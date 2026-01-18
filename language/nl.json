@@ -1,0 +1,58 @@
+{
+    "TOOLBAR_TITLE":
+    "Werkbalk Objectannotatie",
+
+    "TOOLBAR_ITEM1":
+    "Toevoegen",
+
+    "TOOLBAR_ITEM2":
+    "Wijzigen",
+
+    "TOOLBAR_ITEM3":
+    "Verwijderen",
+
+    "MENU_TITLE":
+    "Notitie",
+
+    "MENU_ITEM1":
+    "Aanmaken...",
+
+    "MENU_ITEM2":
+    "Wijzigen...",
+
+    "MENU_ITEM3":
+    "Verwijderen...",
+
+    "Feature Annotation Toolbar": "Werkbalk Objectannotatie",
+    "Start Session": "Sessie Starten",
+    "Add Marker": "Melding Toevoegen",
+    "Edit Marker": "Melding Wijzigen",
+    "Remove Marker": "Melding Verwijderen",
+
+    "MARKERDIALOG_TITLE": [
+        "Melding Aanmaken",
+        "Melding Wijzigen"],
+    "MARKERDIALOG_MAINLABEL": [
+        "Deze melding wordt aangemaakt in een nieuwe laag.",
+        "Deze melding wordt aangemaakt in de laag '{}'.",
+        "Deze melding bevindt zich in de laag '{}'."],
+    "MARKERDIALOG_NOTELABEL":
+        "Opmerking:",
+    "MARKERDIALOG_INFOLABEL":
+        "Toelichting (optioneel):",
+    "MARKERDIALOG_NOTEOPTIONS": [
+        "Situatie gewijzigd",
+        "Kartering onjuist",
+        "Begrenzing onjuist",
+        "Classificatie onjuist",
+        "Fysiek voorkomen onjuist",
+        "Geen fysieke grens",
+        "Verharding",
+        "Onverhard"
+    ],
+
+    "Markers": "Meldingen",
+
+    "DEFAULT_LAYERNAME":
+        "Meldingen"
+}

@@ -1,0 +1,32 @@
+
+import sys
+_MODULE = sys.modules.get(__name__.split('.')[0])
+
+
+from .fsitem import FSFolder
+
+################################################################################
+### Database
+################################################################################
+'''
+'''
+class Database(FSFolder):
+    ########################################################################
+    ### Central Storage Location
+    ########################################################################
+    _PATH_KEY = "database/path"
+
+    @classmethod
+    def getGlobalPath(cls):
+        with _MODULE.plugin.Settings() as settings:
+            return settings.loadPath(cls._PATH_KEY)
+
+    @classmethod
+    def setGlobalPath(cls, path):
+        with _MODULE.plugin.Settings() as settings:
+            return settings.savePath(cls._PATH_KEY, path)
+    ########################################################################
+
+    def getSessionSet(self, name):
+        return FSFolder(self._path, name)
+

@@ -1,0 +1,12 @@
+[general]
+name=32BT Feature Annotation Toolbar
+icon=icon.svg
+description=Quickly add and manage textcaptions using a standard pointlayer
+about=This plugin provides a toolbar to quickly pin captions to locations of interest. It features predefined and customizable captions that can be selected when you pin a location, and allows additional information to be entered.
+version=1.0
+qgisMinimumVersion=3.0
+author=32BT
+email=32beat@gmail.com
+homepage=URL to homepage
+repository=URL to repository
+tracker=URL to tracker
