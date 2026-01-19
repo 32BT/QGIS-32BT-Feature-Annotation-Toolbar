@@ -104,7 +104,7 @@ class Dialog(QDialog, _form()):
         # If marker is available, then this is a modify operation
         if marker:
             self.setWindowTitle(_LABELS.MARKERDIALOG_TITLE[1])
-            self.setText(marker.note)
+            self.setText(marker.note())
 
         # If layer is available, add layer.name() to mainlabel
         if layer:
@@ -117,10 +117,10 @@ class Dialog(QDialog, _form()):
 
     ########################################################################
 
-    def setText(self, text):
+    def setText(self, note):
         info = ''
-        if ':' in text:
-            note, info = text.split(':')
+        if ':' in note:
+            note, info = note.split(':')
             note = note.strip()
             info = info.strip()
         self.noteCombo.lineEdit().setText(note)

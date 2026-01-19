@@ -142,16 +142,16 @@ def addAttribute(layer, name, size=32):
 
 ################################################################################
 
-def addFeature(layer, feature):
-    with edit(layer):
-        layer.addFeature(feature)
-        layer.selectByIds([feature.id()])
-
 def addFeatures(layer, features):
     layer.removeSelection()
     with edit(layer):
         for feature in features:
-            layer.addFeature(feature)
+            layer.appendFeature(feature)
+
+def appendFeature(layer, feature):
+    with edit(layer):
+        layer.addFeature(feature)
+        layer.selectByIds([feature.id()])
 
 def updateFeature(layer, feature):
     with edit(layer):

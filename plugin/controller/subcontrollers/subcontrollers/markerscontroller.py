@@ -54,12 +54,17 @@ class MarkersController:
         action.setEnabled(self.validateAction(action, idx))
 
     def validateAction(self, action, idx):
-        if idx == ACTION.INDEX.RESET: return True
+        # It is not generally sensible to annotate an empty map
         n = len(QgsProject.instance().mapLayers())
+        if idx == ACTION.INDEX.RESET: return n>0
         if idx == ACTION.INDEX.APPEND: return n>0
+        # Modify and Remove require a selection
         n = self._validateActiveLayer() or 0
-        if idx == ACTION.INDEX.MODIFY: return n==1
-        if idx == ACTION.INDEX.REMOVE: return n>=1
+        if idx == ACTION.INDEX.MODIFY:
+            # Only allow modifying one, unflagged marker at a time
+            return n==1 and self._validateActionModify()
+        if idx == ACTION.INDEX.REMOVE:
+            return n>=1
         return False
 
     '''
@@ -67,15 +72,19 @@ class MarkersController:
     --------------------
     Test if active layer is a TMS.LAYER type (with selection).
     If layer is a TMS.LAYER type:
-        Returns selectedFeatureCount (which might be 0)
+        Return selectedFeatureCount (which might be 0)
     otherwise:
-        Returns None
+        Return None
     '''
     def _validateActiveLayer(self, mode='w'):
-        # Test if active layer is a TMS.LAYER with selection
         layer = self._iface.activeLayer()
         if TMS.LAYER.validate(layer, mode):
             return layer.selectedFeatureCount()
+
+    def _validateActionModify(self):
+        layer = self._iface.activeLayer()
+        marker = next(TMS.LAYER.fetch_markers(layer))
+        return bool(marker.flag()) == False
 
     ########################################################################
     ### Handle Action
@@ -102,11 +111,10 @@ class MarkersController:
 
     def modifyMarker(self):
         layer = self._iface.activeLayer()
-        if TMS.LAYER.validate(layer, 'w'):
-            if layer.selectedFeatureCount() == 1:
-                # fetch marker
-                marker = None
-                self.startDialog(layer, marker)
+        marker = next(TMS.LAYER.fetch_markers(layer))
+        note = self.startDialog(layer, marker)
+        if note and marker.replaceNote(note):
+            TMS.LAYER.update_marker(layer, marker)
 
     def removeMarker(self):
         print('MarkerController.removeMarker')
@@ -192,8 +200,8 @@ class MarkersController:
 
         mapPoint = self._convertMapPoint(mapPoint, layer.crs())
 
-        m = TMS.Marker(mapPoint, note)
-        TMS.LAYER.append_marker(layer, m)
+        marker = TMS.Marker(mapPoint, note)
+        TMS.LAYER.append_marker(layer, marker)
         # Create indicator and add to layer
         #indicator = TMS.Indicator(mapPoint, txt)
         #TMS.LAYER.appendIndicator(layer, indicator)

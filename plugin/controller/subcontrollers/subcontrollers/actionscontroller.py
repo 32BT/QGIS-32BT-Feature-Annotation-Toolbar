@@ -120,7 +120,7 @@ class ActionsController(QObject):
         if not hasattr(self, '_marker'):
             self._marker = PanningMarkerMapTool(self._iface.mapCanvas())
             self._marker.setAction(self._tools.action(0))
-            self._marker.canvasClicked.connect(self.canvasClicked)
+            self._marker.canvasUnclicked.connect(self.canvasClicked)
         return self._marker
 
     def _parseToolAction2(self):
@@ -146,7 +146,7 @@ class ActionsController(QObject):
     ### Response
     ########################################################################
 
-    def canvasClicked(self, location):
+    def canvasClicked(self, location, button):
         self.lastMapLocation = location
         self.emitAction(ACTION.INDEX.APPEND)
 

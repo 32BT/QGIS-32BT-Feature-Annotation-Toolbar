@@ -22,20 +22,53 @@ def local_time_as_str():
     return local_time().isoformat(timespec='milliseconds')
 
 ################################################################################
+'''
+TODO: move to feature.py as in: QGS.FEATURE.getvalue(F, key)
+'''
+def _qgsfeature_getvalue(F, key):
+    try: return F[key]
+    except KeyError: pass
 
+################################################################################
 
 class Marker:
-    def __init__(self, mapPoint, note, date=None, guid=None):
-        self._location = mapPoint
+    @classmethod
+    def class_guid(cls): return local_uuid_as_str()
+    @classmethod
+    def class_date(cls): return local_time_as_str()
+
+    @classmethod
+    def from_qgsfeature(cls, F):
+        P = F.geometry().asPoint()
+        flag = _qgsfeature_getvalue(F, 'flag')
+        guid = _qgsfeature_getvalue(F, 'guid')
+        date = _qgsfeature_getvalue(F, 'date')
+        note = _qgsfeature_getvalue(F, 'note')
+        return Marker(P, note, date, guid)
+
+
+    def __init__(self, location, note, date=None, guid=None, flag=None):
+        self._location = location
+        self._flag = flag
         self._guid = guid or local_uuid_as_str()
         self._date = date or local_time_as_str()
-        self._note = note
+        self._note = note.strip()
 
     def location(self):
         return self._location
+    def flag(self):
+        return self._flag
     def guid(self):
         return self._guid
     def date(self):
         return self._date
     def note(self):
         return self._note
+
+    def replaceNote(self, note):
+        note = note.strip()
+        if self._note != note:
+            self._note = note
+            self._date = local_time_as_str()
+            return True
+        return False

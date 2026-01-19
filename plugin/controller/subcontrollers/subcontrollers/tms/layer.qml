@@ -2,8 +2,8 @@
 <qgis autoRefreshTime="0" hasScaleBasedVisibilityFlag="0" maxScale="0" simplifyDrawingTol="1" simplifyMaxScale="1" autoRefreshMode="Disabled" simplifyDrawingHints="0" minScale="0" version="3.44.3-Solothurn" styleCategories="Symbology|Labeling|Rendering|Legend" simplifyLocal="1" labelsEnabled="1" symbologyReferenceScale="-1" simplifyAlgorithm="0">
   <renderer-v2 type="RuleRenderer" referencescale="-1" forceraster="0" symbollevels="0" enableorderby="0">
     <rules key="{c0ad41f9-e8e7-46a2-8e1c-16090ee37788}">
-      <rule symbol="0" label="Nieuw" key="{90f80b46-8ee1-46d4-a31c-eb5132fc1831}" filter="&quot;tms_id&quot; is null"/>
-      <rule symbol="1" label="Verzonden" key="{cc26d001-205b-4e8b-8400-0e64653d255c}" filter="&quot;tms_id&quot; is not null"/>
+      <rule symbol="0" label="Nieuw" key="{90f80b46-8ee1-46d4-a31c-eb5132fc1831}" filter="&quot;flag&quot; is null"/>
+      <rule symbol="1" label="Verzonden" key="{cc26d001-205b-4e8b-8400-0e64653d255c}" filter="&quot;flag&quot; is not null"/>
     </rules>
     <symbols>
       <symbol type="marker" clip_to_extent="1" frame_rate="10" force_rhr="0" alpha="1" is_animated="0" name="0">

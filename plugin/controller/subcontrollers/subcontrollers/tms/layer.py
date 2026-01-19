@@ -6,6 +6,7 @@ from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
 
 from .. import qgs as QGS
+from .marker import Marker
 
 ################################################################################
 ###
@@ -41,12 +42,20 @@ def get_type(layer):
         return layer.customProperty(type)
 
 ################################################################################
-
+'''
+flag
+busy
+lock
+mask
+bits
+mark
+'''
 _URI = '&'.join((
     "Point?crs=epsg:28992",
+    "field=flag:text(1)",
     "field=guid:text(32)",
     "field=date:text(32)",
-    "field=note:text(192)",
+    "field=note:text(190)",
     "index=yes"))
 
 def make(name='Terugmeldingen', crs=None):
@@ -99,7 +108,22 @@ def append_marker(layer, marker):
     F['guid'] = marker.guid()
     F['date'] = marker.date()
     F['note'] = marker.note()
-    QGS.LAYER.add_feature(layer, F)
+    QGS.LAYER.appendFeature(layer, F)
+
+def fetch_markers(layer):
+    for F in layer.getSelectedFeatures():
+        yield Marker.from_qgsfeature(F)
+
+def find_marker(layer, guid):
+    for F in layer.getFeatures():
+        if F['guid'] == guid:
+            return Marker.from_qgsfeature(F)
+
+def update_marker(layer, marker):
+    F = next(layer.getSelectedFeatures())
+    F['date'] = marker.date()
+    F['note'] = marker.note()
+    QGS.LAYER.updateFeature(layer, F)
 
 
 
