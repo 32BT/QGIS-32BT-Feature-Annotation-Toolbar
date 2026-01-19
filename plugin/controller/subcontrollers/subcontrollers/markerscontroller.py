@@ -12,7 +12,7 @@ from .actionscontroller import ACTION
 
 # Actions involve dialogs
 from .dialog import MarkerDialog
-#from .dialog import RemoveDialog
+from .dialog import RemoveDialog
 
 # Require QGS.LAYER and TMS.LAYER functions
 from . import qgs as QGS
@@ -93,31 +93,34 @@ class MarkersController:
     def handleAction(self, sender, idx):
         if idx == ACTION.INDEX.APPEND:
             location = sender.lastMapLocation
-            return self.startMarker(location)
+            return self.startAppend(location)
         if idx == ACTION.INDEX.MODIFY:
-            return self.modifyMarker()
+            return self.startModify()
         if idx == ACTION.INDEX.REMOVE:
-            return self.removeMarker()
+            return self.startRemove()
 
     ########################################################################
     ########################################################################
 
-    def startMarker(self, location):
+    def startAppend(self, location):
         print(location)
         layer = self.findLayer()
         note = self.startDialog(layer)
         if note:
             self._addMarker(layer, location, note)
 
-    def modifyMarker(self):
+    def startModify(self):
         layer = self._iface.activeLayer()
         marker = next(TMS.LAYER.fetch_markers(layer))
         note = self.startDialog(layer, marker)
         if note and marker.replaceNote(note):
             TMS.LAYER.update_marker(layer, marker)
 
-    def removeMarker(self):
-        print('MarkerController.removeMarker')
+    def startRemove(self):
+        parent = self._iface.mainWindow()
+        layer = self._iface.activeLayer()
+        if RemoveDialog(parent).confirmAction(layer):
+            TMS.LAYER.remove_markers(layer)
     ########################################################################
 
     def startDialog(self, layer=None, marker=None):

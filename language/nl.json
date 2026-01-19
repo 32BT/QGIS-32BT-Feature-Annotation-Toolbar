@@ -28,6 +28,11 @@
     "Add Marker": "Melding Toevoegen",
     "Edit Marker": "Melding Wijzigen",
     "Remove Marker": "Melding Verwijderen",
+    "Marker": "Melding",
+    "Markers": "Meldingen",
+
+    "DEFAULT_LAYERNAME":
+        "Meldingen",
 
     "MARKERDIALOG_TITLE": [
         "Melding Aanmaken",
@@ -51,8 +56,12 @@
         "Onverhard"
     ],
 
-    "Markers": "Meldingen",
+    "CONFIRMDIALOG_TITLE":
+        "Actie Bevestigen",
+    "CONFIRMDIALOG_MAINLABEL": [
+        "{} melding zal verwijderd worden uit laag '{}'.",
+        "{} meldingen zullen verwijderd worden uit laag '{}'."],
+    "CONFIRMDIALOG_MAINLABEL2":
+        "Bevestig de actie om door te gaan."
 
-    "DEFAULT_LAYERNAME":
-        "Meldingen"
 }

@@ -158,6 +158,7 @@ def updateFeature(layer, feature):
         layer.updateFeature(feature)
 
 def deleteFeature(layer, fid):
+    layer.removeSelection()
     with edit(layer):
         layer.deleteFeature(fid)
 

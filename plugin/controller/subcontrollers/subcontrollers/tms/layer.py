@@ -108,7 +108,7 @@ def append_marker(layer, marker):
     F['guid'] = marker.guid()
     F['date'] = marker.date()
     F['note'] = marker.note()
-    QGS.LAYER.appendFeature(layer, F)
+    appendFeature(layer, F)
 
 def fetch_markers(layer):
     for F in layer.getSelectedFeatures():
@@ -123,7 +123,41 @@ def update_marker(layer, marker):
     F = next(layer.getSelectedFeatures())
     F['date'] = marker.date()
     F['note'] = marker.note()
-    QGS.LAYER.updateFeature(layer, F)
+    updateFeature(layer, F)
+
+def remove_markers(layer):
+    #for F in layer.getSelectedFeatures():
+    #    fileAsMarker(layer, F)
+    ids = layer.getSelectedFeatureIds()
+    QGS.LAYER.deleteFeatures(layer, ids)
+
+################################################################################
+
+def appendFeature(layer, feature):
+    QGS.LAYER.appendFeature(layer, feature)
+    #saveAsMarker(layer, feature)
+
+def updateFeature(layer, feature):
+    QGS.LAYER.updateFeature(layer, feature)
+    #saveAsMarker(layer, feature)
+
+def deleteFeature(layer, feature):
+    #fileAsMarker(layer, feature)
+    QGS.LAYER.deleteFeature(layer, feature.id())
 
 
+'''
+def saveAsMarker(layer, feature):
+    session = Session.from_layer(layer)
+    if session:
+        marker = Marker.from_qgsfeature(feature)
+        session.saveMarker(marker)
+
+def fileAsMarker(layer, feature):
+    session = Session.from_layer(layer)
+    if session:
+        marker = Marker.from_qgsfeature(feature)
+        session.fileMarker(marker)
+'''
+################################################################################
 
