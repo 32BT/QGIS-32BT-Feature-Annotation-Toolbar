@@ -1,20 +1,8 @@
 
 
-from qgis.core import *
 from qgis.PyQt import uic
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtWidgets import QDialog, QMessageBox
 
-
-################################################################################
-
-import os
-
-def _form():
-    path, ext = os.path.splitext(__file__)
-    form, _ = uic.loadUiType(path+'.ui')
-    return form
 
 ################################################################################
 ### Labels
@@ -27,10 +15,12 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
     "CONFIRMDIALOG_TITLE":
         "Confirm Action",
     "CONFIRMDIALOG_MAINLABEL": [
-        "{} marker will be removed from layer '{}'.",
-        "{} markers will be removed from layer '{}'."],
+        "You are about to remove {} marker from layer '{}'.",
+        "You are about to remove {} markers from layer '{}'."],
     "CONFIRMDIALOG_MAINLABEL2":
-        "Select OK to continue."
+        "Confirm this action to continue.",
+    "CONFIRMDIALOG_INFOLABEL":
+        "Reason:"
     })
 
 ################################################################################
@@ -54,9 +44,20 @@ class Dialog:
         label += _LABELS.CONFIRMDIALOG_MAINLABEL2
         label = label.format(n, layer.name())
 
-        return QMessageBox.warning(self._parent, title, label,
-                QMessageBox.StandardButton.Ok,
-                QMessageBox.StandardButton.Cancel)
+        result = \
+        QMessageBox.warning(self._parent, title, label,
+        QMessageBox.StandardButton.Ok,
+        QMessageBox.StandardButton.Cancel)
+        return result == QMessageBox.StandardButton.Ok
+
+################################################################################
+
+import os
+
+def _form():
+    path, ext = os.path.splitext(__file__)
+    form, _ = uic.loadUiType(path+'.ui')
+    return form
 
 ################################################################################
 

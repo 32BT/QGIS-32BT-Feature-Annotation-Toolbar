@@ -47,7 +47,7 @@ class MarkersController:
         self._layerID = None
 
     ########################################################################
-    ### Validate Action
+    ### Update Action
     ########################################################################
 
     def updateAction(self, action, idx):
@@ -100,40 +100,53 @@ class MarkersController:
             return self.startRemove()
 
     ########################################################################
-    ########################################################################
 
-    def startAppend(self, location):
-        print(location)
+    def startAppend(self, mapPoint):
         layer = self.findLayer()
-        note = self.startDialog(layer)
+        note = self.runInputDialog(layer)
         if note:
-            self._addMarker(layer, location, note)
+            layer = self.assertLayer(layer)
+            mapPoint = self._convertMapPoint(mapPoint, layer.crs())
+            marker = TMS.Marker(mapPoint, note)
+            TMS.LAYER.append_marker(layer, marker)
+            self._layerID = layer.id()
 
     def startModify(self):
         layer = self._iface.activeLayer()
         marker = next(TMS.LAYER.fetch_markers(layer))
-        note = self.startDialog(layer, marker)
+        note = self.runInputDialog(layer, marker)
         if note and marker.replaceNote(note):
             TMS.LAYER.update_marker(layer, marker)
+            self._layerID = layer.id()
 
     def startRemove(self):
-        parent = self._iface.mainWindow()
         layer = self._iface.activeLayer()
-        if RemoveDialog(parent).confirmAction(layer):
+        if self.runRemoveDialog(layer):
             TMS.LAYER.remove_markers(layer)
+            self._layerID = layer.id()
+
+    ########################################################################
     ########################################################################
 
-    def startDialog(self, layer=None, marker=None):
+    def runInputDialog(self, layer=None, marker=None):
         # Switch active layer to TMS layer and ensure it is visible
         lastActiveLayer = self.setActiveLayer(layer, True)
         # Start dialog
-        parent = self._iface.mapCanvas()
-        result = MarkerDialog(parent).askInput(layer, marker)
-        if result:
-            return result
+        result = self.runMarkerDialog(layer, marker)
+        if result: return result
         # User canceled, restore previous active layer
         self.setActiveLayer(lastActiveLayer)
 
+    def runMarkerDialog(self, layer=None, marker=None):
+        parent = self._iface.mapCanvas()
+        return MarkerDialog(parent).askInput(layer, marker)
+
+    def runRemoveDialog(self, layer):
+        parent = self._iface.mapCanvas()
+        return RemoveDialog(parent).confirmAction(layer)
+
+    ########################################################################
+    ########################################################################
     '''
     The plugin requires a targetlayer that can handle markers.
 
@@ -212,6 +225,15 @@ class MarkersController:
 
         # set last used layer
         self._layerID = layer.id()
+
+
+    def assertLayer(self, layer):
+        if layer is None:
+            name = self.DEFAULT_LAYERNAME
+            layer = TMS.LAYER.make(name, self._getMapCrs())
+            layer = QGS.LAYER.add_to_toc(layer)
+            self._iface.setActiveLayer(layer)
+        return layer
 
     ########################################################################
     # Helper functions. TODO: move to QGS.MapCanvas

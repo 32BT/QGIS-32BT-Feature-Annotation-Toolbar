@@ -59,9 +59,10 @@
     "CONFIRMDIALOG_TITLE":
         "Actie Bevestigen",
     "CONFIRMDIALOG_MAINLABEL": [
-        "{} melding zal verwijderd worden uit laag '{}'.",
-        "{} meldingen zullen verwijderd worden uit laag '{}'."],
+        "Er zal {} melding verwijderd worden uit laag '{}'.",
+        "Er zullen {} meldingen verwijderd worden uit laag '{}'."],
     "CONFIRMDIALOG_MAINLABEL2":
-        "Bevestig de actie om door te gaan."
-
+        "Bevestig de actie om door te gaan.",
+    "CONFIRMDIALOG_INFOLABEL":
+        "Toelichting:"
 }

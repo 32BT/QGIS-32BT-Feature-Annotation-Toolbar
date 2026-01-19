@@ -128,7 +128,7 @@ def update_marker(layer, marker):
 def remove_markers(layer):
     #for F in layer.getSelectedFeatures():
     #    fileAsMarker(layer, F)
-    ids = layer.getSelectedFeatureIds()
+    ids = layer.selectedFeatureIds()
     QGS.LAYER.deleteFeatures(layer, ids)
 
 ################################################################################

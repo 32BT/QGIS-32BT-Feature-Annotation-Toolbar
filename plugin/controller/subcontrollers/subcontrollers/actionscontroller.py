@@ -146,7 +146,7 @@ class ActionsController(QObject):
     ### Response
     ########################################################################
 
-    def canvasClicked(self, location, button):
+    def canvasClicked(self, location, button=None):
         self.lastMapLocation = location
         self.emitAction(ACTION.INDEX.APPEND)
 

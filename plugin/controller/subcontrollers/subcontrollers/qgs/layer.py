@@ -85,6 +85,8 @@ def is_editable(layer):
         return False
 
 
+
+
 ################################################################################
 
 def validate_geometry(layer, geometryType=Qgis.GeometryType.Point):
