@@ -23,7 +23,7 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
 ### ContextMenu
 ################################################################################
 
-from ..subcontrollers.qgs.mapcanvas import MapCanvas
+from ..qgs.mapcanvas import MapCanvas
 
 class TokenMenu(QObject):
     updateAction = pyqtSignal(object, object)
@@ -31,7 +31,7 @@ class TokenMenu(QObject):
 
     def __init__(self, mapCanvas):
         super().__init__()
-        self._mapCanvas = MapCanvasController(mapCanvas)
+        self._mapCanvas = MapCanvas(mapCanvas)
         self._mapCanvas.connectMenuHandler(self.prepareContextMenu)
         self._menu = self.startMenu()
 

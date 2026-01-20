@@ -29,6 +29,7 @@ class PanningMarker(Marker):
     def __init__(self, canvas):
         super().__init__(canvas)
         self.resetTracking()
+        self.tolerance = 5
 
     def activate(self):
         super().activate()
@@ -48,11 +49,12 @@ class PanningMarker(Marker):
         elif self._position is not None:
             dx = abs(self._position.x()-event.pos().x())
             dy = abs(self._position.y()-event.pos().y())
-            self._tracking = (dx>5)or(dy>5)
+            self._tracking = (dx*dx+dy*dy)>(self.tolerance*self.tolerance)
 
     def canvasReleaseEvent(self, event):
         if self._tracking:
             self.canvas().panActionEnd(event.pos())
         else:
-            super().canvasReleaseEvent(event)
+            mapLocation = self.toMapCoordinates(self._position)
+            self.canvasClicked.emit(mapLocation, event.button())
         self.resetTracking()

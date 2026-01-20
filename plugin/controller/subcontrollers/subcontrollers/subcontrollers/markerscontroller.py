@@ -15,11 +15,11 @@ from .dialog import MarkerDialog
 from .dialog import RemoveDialog
 
 # Require QGS.LAYER and TMS.LAYER functions
-from . import qgs as QGS
-from . import tms as TMS
+from .. import qgs as QGS
+from .. import tms as TMS
 
 # Require MapCanvas utilities
-from .qgs.mapcanvas import MapCanvas
+from ..qgs.mapcanvas import MapCanvas
 
 ################################################################################
 '''
@@ -101,7 +101,7 @@ class MarkersController:
 
     ########################################################################
 
-    def startAppend(self, mapPoint):
+    def startAppend(self):
         layer = self.findLayer()
         note = self.runInputDialog(layer)
         if note:
@@ -218,11 +218,7 @@ class MarkersController:
         return self._mapCanvas
 
     def _getLastMapPoint(self, crs=None):
-        mapCanvas = self.mapCanvas()
-        p = mapCanvas.getLastEventPosition()
-        p = mapCanvas.getMapPointForEventPosition(p)
-        if crs: p = mapCanvas.convertMapPoint(p, crs)
-        return p
+        return self.mapCanvas().getLastEventLocation(crs)
 
     def _getMapCrs(self):
         return self.mapCanvas().getCrs()

@@ -12,7 +12,7 @@ from .toolset import TokenTools
 from .toolset import TokenMenu
 
 # The toolbar contains a maptool
-from .subcontrollers.qgs.maptools import PanningMarker as PanningMarkerMapTool
+from .qgs.maptools import PanningMarker as PanningMarkerMapTool
 
 ################################################################################
 ### Definitions
@@ -120,7 +120,7 @@ class ActionManager(QObject):
         if not hasattr(self, '_marker'):
             self._marker = PanningMarkerMapTool(self._iface.mapCanvas())
             self._marker.setAction(self._tools.action(0))
-            self._marker.canvasUnclicked.connect(self.canvasClicked)
+            self._marker.canvasClicked.connect(self.canvasClicked)
         return self._marker
 
     def _parseToolAction2(self):
