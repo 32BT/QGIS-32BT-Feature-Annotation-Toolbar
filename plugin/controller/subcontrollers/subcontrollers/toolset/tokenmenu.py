@@ -6,9 +6,8 @@ from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtWidgets import *
 from qgis.PyQt.QtGui import *
 
-
 ################################################################################
-### ContextMenu item
+### Language
 ################################################################################
 '''
 '''
@@ -20,9 +19,13 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
     "MENU_ITEM2": "Edit Marker...",
     "MENU_ITEM3": "Remove Marker..."})
 
+################################################################################
+### ContextMenu
+################################################################################
+
 from ..qgs.mapcanvas import MapCanvas as MapCanvasController
 
-class Menu(QObject):
+class TokenMenu(QObject):
     updateAction = pyqtSignal(object, object)
     handleAction = pyqtSignal(object, object)
 
