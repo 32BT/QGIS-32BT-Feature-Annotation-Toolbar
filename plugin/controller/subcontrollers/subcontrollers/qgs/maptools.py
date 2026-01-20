@@ -31,7 +31,6 @@ class PanningMarker(Marker):
         self.resetTracking()
 
     def activate(self):
-        print('activate')
         super().activate()
         self.resetTracking()
 
@@ -40,7 +39,6 @@ class PanningMarker(Marker):
         self._position = None
 
     def canvasPressEvent(self, event):
-        print('pressEvent')
         self._tracking = False
         self._position = event.pos()
 

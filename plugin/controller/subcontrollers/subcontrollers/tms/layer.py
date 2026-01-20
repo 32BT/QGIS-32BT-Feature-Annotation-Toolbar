@@ -101,38 +101,43 @@ def is_writeable(layer):
 
 ################################################################################
 
-def append_marker(layer, marker):
+def fetchMarkers(layer):
+    for F in layer.getSelectedFeatures():
+        yield Marker.from_qgsfeature(F)
+
+def findMarker(layer, guid):
+    for F in layer.getFeatures():
+        if F['guid'] == guid:
+            return Marker.from_qgsfeature(F)
+
+################################################################################
+
+def appendMarker(layer, marker):
     F = QgsFeature(layer.fields())
     P = QgsPoint(*marker.location())
     F.setGeometry(P)
+    F['flag'] = marker.flag()
     F['guid'] = marker.guid()
     F['date'] = marker.date()
     F['note'] = marker.note()
     appendFeature(layer, F)
 
-def fetch_markers(layer):
-    for F in layer.getSelectedFeatures():
-        yield Marker.from_qgsfeature(F)
-
-def find_marker(layer, guid):
-    for F in layer.getFeatures():
-        if F['guid'] == guid:
-            return Marker.from_qgsfeature(F)
-
-def update_marker(layer, marker):
+def updateMarker(layer, marker):
     F = next(layer.getSelectedFeatures())
     F['date'] = marker.date()
     F['note'] = marker.note()
     updateFeature(layer, F)
 
-def remove_markers(layer):
+def removeMarkers(layer):
     #for F in layer.getSelectedFeatures():
     #    fileAsMarker(layer, F)
     ids = layer.selectedFeatureIds()
     QGS.LAYER.deleteFeatures(layer, ids)
 
 ################################################################################
-
+'''
+A TMS Layer is either ad-hoc, or it may have an associated Session.
+'''
 def appendFeature(layer, feature):
     QGS.LAYER.appendFeature(layer, feature)
     #saveAsMarker(layer, feature)
@@ -142,9 +147,12 @@ def updateFeature(layer, feature):
     #saveAsMarker(layer, feature)
 
 def deleteFeature(layer, feature):
-    #fileAsMarker(layer, feature)
     QGS.LAYER.deleteFeature(layer, feature.id())
+    #fileAsMarker(layer, feature)
 
+def deleteFeatureByID(layer, fid):
+    feature = QGS.LAYER.removeFeature(layer, fid)
+    #fileAsMarker(layer, feature)
 
 '''
 def saveAsMarker(layer, feature):

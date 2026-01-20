@@ -1,5 +1,5 @@
 
 from .toolset import ToolSet
-from .resettools import ResetTools
+from .tokenmenu import TokenMenu
 from .tokentools import TokenTools
 

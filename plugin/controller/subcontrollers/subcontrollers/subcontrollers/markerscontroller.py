@@ -8,18 +8,18 @@ from qgis.PyQt.QtCore import *
 ################################################################################
 
 # Action indices
-from .actionscontroller import ACTION
+from ..actionmanager import ACTION
 
 # Actions involve dialogs
-from .dialog import MarkerDialog
-from .dialog import RemoveDialog
+from ..dialog import MarkerDialog
+from ..dialog import RemoveDialog
 
 # Require QGS.LAYER and TMS.LAYER functions
-from . import qgs as QGS
-from . import tms as TMS
+from .. import qgs as QGS
+from .. import tms as TMS
 
 # Require MapCanvas utilities
-from .qgs.mapcanvas import MapCanvas
+from ..qgs.mapcanvas import MapCanvas
 
 ################################################################################
 '''
@@ -81,9 +81,10 @@ class MarkersController:
         if TMS.LAYER.validate(layer, mode):
             return layer.selectedFeatureCount()
 
+    # Only allow unflagged items to be modified
     def _validateActionModify(self):
         layer = self._iface.activeLayer()
-        marker = next(TMS.LAYER.fetch_markers(layer))
+        marker = next(TMS.LAYER.fetchMarkers(layer))
         return bool(marker.flag()) == False
 
     ########################################################################
@@ -108,21 +109,21 @@ class MarkersController:
             layer = self.assertLayer(layer)
             mapPoint = self._convertMapPoint(mapPoint, layer.crs())
             marker = TMS.Marker(mapPoint, note)
-            TMS.LAYER.append_marker(layer, marker)
+            TMS.LAYER.appendMarker(layer, marker)
             self._layerID = layer.id()
 
     def startModify(self):
         layer = self._iface.activeLayer()
-        marker = next(TMS.LAYER.fetch_markers(layer))
+        marker = next(TMS.LAYER.fetchMarkers(layer))
         note = self.runInputDialog(layer, marker)
         if note and marker.replaceNote(note):
-            TMS.LAYER.update_marker(layer, marker)
+            TMS.LAYER.updateMarker(layer, marker)
             self._layerID = layer.id()
 
     def startRemove(self):
         layer = self._iface.activeLayer()
         if self.runRemoveDialog(layer):
-            TMS.LAYER.remove_markers(layer)
+            TMS.LAYER.removeMarkers(layer)
             self._layerID = layer.id()
 
     ########################################################################
@@ -146,6 +147,7 @@ class MarkersController:
         return RemoveDialog(parent).confirmAction(layer)
 
     ########################################################################
+    ### Layer management
     ########################################################################
     '''
     The plugin requires a targetlayer that can handle markers.
@@ -198,35 +200,9 @@ class MarkersController:
                 QGS.LAYER.make_visible(layer)
         return lastLayer
 
-    ########################################################################
-    ### Save indicator
-    ########################################################################
     '''
-    If we have a valid annotation, we can create the marker.
-    It will be added to layer if it was supplied. If layer is None, we will
-    first add an in_memory layer to the toc.
+    If there is no layer, then create an ad-hoc, in-memory layer.
     '''
-    def _addMarker(self, layer, mapPoint, note):
-        # Create new layer if necessary
-        if layer is None:
-            name = self.DEFAULT_LAYERNAME
-            layer = TMS.LAYER.make(name, self._getMapCrs())
-            layer = QGS.LAYER.add_to_toc(layer)
-            self._iface.setActiveLayer(layer)
-
-        mapPoint = self._convertMapPoint(mapPoint, layer.crs())
-
-        marker = TMS.Marker(mapPoint, note)
-        TMS.LAYER.append_marker(layer, marker)
-        # Create indicator and add to layer
-        #indicator = TMS.Indicator(mapPoint, txt)
-        #TMS.LAYER.appendIndicator(layer, indicator)
-        #TMS.LAYER.add_indicator(layer, indicator)
-
-        # set last used layer
-        self._layerID = layer.id()
-
-
     def assertLayer(self, layer):
         if layer is None:
             name = self.DEFAULT_LAYERNAME
@@ -236,8 +212,7 @@ class MarkersController:
         return layer
 
     ########################################################################
-    # Helper functions. TODO: move to QGS.MapCanvas
-
+    # Helper functions.
     def mapCanvas(self):
         if not hasattr(self, '_mapCanvas'):
             self._mapCanvas = MapCanvas(self._iface.mapCanvas())

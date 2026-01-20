@@ -1,5 +1,4 @@
 
 
-from .actionscontroller import ActionsController
-from .sessioncontroller import SessionController
-from .markerscontroller import MarkersController
+from .actionmanager import ActionManager
+from .actionhandler import ActionHandler

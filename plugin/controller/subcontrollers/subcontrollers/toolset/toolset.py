@@ -74,17 +74,20 @@ class ToolSet(QObject):
             return self._find_icon('mAction'+name)
         return QgsApplication.getThemeIcon(name)
 
-    def _icon_name(self, name):
+    @classmethod
+    def _icon_name(cls, name):
         name = name.replace(' ','')
         name, ext = os.path.splitext(name)
         if not ext: ext = '.svg'
         return name+ext
 
-    def _load_icon(self, name):
-        path = self._icon_path(name)
+    @classmethod
+    def _load_icon(cls, name):
+        path = cls._icon_path(name)
         return QIcon(path)
 
-    def _icon_path(self, name):
+    @classmethod
+    def _icon_path(cls, name):
         path = __file__
         path = os.path.split(path)[0]
         path = os.path.join(path, "icons")

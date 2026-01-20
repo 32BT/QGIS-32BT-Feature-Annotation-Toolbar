@@ -24,8 +24,8 @@ class ToolBar:
 
 from qgis.PyQt.QtCore import *
 
-from .subcontrollers import ResetController
-from .subcontrollers import TokenController
+from .subcontrollers import MenuController
+from .subcontrollers import ToolController
 from .selection import Selection
 
 ################################################################################
@@ -36,51 +36,37 @@ Controller is the main controller.
 It merely manages two subcontrollers that do the actual work.
 
 Controller
-    ResetController <-- responsible for reset button
-        ResetTools
-    TokenController <-- responsible for token buttons
-        ActionsController
-            TokenTools
-            TokenMenus
-        SessionController
-        MarkersController
+    MenuController <-- responsible for session button
+    ToolController <-- responsible for marker buttons
+        ActionManager
+            tokenToolActions
+            tokenMenuActions
+        ActionHandler
+            SessionController
+            MarkersController
 '''
 class Controller(QObject):
     _NAME = "Feature Annotation Controller"
     _GUID = _IDENTITY.PREFIX+_NAME.replace(" ", "")
 
-    def __init__(self, iface, toolBar, resetIcon="StartSession"):
+    def __init__(self, iface, toolBar, menuIcon="menuButton"):
         super().__init__()
-        self._resetController = ResetController(iface, toolBar, resetIcon)
-        self._tokenController = TokenController(iface, toolBar)
+        self._menuController = MenuController(iface, toolBar, menuIcon)
+        self._toolController = ToolController(iface, toolBar)
+        self._menuController.setDelegate(self._toolController)
 
-        self._resetController.setDelegate(self)
         self._selection = Selection(iface)
         self._selection.changed.connect(self.selectionChanged)
         self.updateActions()
 
     ########################################################################
-    ### Selection response
+    ### Selection Changed
     ########################################################################
 
     def selectionChanged(self, layer):
-        if hasattr(self._resetController, 'selectionChanged'):
-            self._resetController.selectionChanged(layer)
-        if hasattr(self._tokenController, 'selectionChanged'):
-            self._tokenController.selectionChanged(layer)
         self.updateActions()
 
     def updateActions(self):
-        self._resetController.updateActions()
-        self._tokenController.updateActions()
-
-    ########################################################################
-    ### ResetController delegation
-    ########################################################################
-
-    def validateReset(self):
-        self._resetController.setEnabled(True)
-
-    def resetClicked(self):
-        self._tokenController.resetClicked()
+        self._menuController.updateActions()
+        self._toolController.updateActions()
 

@@ -148,7 +148,14 @@ def addFeatures(layer, features):
     layer.removeSelection()
     with edit(layer):
         for feature in features:
-            layer.appendFeature(feature)
+            layer.addFeature(feature)
+
+def deleteFeatures(layer, fids):
+    layer.removeSelection()
+    with edit(layer):
+        layer.deleteFeatures(fids)
+
+################################################################################
 
 def appendFeature(layer, feature):
     with edit(layer):
@@ -164,10 +171,10 @@ def deleteFeature(layer, fid):
     with edit(layer):
         layer.deleteFeature(fid)
 
-def deleteFeatures(layer, fids):
-    layer.removeSelection()
-    with edit(layer):
-        layer.deleteFeatures(fids)
+def removeFeature(layer, fid):
+    feature = layer.getFeature(fid)
+    deleteFeature(layer, fid)
+    return feature
 
 ################################################################################
 '''

@@ -29,6 +29,9 @@ def _qgsfeature_getvalue(F, key):
     try: return F[key]
     except KeyError: pass
 
+
+from .. import qgs as QGS
+
 ################################################################################
 
 class Marker:
@@ -40,10 +43,10 @@ class Marker:
     @classmethod
     def from_qgsfeature(cls, F):
         P = F.geometry().asPoint()
-        flag = _qgsfeature_getvalue(F, 'flag')
-        guid = _qgsfeature_getvalue(F, 'guid')
-        date = _qgsfeature_getvalue(F, 'date')
-        note = _qgsfeature_getvalue(F, 'note')
+        flag = QGS.FEATURE.getValue(F, 'flag')
+        guid = QGS.FEATURE.getValue(F, 'guid')
+        date = QGS.FEATURE.getValue(F, 'date')
+        note = QGS.FEATURE.getValue(F, 'note')
         return Marker(P, note, date, guid)
 
 
