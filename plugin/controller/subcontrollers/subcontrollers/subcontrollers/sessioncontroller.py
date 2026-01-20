@@ -9,10 +9,8 @@ from qgis.PyQt.QtCore import *
 ### Imports
 ################################################################################
 
-# Action indices
-from ..actionmanager import ACTION
-
-
+# Menu indices
+from ..sessionmenu import SessionMenu as MENU
 
 ################################################################################
 ### Language
@@ -33,11 +31,18 @@ class SessionController:
         action.setEnabled(self.validateAction(action, idx))
 
     def validateAction(self, action, idx):
-        return idx == ACTION.INDEX.RESET
+        if idx == MENU.BUTTON.INDEX:
+            return self.validateStartSession()
+        if idx == MENU.ITEM.INDEX.START_SESSION:
+            return self.validateStartSession()
+
+    def validateStartSession(self):
+        return True
 
     def handleAction(self, sender, idx):
-        if idx == ACTION.INDEX.RESET:
+        if idx == MENU.ITEM.INDEX.START_SESSION:
             return self.startSession()
 
     def startSession(self):
         print('SessionController.startSession')
+
