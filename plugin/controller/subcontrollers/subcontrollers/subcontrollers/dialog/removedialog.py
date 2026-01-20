@@ -12,8 +12,9 @@ import sys
 _MODULE = sys.modules.get(__name__.split('.')[0])
 
 _LABELS = _MODULE.LANGUAGE.LABELS({
-    "CONFIRMDIALOG_TITLE":
-        "Confirm Action",
+    "CONFIRMDIALOG_TITLE": [
+        "Remove",
+        "Archive"],
     "CONFIRMDIALOG_MAINLABEL": [
         "You are about to remove {} marker from layer '{}'.",
         "You are about to remove {} markers from layer '{}'."],
@@ -37,7 +38,7 @@ class Dialog:
         self._parent = parent
 
     def confirmAction(self, layer):
-        title = _LABELS.CONFIRMDIALOG_TITLE
+        title = _LABELS.CONFIRMDIALOG_TITLE[0]
         n = layer.selectedFeatureCount()
         label = _LABELS.CONFIRMDIALOG_MAINLABEL[n>1]
         label += '\n'
@@ -66,8 +67,7 @@ class _Dialog(QDialog, _form()):
     def __init__(self, parent):
         super().__init__(parent)
         self.setupUi(self)
-        self.setWindowTitle(_LABELS.CONFIRMDIALOG_TITLE)
-        self.mainLabel.setText(_LABELS.CONFIRMDIALOG_MAINLABEL2)
+        self.setWindowTitle(_LABELS.CONFIRMDIALOG_TITLE[1])
 
     ########################################################################
     ### Entrypoint

@@ -12,6 +12,8 @@ from qgis.PyQt.QtCore import *
 # Menu indices
 from ..toolsetmenu import SessionMenu as MENU
 
+from .dialog import StorageDialog
+
 ################################################################################
 ### Language
 ################################################################################
@@ -45,4 +47,5 @@ class SessionController:
 
     def startSession(self):
         print('SessionController.startSession')
-
+        parent = self._iface.mainWindow()
+        StorageDialog(parent).askStorageLocation()

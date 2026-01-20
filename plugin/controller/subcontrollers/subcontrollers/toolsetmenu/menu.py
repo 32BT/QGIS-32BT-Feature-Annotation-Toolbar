@@ -16,7 +16,7 @@ _IDENTITY = _MODULE.IDENTITY
 _LANGUAGE = _MODULE.LANGUAGE
 _LABELS = _LANGUAGE.LABELS({
     "SESSIONMENU_TITLE": "Sessionmenu",
-    "SESSIONMENU_ITEM1": "Start Session"})
+    "SESSIONMENU_ITEM1": "Start Session..."})
 
 ################################################################################
 ### SessionMenu

@@ -56,13 +56,28 @@
         "Onverhard"
     ],
 
-    "CONFIRMDIALOG_TITLE":
-        "Actie Bevestigen",
+    "CONFIRMDIALOG_TITLE": [
+        "Verwijderen",
+        "Archiveren"],
     "CONFIRMDIALOG_MAINLABEL": [
         "Er zal {} melding verwijderd worden uit laag '{}'.",
         "Er zullen {} meldingen verwijderd worden uit laag '{}'."],
     "CONFIRMDIALOG_MAINLABEL2":
         "Bevestig de actie om door te gaan.",
     "CONFIRMDIALOG_INFOLABEL":
-        "Toelichting:"
+        "Toelichting:",
+
+    "SESSIONMENU_TITLE":
+        "Sessiemenu",
+    "SESSIONMENU_ITEM1": "Start Sessie...",
+
+    "STORAGEDIALOG_TITLE":
+        "Central Opslag",
+    "STORAGEDIALOG_LABEL": [
+        "Voor deze plugin is een centrale opslagmap vereist.",
+        "Selecteer een map voor centrale opslag."]
+
 }
+
+
+
