@@ -40,7 +40,7 @@ Controller
     ToolController <-- responsible for marker buttons
         ActionManager
             tokenToolActions
-            tokenMenuActions
+            tokenMenuActions (contextmenu)
         ActionHandler
             SessionController
             MarkersController

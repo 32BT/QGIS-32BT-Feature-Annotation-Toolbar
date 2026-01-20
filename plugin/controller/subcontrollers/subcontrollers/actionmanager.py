@@ -12,7 +12,7 @@ from .toolset import TokenTools
 from .toolset import TokenMenu
 
 # The toolbar contains a maptool
-from .qgs.maptools import PanningMarker as PanningMarkerMapTool
+from .subcontrollers.qgs.maptools import PanningMarker as PanningMarkerMapTool
 
 ################################################################################
 ### Definitions
@@ -64,7 +64,7 @@ class ActionManager(QObject):
         self._menus.action(1).triggered.connect(self._parseMenuAction2)
         self._menus.action(2).triggered.connect(self._parseMenuAction3)
 
-        self.lastMapLocation = None
+        #self.lastMapLocation = None
 
 
     def setResponder(self, controller):
@@ -134,7 +134,9 @@ class ActionManager(QObject):
     ########################################################################
 
     def _parseMenuAction1(self):
-        self.canvasClicked(self._menus.lastMapLocation())
+        # eventPosition = self._menu.getLastEventPosition()
+        # eventLocation = convert to map(eventPosition)
+        self.canvasClicked()
 
     def _parseMenuAction2(self):
         self.emitAction(ACTION.INDEX.MODIFY)
@@ -146,8 +148,8 @@ class ActionManager(QObject):
     ### Response
     ########################################################################
 
-    def canvasClicked(self, location, button=None):
-        self.lastMapLocation = location
+    def canvasClicked(self, location=None, button=None):
+        #self.lastMapLocation = location
         self.emitAction(ACTION.INDEX.APPEND)
 
     def emitAction(self, idx):

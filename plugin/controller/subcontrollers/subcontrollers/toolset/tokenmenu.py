@@ -23,7 +23,7 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
 ### ContextMenu
 ################################################################################
 
-from ..qgs.mapcanvas import MapCanvas as MapCanvasController
+from ..subcontrollers.qgs.mapcanvas import MapCanvas
 
 class TokenMenu(QObject):
     updateAction = pyqtSignal(object, object)
@@ -69,9 +69,4 @@ class TokenMenu(QObject):
 
     def indexOfAction(self, action):
         return self._menu.actions().index(action)
-
-    def lastMapLocation(self):
-        eventLoc = self._mapCanvas.getLastEventPosition()
-        mapPoint = self._mapCanvas.getMapPointForEventPosition(eventLoc)
-        return mapPoint
 

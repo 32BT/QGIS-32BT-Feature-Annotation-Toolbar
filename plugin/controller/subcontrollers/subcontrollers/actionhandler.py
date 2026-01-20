@@ -7,10 +7,6 @@ from qgis.PyQt.QtCore import *
 ### Imports
 ################################################################################
 
-# Action indices
-from .actionmanager import ACTION
-from .sessionmenu import SessionMenu as MENU
-
 # ActionHandler handles actions for Sessions and Markers
 from .subcontrollers import SessionController
 from .subcontrollers import MarkersController

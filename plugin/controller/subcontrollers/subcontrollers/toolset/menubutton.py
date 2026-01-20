@@ -11,7 +11,7 @@ from qgis.PyQt.QtWidgets import *
 from .toolset import ToolSet
 
 # MenuButton has SessionMenu attached
-from ..sessionmenu import SessionMenu
+from ..toolsetmenu import SessionMenu
 
 ################################################################################
 ### MenuButton

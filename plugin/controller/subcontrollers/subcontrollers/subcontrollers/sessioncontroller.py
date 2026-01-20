@@ -10,7 +10,7 @@ from qgis.PyQt.QtCore import *
 ################################################################################
 
 # Menu indices
-from ..sessionmenu import SessionMenu as MENU
+from ..toolsetmenu import SessionMenu as MENU
 
 ################################################################################
 ### Language

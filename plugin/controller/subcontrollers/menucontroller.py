@@ -18,7 +18,7 @@ class MenuController:
 
     '''
     Delegate is attached directly to menu.
-    Updates include the menu-toolbarbutton itself, see ResetTools.updateActions.
+    Updates include the menu-toolbarbutton itself, see MenuButton.updateAction.
     '''
     def setDelegate(self, delegate):
         menu = self._menuButton.getMenu()

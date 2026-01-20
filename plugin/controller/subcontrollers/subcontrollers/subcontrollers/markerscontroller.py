@@ -11,15 +11,15 @@ from qgis.PyQt.QtCore import *
 from ..actionmanager import ACTION
 
 # Actions involve dialogs
-from ..dialog import MarkerDialog
-from ..dialog import RemoveDialog
+from .dialog import MarkerDialog
+from .dialog import RemoveDialog
 
 # Require QGS.LAYER and TMS.LAYER functions
-from .. import qgs as QGS
-from .. import tms as TMS
+from . import qgs as QGS
+from . import tms as TMS
 
 # Require MapCanvas utilities
-from ..qgs.mapcanvas import MapCanvas
+from .qgs.mapcanvas import MapCanvas
 
 ################################################################################
 '''
@@ -93,8 +93,7 @@ class MarkersController:
 
     def handleAction(self, sender, idx):
         if idx == ACTION.INDEX.APPEND:
-            location = sender.lastMapLocation
-            return self.startAppend(location)
+            return self.startAppend()
         if idx == ACTION.INDEX.MODIFY:
             return self.startModify()
         if idx == ACTION.INDEX.REMOVE:
@@ -107,7 +106,7 @@ class MarkersController:
         note = self.runInputDialog(layer)
         if note:
             layer = self.assertLayer(layer)
-            mapPoint = self._convertMapPoint(mapPoint, layer.crs())
+            mapPoint = self._getLastMapPoint(layer.crs())
             marker = TMS.Marker(mapPoint, note)
             TMS.LAYER.appendMarker(layer, marker)
             self._layerID = layer.id()
@@ -218,8 +217,12 @@ class MarkersController:
             self._mapCanvas = MapCanvas(self._iface.mapCanvas())
         return self._mapCanvas
 
-    def _convertMapPoint(self, mapPoint, crs):
-        return self.mapCanvas().convertMapPoint(mapPoint, crs)
+    def _getLastMapPoint(self, crs=None):
+        mapCanvas = self.mapCanvas()
+        p = mapCanvas.getLastEventPosition()
+        p = mapCanvas.getMapPointForEventPosition(p)
+        if crs: p = mapCanvas.convertMapPoint(p, crs)
+        return p
 
     def _getMapCrs(self):
         return self.mapCanvas().getCrs()

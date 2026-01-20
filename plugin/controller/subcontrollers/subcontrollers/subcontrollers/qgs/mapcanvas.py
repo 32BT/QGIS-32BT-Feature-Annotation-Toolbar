@@ -43,6 +43,12 @@ class MapCanvas:
     def getLastEventPosition(self):
         return self._mapCanvas.mouseLastXY()
 
+    def getLastEventLocation(self, crs=None):
+        p = self.getLastEventPosition()
+        p = self.getMapPointForEventPosition(p)
+        if crs: p = self.convertMapPoint(p, crs)
+        return p
+
     # mappoint for mouseposition
     def getMapPointForEventPosition(self, eventPosition):
         # Translate eventPosition to mapPoint
