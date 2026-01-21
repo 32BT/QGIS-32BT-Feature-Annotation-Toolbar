@@ -24,4 +24,7 @@ class TokenTools(ToolSet):
         })
 
         # Add Marker is a MapTool:
-        self._actions[0].setCheckable(True)
+        self.action(0).setCheckable(True)
+        self.action(0).setObjectName("actionAddMarker")
+        self.action(1).setObjectName("actionEditMarker")
+        self.action(2).setObjectName("actionRemoveMarker")

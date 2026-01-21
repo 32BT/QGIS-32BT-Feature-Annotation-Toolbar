@@ -7,9 +7,6 @@ from qgis.PyQt.QtWidgets import *
 from qgis.PyQt.QtGui import *
 
 ################################################################################
-import sys
-_MODULE = sys.modules.get(__name__.split('.')[0])
-_LABELS = _MODULE.LANGUAGE.LABELS()
 
 def _objectname(name):
     return name.replace(" ", "")
@@ -17,17 +14,17 @@ def _objectname(name):
 
 
 class ToolSet(QObject):
-    updateAction = pyqtSignal(object, object)
-    handleAction = pyqtSignal(object, object)
+    updateAction = pyqtSignal(object, object, object)
+    handleAction = pyqtSignal(object, object, object)
 
-    def __init__(self, toolBar, info={}):
+    def __init__(self, toolBox, info={}):
         super().__init__()
-        self._toolBar = toolBar
+        self._toolBox = toolBox
         self._actions = []
-        self._prepare(toolBar, info)
+        self._prepare(toolBox, info)
 
-    def toolBar(self):
-        return self._toolBar
+    def toolBox(self):
+        return self._toolBox
 
     def actions(self):
         return self._actions
@@ -39,9 +36,9 @@ class ToolSet(QObject):
     ########################################################################
     ### Prepare
     ########################################################################
-    def _prepare(self, toolBar, info={}):
+    def _prepare(self, toolBox, info={}):
         self._actions = self._prepareActions(info)
-        self._prepareToolBar(toolBar, self._actions)
+        self._prepareToolBox(toolBox, self._actions)
 
     '''
     Create actions from a dictionary with actionName, iconName pairs.
@@ -49,14 +46,16 @@ class ToolSet(QObject):
     def _prepareActions(self, info={}):
         actions = []
         for name, icon in info.items():
+            idx = len(actions)
             action = self._prepareAction(icon, name)
             actions.append(action)
         return actions
 
     def _prepareAction(self, icon, name, proc=None):
+
         if isinstance(icon, str):
             icon = self._find_icon(icon)
-        action = QAction(icon, _LABELS(name))
+        action = QAction(icon or QIcon(), name)
         action.setObjectName(_objectname(name))
         action.setEnabled(False)
         if proc: action.triggered.connect(proc)
@@ -96,28 +95,36 @@ class ToolSet(QObject):
 
     ########################################################################
 
-    def _prepareToolBar(self, toolBar, actions):
-        # Add a separator if there are other actions in toolBar
-        if toolBar.actions():
-            toolBar.addSeparator()
-        toolBar.addActions(actions)
-        toolBar.actionTriggered.connect(self.parseToolBarAction)
+    def _prepareToolBox(self, toolBox, actions):
+        # Add a separator if there are other actions in toolBox
+        if toolBox.actions():
+            toolBox.addSeparator()
+        toolBox.addActions(actions)
+        self.getToolBoxTrigger().connect(self.parseToolBoxAction)
+
+    def getToolBoxTrigger(self):
+        toolBox = self._toolBox
+        try: return toolBox.triggered
+        except AttributeError: pass
+        try: return toolBox.actionTriggered
+        except AttributeError: pass
+
 
 
     def replaceActions(self, info={}):
         beforeAction = self.removeActions()
         self._actions = self._prepareActions(info)
         for action in self._actions:
-            self._toolBar.insertAction(beforeAction, action)
+            self._toolBox.insertAction(beforeAction, action)
 
     def removeActions(self):
         beforeAction = None
         if self._actions:
-            index = self._toolBar.actions().index(self._actions[0])
+            index = self._toolBox.actions().index(self._actions[0])
             for action in self._actions:
-                self._toolBar.removeAction(action)
-            if index < len(self._toolBar.actions()):
-                beforeAction = self._toolBar.actions()[index]
+                self._toolBox.removeAction(action)
+            if index < len(self._toolBox.actions()):
+                beforeAction = self._toolBox.actions()[index]
             self._actions = None
         return beforeAction
 
@@ -129,8 +136,8 @@ class ToolSet(QObject):
     statechanges.
     '''
     def updateActions(self):
-        for action in self._actions:
-            self.updateAction.emit(self, action)
+        for idx, action in enumerate(self._actions):
+            self.updateAction.emit(self, action, idx)
 
     def setEnabled(self, enabled=True, index=None):
         if index is None:
@@ -153,7 +160,7 @@ class ToolSet(QObject):
     ToolSet is a subset of actions in a ToolBar.
     If incoming action belongs to our subset -> parse action.
     '''
-    def parseToolBarAction(self, action):
+    def parseToolBoxAction(self, action):
         if action in self._actions:
             self.parseAction(action)
 
@@ -170,6 +177,7 @@ class ToolSet(QObject):
         with that name.
     '''
     def parseAction(self, action):
-        self.handleAction.emit(self, action)
+        idx = self.actions().index(action)
+        self.handleAction.emit(self, action, idx)
 
 

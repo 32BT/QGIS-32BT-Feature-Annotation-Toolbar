@@ -64,8 +64,6 @@ class ActionManager(QObject):
         self._menus.action(1).triggered.connect(self._parseMenuAction2)
         self._menus.action(2).triggered.connect(self._parseMenuAction3)
 
-        #self.lastMapLocation = None
-
 
     def setResponder(self, controller):
         self.updateAction.connect(controller.updateAction)
@@ -85,8 +83,7 @@ class ActionManager(QObject):
     It is transferred to the responder (ActionHandler)
     '''
     # Translate sender.action to ACTION.INDEX
-    def _updateAction(self, sender, action):
-        idx = sender.actions().index(action)
+    def _updateAction(self, sender, action, idx):
         self.updateAction.emit(action, idx+1)
 
     ########################################################################
@@ -95,7 +92,7 @@ class ActionManager(QObject):
     '''
     Not implemented because this controller uses direct connections
     '''
-    def _handleAction(self, sender, action):
+    def _handleAction(self, sender, action, idx):
         raise NotImplementedError
 
     ########################################################################

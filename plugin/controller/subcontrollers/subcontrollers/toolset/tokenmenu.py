@@ -23,50 +23,26 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
 ### ContextMenu
 ################################################################################
 
+from .toolset import ToolSet
 from ..qgs.mapcanvas import MapCanvas
 
-class TokenMenu(QObject):
-    updateAction = pyqtSignal(object, object)
-    handleAction = pyqtSignal(object, object)
+class TokenMenu(ToolSet):
 
     def __init__(self, mapCanvas):
-        super().__init__()
+        super().__init__(QMenu(_LABELS.MENU_TITLE), {
+            _LABELS.MENU_ITEM1: None,
+            _LABELS.MENU_ITEM2: None,
+            _LABELS.MENU_ITEM3: None})
         self._mapCanvas = MapCanvas(mapCanvas)
         self._mapCanvas.connectMenuHandler(self.prepareContextMenu)
-        self._menu = self.startMenu()
 
     def __del__(self):
         self._mapCanvas.disconnectMenuHandler(self.prepareContextMenu)
         self._mapCanvas = None
 
-
-    def startMenu(self):
-        menu = QMenu(_LABELS.MENU_TITLE)
-        menu.addAction(_LABELS.MENU_ITEM1)
-        menu.addAction(_LABELS.MENU_ITEM2)
-        menu.addAction(_LABELS.MENU_ITEM3)
-        menu.triggered.connect(self.parseMenuAction)
-        return menu
-
-
     def prepareContextMenu(self, menu: QMenu, event: QgsMapMouseEvent):
-        for action in self.actions():
-            self.updateAction.emit(self, action)
+        self.updateActions()
         if len(menu.actions()) == 1:
             menu.addSeparator()
-        action = menu.addMenu(self._menu)
-
-    def parseMenuAction(self, action):
-        if action in self._menu.actions():
-            self.handleAction.emit(self, action)
-
-    def actions(self):
-        return self._menu.actions()
-
-    def action(self, idx):
-        try: return self._menu.actions()[idx]
-        except IndexError: pass
-
-    def indexOfAction(self, action):
-        return self._menu.actions().index(action)
+        action = menu.addMenu(self._toolBox)
 

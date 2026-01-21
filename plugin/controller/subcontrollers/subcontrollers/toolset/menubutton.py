@@ -31,7 +31,7 @@ class MenuButton:
         self._menu.aboutToHide.connect(self.menuDidFinish)
 
         self._action = QAction()
-        self._action.setObjectName("SessionMenuAction")
+        self._action.setObjectName("actionSessionMenu")
         self._action.setIcon(ToolSet._load_icon(iconName))
         self._action.setText(self._menu.title())
         self._action.triggered.connect(self.showMenu)
