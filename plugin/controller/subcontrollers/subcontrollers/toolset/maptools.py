@@ -14,7 +14,7 @@ we release the mousebutton. In addition, if we want to reset our tool on
 canvasClicked, we should not use mousedown, because a subsequent mouseup event
 will then be transmitted to the new tool.
 '''
-class Marker(QgsMapToolEmitPoint):
+class MarkerMapTool(QgsMapToolEmitPoint):
     canvasUnclicked = pyqtSignal(object, object)
 
     def canvasReleaseEvent(self, event):
@@ -25,7 +25,7 @@ class Marker(QgsMapToolEmitPoint):
 ### Marker MapTool with panning
 ################################################################################
 
-class PanningMarker(Marker):
+class PanningMarkerMapTool(MarkerMapTool):
     def __init__(self, canvas):
         super().__init__(canvas)
         self.resetTracking()

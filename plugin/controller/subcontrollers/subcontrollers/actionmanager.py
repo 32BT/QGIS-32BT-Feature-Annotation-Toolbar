@@ -12,7 +12,7 @@ from .toolset import TokenTools
 from .toolset import TokenMenu
 
 # The toolbar contains a maptool
-from .qgs.maptools import PanningMarker as PanningMarkerMapTool
+from .toolset.maptools import PanningMarkerMapTool
 
 ################################################################################
 ### Definitions

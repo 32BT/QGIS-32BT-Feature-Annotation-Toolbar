@@ -15,11 +15,11 @@ from .dialogs import MarkerDialog
 from .dialogs import RemoveDialog
 
 # Require QGS.LAYER and TMS.LAYER functions
-from .. import qgs as QGS
-from .. import tms as TMS
+from . import qgs as QGS
+from . import tms as TMS
 
 # Require MapCanvas utilities
-from ..qgs.mapcanvas import MapCanvas
+from .qgs.mapcanvas import MapCanvas
 
 ################################################################################
 '''
