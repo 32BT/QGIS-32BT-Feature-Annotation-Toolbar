@@ -32,7 +32,7 @@ class Database(FSFolder):
     def __init__(self, path=None, name=None):
         if not path and not name:
             path = self.getGlobalPath()
-        super().__init__(self, path, name)
+        super().__init__(path, name)
 
     def getSessionSet(self, name=None):
         return FSFolder(self._path, name or self.ITEM_STORAGE_NAME)

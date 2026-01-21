@@ -18,7 +18,8 @@ from .qgs.maptools import PanningMarker as PanningMarkerMapTool
 ### Definitions
 ################################################################################
 '''
-ActionManager translates toolactions and contextmenuactions to an ACTION.INDEX
+ActionManager merges toolbar- and menuactions into a single actionsignal.
+The signal emits an ACTION.INDEX.
 '''
 class ACTION:
     class INDEX:
@@ -28,12 +29,16 @@ class ACTION:
 
 ################################################################################
 '''
-Actions and Response have been split into separate files for clarity.
+Actions and Response have been split into separate files for clarity:
+    ActionManager creates the actions
+    ActionHandler responds to actions
 
-ActionsController merges toolbar- and menuactions into a single actionsignal.
-Reset is a meta-action which is handled by the main controller.
+ToolController fuses them together.
 
-ActionsController emits two signals:
+The sessionmenu is handled separately. Its actions are channeled through
+ToolController directly to ActionHandler.
+
+ActionManager emits two signals:
 
     updateAction.emit(...)
     -- Allows Responder to update actionstates.
@@ -48,22 +53,17 @@ class ActionManager(QObject):
 
     def __init__(self, iface, toolBar):
         super().__init__()
-
         self._iface = iface
 
         # Toolbar buttons
         self._tools = TokenTools(toolBar)
         self._tools.updateAction.connect(self._updateAction)
-        self._tools.action(0).triggered.connect(self._parseToolAction1)
-        self._tools.action(1).triggered.connect(self._parseToolAction2)
-        self._tools.action(2).triggered.connect(self._parseToolAction3)
+        self._tools.handleAction.connect(self._handleAction)
 
         # Context menu
         self._menus = TokenMenu(iface.mapCanvas())
         self._menus.updateAction.connect(self._updateAction)
-        self._menus.action(0).triggered.connect(self._parseMenuAction1)
-        self._menus.action(1).triggered.connect(self._parseMenuAction2)
-        self._menus.action(2).triggered.connect(self._parseMenuAction3)
+        self._menus.handleAction.connect(self._handleAction)
 
 
     def setResponder(self, controller):
@@ -73,9 +73,10 @@ class ActionManager(QObject):
     ########################################################################
     ### Update Actions
     ########################################################################
-
-    # Validate toolbar actions, called via maincontroller.
-    # (menu actions are validated on-demand)
+    '''
+    Validate toolbar actions, called via maincontroller Selectionchanges.
+    (menu actions are validated on-demand)
+    '''
     def updateActions(self):
         self._tools.updateActions()
 
@@ -91,10 +92,15 @@ class ActionManager(QObject):
     ### Handle Actions
     ########################################################################
     '''
-    Not implemented because this controller uses direct connections
+    Transfer all actions to responder, except toolbarAction1 which first
+    needs to run a MapTool.
     '''
     def _handleAction(self, sender, action, idx):
-        raise NotImplementedError
+        #raise NotImplementedError
+        if action != self._tools.action(0):
+            self.handleAction.emit(self, idx+1)
+        else:
+            self._parseToolAction1(action.isChecked())
 
     ########################################################################
     ### ToolAction Handlers
@@ -103,8 +109,6 @@ class ActionManager(QObject):
     Action 1 is different depending on toolbutton vs menuitem:
     - toolAction0 starts a MapTool to acquire a mappoint from the user.
     - menuAction0 fetches the mapPoint from the contextmenu event.
-
-    Actions 2&3 are equivalent for both.
     '''
     def _parseToolAction1(self, isChecked):
         canvas = self._iface.mapCanvas()
@@ -121,33 +125,9 @@ class ActionManager(QObject):
             self._marker.canvasClicked.connect(self.canvasClicked)
         return self._marker
 
-    def _parseToolAction2(self):
-        self._parseMenuAction2()
-
-    def _parseToolAction3(self):
-        self._parseMenuAction3()
-
-    ########################################################################
-    ### MenuAction Handlers
-    ########################################################################
-
-    def _parseMenuAction1(self):
-        self.canvasClicked()
-
-    def _parseMenuAction2(self):
-        self.emitAction(ACTION.INDEX.MODIFY)
-
-    def _parseMenuAction3(self):
-        self.emitAction(ACTION.INDEX.REMOVE)
-
-    ########################################################################
-    ### Response
-    ########################################################################
-
     def canvasClicked(self, location=None, button=None):
         #self.lastMapLocation = location
-        self.emitAction(ACTION.INDEX.APPEND)
+        self.handleAction.emit(self, ACTION.INDEX.APPEND)
 
-    def emitAction(self, idx):
-        self.handleAction.emit(self, idx)
+
 

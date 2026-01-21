@@ -35,23 +35,25 @@ class ActionHandler:
         return self._markersController
 
     ########################################################################
-    ### Update Action
+    ### Handle Tool Actions (toolbar and contextmenu)
     ########################################################################
-
+    '''
+    Receives ACTION.INDEX types
+    '''
     def updateAction(self, action, idx):
-        print('ActionHandler.updateAction', action.text(), idx)
         return self.markersController.updateAction(action, idx)
-
-    def updateMenuAction(self, sender, action, idx):
-        print('ActionHandler.updateMenuAction', action.text(), idx)
-        return self.sessionController.updateAction(action, idx)
-
-    ########################################################################
-    ### Handle Action
-    ########################################################################
 
     def handleAction(self, sender, idx):
         return self.markersController.handleAction(sender, idx)
+
+    ########################################################################
+    ### Handle Menu Actions (sessionmenu)
+    ########################################################################
+    '''
+    Receives MENU.ITEM.INDEX types
+    '''
+    def updateMenuAction(self, sender, action, idx):
+        return self.sessionController.updateAction(action, idx)
 
     def handleMenuAction(self, sender, action, idx):
         return self.sessionController.handleAction(sender, idx)
