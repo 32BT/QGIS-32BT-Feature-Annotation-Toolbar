@@ -12,6 +12,8 @@ from qgis.PyQt.QtCore import *
 # Menu indices
 from ..toolsetmenu import SessionMenu as MENU
 
+from .database import Database
+
 from .dialog import StorageDialog
 
 ################################################################################
@@ -37,15 +39,32 @@ class SessionController:
             return self.validateStartSession()
         if idx == MENU.ITEM.INDEX.START_SESSION:
             return self.validateStartSession()
+        if idx == MENU.ITEM.INDEX.STORAGE_LOCATION:
+            return self.validateStorageLocation()
 
     def validateStartSession(self):
+        return True
+
+    def validateStorageLocation(self):
         return True
 
     def handleAction(self, sender, idx):
         if idx == MENU.ITEM.INDEX.START_SESSION:
             return self.startSession()
+        if idx == MENU.ITEM.INDEX.STORAGE_LOCATION:
+            return self.askStorageLocation()
 
     def startSession(self):
         print('SessionController.startSession')
+        path = Database.getGlobalPath()
+        path = path or self.askStorageLocation(path)
+        if path:
+            print(path)
+
+    def askStorageLocation(self, path=None):
         parent = self._iface.mainWindow()
-        StorageDialog(parent).askStorageLocation()
+        path = path or Database.getGlobalPath()
+        path = StorageDialog(parent).askStorageLocation(path)
+        if path:
+            Database.setGlobalPath(path)
+            return path

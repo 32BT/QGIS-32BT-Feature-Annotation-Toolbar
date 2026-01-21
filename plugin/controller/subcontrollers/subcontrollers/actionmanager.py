@@ -80,7 +80,7 @@ class ActionManager(QObject):
 
     '''
     Both Toolbar as well as Contextmenu actions trigger updates.
-    It is transferred to the responder (ActionHandler)
+    These are transferred to the responder (ActionHandler)
     '''
     # Translate sender.action to ACTION.INDEX
     def _updateAction(self, sender, action, idx):
@@ -131,8 +131,6 @@ class ActionManager(QObject):
     ########################################################################
 
     def _parseMenuAction1(self):
-        # eventPosition = self._menu.getLastEventPosition()
-        # eventLocation = convert to map(eventPosition)
         self.canvasClicked()
 
     def _parseMenuAction2(self):

@@ -16,7 +16,9 @@ _IDENTITY = _MODULE.IDENTITY
 _LANGUAGE = _MODULE.LANGUAGE
 _LABELS = _LANGUAGE.LABELS({
     "SESSIONMENU_TITLE": "Sessionmenu",
-    "SESSIONMENU_ITEM1": "Start Session..."})
+    "SESSIONMENU_ITEM1": "Storage location...",
+    "SESSIONMENU_ITEM2": "Start session..."
+    })
 
 ################################################################################
 ### SessionMenu
@@ -32,7 +34,8 @@ class SessionMenu(QMenu):
         INDEX                = -1
     class ITEM:
         class INDEX:
-            START_SESSION    = 0
+            STORAGE_LOCATION = 0
+            START_SESSION    = 1
 
     ########################################################################
 
@@ -42,25 +45,25 @@ class SessionMenu(QMenu):
     def __init__(self, parent=None):
         super().__init__(_LABELS.SESSIONMENU_TITLE, parent)
         self.setObjectName("fat:sessionMenu")
-        action = self.addAction(_LABELS.SESSIONMENU_ITEM1)
-        action.setObjectName("fat:menuActionStartSession")
 
+        action = self.addAction(_LABELS.SESSIONMENU_ITEM1)
+        action.setObjectName("fat:menuActionStorageLocation")
+        action = self.addSeparator()
+        action = self.addAction(_LABELS.SESSIONMENU_ITEM2)
+        action.setObjectName("fat:menuActionStartSession")
+        self._actions = [a for a in self.actions() if not a.isSeparator()]
 
         self.aboutToShow.connect(self.updateActions)
         self.triggered.connect(self.actionTriggered)
 
-
-
     ########################################################################
 
     def updateActions(self):
-        actions = self.actions()
-        for idx, action in enumerate(actions):
+        for idx, action in enumerate(self._actions):
             self.emitUpdate(action, idx)
 
     def actionTriggered(self, action):
-        actions = self.actions()
-        idx = actions.index(action)
+        idx = self._actions.index(action)
         self.emitAction(action, idx)
 
     ########################################################################

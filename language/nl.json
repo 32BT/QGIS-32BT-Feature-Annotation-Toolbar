@@ -25,10 +25,13 @@
 
     "SESSIONMENU_TITLE":
         "Sessiemenu",
-    "SESSIONMENU_ITEM1": "Start Sessie...",
+    "SESSIONMENU_ITEM1":
+        "Centrale opslagmap...",
+    "SESSIONMENU_ITEM2":
+        "Start sessie...",
 
     "STORAGEDIALOG_TITLE":
-        "Central Opslag",
+        "Centrale Opslag",
     "STORAGEDIALOG_LABEL": [
         "Voor deze plugin is een centrale opslagmap vereist.",
         "Selecteer een map voor centrale opslag."],
