@@ -107,6 +107,7 @@ class MarkersController:
             layer = self.assertLayer(layer)
             mapPoint = self._getLastMapPoint(layer.crs())
             marker = TMS.Marker(mapPoint, note)
+            print(marker.as_json())
             TMS.LAYER.appendMarker(layer, marker)
             self._layerID = layer.id()
 
