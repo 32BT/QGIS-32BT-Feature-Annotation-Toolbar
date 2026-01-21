@@ -60,7 +60,7 @@ class SessionController:
         path = path or self.askStorageLocation(path)
         if path:
             db = Database(path)
-            sessionSet = None #db.getSessionSet()
+            sessionSet = db.getSessionSet()
             parent = self._iface.mainWindow()
             SessionDialog(parent).askSessionName(sessionSet)
             print(path)

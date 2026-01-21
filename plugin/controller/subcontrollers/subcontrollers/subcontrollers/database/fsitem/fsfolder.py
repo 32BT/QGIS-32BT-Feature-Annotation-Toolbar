@@ -1,5 +1,5 @@
 
-import os, datetime
+import os, time, datetime
 
 from .fsitem import FSItem
 from .fsfile import FSFile
@@ -92,7 +92,7 @@ class FSFolder(FSItem):
         return self.itemCount()
 
     def __contains__(self, name):
-        return self.exists(name)
+        return self.itemExists(name)
 
     def itemPath(self, itemName=''):
         return os.path.join(self.path(), itemName)
@@ -100,14 +100,14 @@ class FSFolder(FSItem):
     def itemCount(self):
         return len(list(self.itemNames()))
 
-    def itemNames(self, filterProc=None):
-        if self.exists():
-            filterProc = filterProc or self.validateItemName
-            for name in os.listdir(self._path):
-                if filterProc(name): yield(name)
+    def hasItems(self):
+        for name in self.itemNames():
+            return True
+        return False
 
-    def validateItemName(self, name):
-        return True
+    def itemNames(self, filterProc=None):
+        if not self.exists(): return []
+        return filter(filterProc, os.listdir(self._path))
 
     def fileItemNames(self):
         return self.itemNames(self.isFile)
@@ -115,12 +115,17 @@ class FSFolder(FSItem):
     def folderItemNames(self):
         return self.itemNames(self.isFolder)
 
+    def itemNamesWithExt(self, ext=None):
+        return self.itemNames(lambda n: n.endswith(ext))
+
     ########################################################################
     ### Default to Textfiles
     ########################################################################
     def saveItem(self, name, text):
         path = self.itemPath(name)
+        used = os.path.exists(path)
         FSFile(path).writeText(text)
+        return used
 
     def loadItem(self, name):
         path = self.itemPath(name)
@@ -131,6 +136,16 @@ class FSFolder(FSItem):
         itemPath = self.itemPath(itemName)
         if os.path.exists(itemPath):
             os.remove(itemPath)
+            return True
+        return False
+
+    def trash(self, itemName):
+        srcPath = self.itemPath(itemName)
+        if os.path.exists(srcPath):
+            itemName = str(time.monotonic_ns())+'_'+itemName
+            trash = self.__class__(self.itemPath('.trash')).start()
+            dstPath = trash.itemPath(itemName)
+            os.rename(srcPath, dstPath)
             return True
         return False
 

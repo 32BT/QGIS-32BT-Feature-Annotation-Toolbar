@@ -11,6 +11,8 @@ from .fsitem import FSFolder
 '''
 '''
 class Database(FSFolder):
+    ITEM_STORAGE_NAME = 'sessions'
+
     ########################################################################
     ### Central Storage Location
     ########################################################################
@@ -27,6 +29,6 @@ class Database(FSFolder):
             return settings.savePath(cls._PATH_KEY, path)
     ########################################################################
 
-    def getSessionSet(self, name):
-        return FSFolder(self._path, name)
+    def getSessionSet(self, name=None):
+        return FSFolder(self._path, name or self.ITEM_STORAGE_NAME)
 

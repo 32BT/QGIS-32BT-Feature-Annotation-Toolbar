@@ -4,7 +4,7 @@
 '''
 Log entries are stored by date
 '''
-import os, datetime
+import datetime
 
 def local_time():
     return datetime.datetime.now().astimezone()
@@ -34,3 +34,15 @@ class LOGFile(CSVFile):
     @classmethod
     def get_user(cls):
         return os.getlogin().lower()
+
+    @classmethod
+    def safe_string(cls, txt):
+        txt = txt.replace('"', "'")
+        return '"{}"'.format(txt)
+
+    def append(self, *args):
+        date = self.get_date()
+        user = self.get_user()
+        values = (date, user) + args
+        super().appendValues(*values)
+

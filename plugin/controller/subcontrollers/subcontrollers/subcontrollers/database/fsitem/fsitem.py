@@ -1,5 +1,5 @@
 
-import os
+import os, time
 
 ################################################################################
 ### Utilities
@@ -31,6 +31,7 @@ def path_expanduser(path):
 def path_parentpath(path):
     # Do not use os.path.dirname since it's an extremely confusing misnomer
     return os.path.split(path)[0]
+
 
 ################################################################################
 ### FSItem
@@ -101,18 +102,49 @@ class FSItem:
         return self._path
 
     def exists(self):
-        return self.path_exists(self.path())
+        return self.path_exists(self._path)
 
     def isFile(self):
-        return self.path_isfile(self.path())
+        return self.path_isfile(self._path)
 
     def isDirectory(self):
-        return self.path_isdirectory(self.path())
+        return self.path_isdirectory(self._path)
+
+    def parentPath(self):
+        return self.path_parentpath(self._path)
+
+    def shrinkPath(self):
+        return self.path_shrinkuser(self._path)
+
+    def chopPath(self, path):
+        return os.path.relpath(path, self._path)
+
+    def joinPath(self, path):
+        return os.path.join(self._path, path)
+
+    def splitExtension(self):
+        return os.path.splitext(self._path)
 
     def parent(self):
         return self.__class__(self.parentPath())
 
-    def parentPath(self):
-        return self.path_parentpath(self.path())
+    def rename(self, name):
+        item = self.__class__(self.parentPath(), name)
+        if self.exists():
+            os.rename(self.path(), item.path())
+        return item
 
 ################################################################################
+### Temporary backup
+################################################################################
+
+class replace:
+    def __init__(self, item):
+        self._item = item.rename(item.name()+'.bck')
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        if args[0] is None:
+            self._item.remove()
