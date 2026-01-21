@@ -1,4 +1,5 @@
 
+import os
 
 from qgis.core import *
 from qgis.gui import *
@@ -9,7 +10,7 @@ from qgis.PyQt.QtCore import *
 ### Imports
 ################################################################################
 
-# Menu indices
+# Menu definitions
 from ..toolset.sessionmenu import SessionMenu as MENU
 
 from .database import Database
@@ -24,12 +25,17 @@ import sys
 _MODULE = sys.modules.get(__name__.split('.')[0])
 _LABELS = _MODULE.LANGUAGE.LABELS({})
 
-
+################################################################################
+### Controller
 ################################################################################
 
 class SessionController:
     def __init__(self, iface):
         self._iface = iface
+
+    ########################################################################
+    ### Update Action
+    ########################################################################
 
     def updateAction(self, action, idx):
         action.setEnabled(self.validateAction(action, idx))
@@ -48,6 +54,10 @@ class SessionController:
     def validateStorageLocation(self):
         return True
 
+    ########################################################################
+    ### Handle Action
+    ########################################################################
+
     def handleAction(self, sender, idx):
         if idx == MENU.ITEM.INDEX.START_SESSION:
             return self.startSession()
@@ -56,14 +66,23 @@ class SessionController:
 
     def startSession(self):
         print('SessionController.startSession')
-        path = Database.getGlobalPath()
-        path = path or self.askStorageLocation(path)
+        path = self.getStorageLocation()
         if path:
             db = Database(path)
             sessionSet = db.getSessionSet()
             parent = self._iface.mainWindow()
-            SessionDialog(parent).askSessionName(sessionSet)
-            print(path)
+            name = SessionDialog(parent).askSessionName(sessionSet)
+            print(path, name)
+
+    ########################################################################
+    ### Storage Location
+    ########################################################################
+
+    def getStorageLocation(self):
+        path = Database.getGlobalPath()
+        if not path or not os.path.exists(path):
+            path = self.askStorageLocation(path)
+        return path
 
     def askStorageLocation(self, path=None):
         parent = self._iface.mainWindow()
@@ -72,3 +91,5 @@ class SessionController:
         if path:
             Database.setGlobalPath(path)
             return path
+
+    ########################################################################

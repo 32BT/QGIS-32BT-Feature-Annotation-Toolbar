@@ -74,4 +74,4 @@ class Dialog(QDialog, _form()):
         self.comboBox.setEditText(sessionSet.generateItemName())
 
     def textValue(self):
-        return self.comboBox.currentText()
+        return self.comboBox.currentText().strip()
