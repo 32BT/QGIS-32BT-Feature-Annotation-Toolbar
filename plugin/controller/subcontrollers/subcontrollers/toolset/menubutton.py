@@ -27,18 +27,17 @@ class MenuButton:
         So we just build a full actionchain ourselves.
         '''
         self._menu = SessionMenu()
-        self._menu.setObjectName("SessionMenu")
         self._menu.aboutToHide.connect(self.menuDidFinish)
 
         self._action = QAction()
-        self._action.setObjectName("SessionMenuAction")
+        self._action.setObjectName("toolbarActionSessionMenu")
         self._action.setIcon(ToolSet._load_icon(iconName))
         self._action.setText(self._menu.title())
         self._action.triggered.connect(self.showMenu)
         #self._actions.append(self._action)
 
         self._button = QToolButton()
-        self._button.setObjectName("SessionMenuButton")
+        self._button.setObjectName("toolbarButtonSessionMenu")
         self._button.setDefaultAction(self._action)
         toolBar.addWidget(self._button)
 

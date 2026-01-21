@@ -41,10 +41,15 @@ class SessionMenu(QMenu):
 
     def __init__(self, parent=None):
         super().__init__(_LABELS.SESSIONMENU_TITLE, parent)
+        self.setObjectName("fat:sessionMenu")
         action = self.addAction(_LABELS.SESSIONMENU_ITEM1)
+        action.setObjectName("fat:menuActionStartSession")
+
 
         self.aboutToShow.connect(self.updateActions)
         self.triggered.connect(self.actionTriggered)
+
+
 
     ########################################################################
 
