@@ -30,6 +30,7 @@ def _round(v, p=3):
 ################################################################################
 
 import json
+from qgis.core import QgsFeature, QgsPoint
 from .. import qgs as QGS
 
 ################################################################################
@@ -78,6 +79,17 @@ class Marker:
         date = QGS.FEATURE.getValue(F, 'date')
         note = QGS.FEATURE.getValue(F, 'note')
         return Marker(P, note, date, guid)
+
+    def as_qgsfeature(self, fields):
+        F = QgsFeature(fields)
+        P = QgsPoint(*self.location())
+        F.setGeometry(P)
+        QGS.FEATURE.setValue(F, 'flag', self._flag)
+        QGS.FEATURE.setValue(F, 'guid', self._guid)
+        QGS.FEATURE.setValue(F, 'date', self._date)
+        QGS.FEATURE.setValue(F, 'note', self._note)
+        return F
+
 
     @classmethod
     def from_json(cls, src):
