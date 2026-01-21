@@ -1,33 +1,38 @@
 {
+    "Feature Annotation Toolbar":
+        "Werkbalk Objectannotatie",
+
     "TOOLBAR_TITLE":
-    "Werkbalk Objectannotatie",
+        "Werkbalk Objectannotatie",
 
+    "TOOLBAR_ITEM0":
+        "Sessiemenu",
     "TOOLBAR_ITEM1":
-    "Toevoegen",
-
+        "Notitie Toevoegen",
     "TOOLBAR_ITEM2":
-    "Wijzigen",
-
+        "Notitie Wijzigen",
     "TOOLBAR_ITEM3":
-    "Verwijderen",
+        "Notitie Verwijderen",
 
-    "MENU_TITLE":
-    "Notitie",
-
-    "MENU_ITEM1":
-    "Aanmaken...",
-
-    "MENU_ITEM2":
-    "Wijzigen...",
-
-    "MENU_ITEM3":
+    "CTXMENU_TITLE":
+        "Notitie",
+    "CTXMENU_ITEM1":
+        "Aanmaken...",
+    "CTXMENU_ITEM2":
+        "Wijzigen...",
+    "CTXMENU_ITEM3":
     "Verwijderen...",
 
-    "Feature Annotation Toolbar": "Werkbalk Objectannotatie",
-    "Start Session": "Sessie Starten",
-    "Add Marker": "Melding Toevoegen",
-    "Edit Marker": "Melding Wijzigen",
-    "Remove Marker": "Melding Verwijderen",
+    "SESSIONMENU_TITLE":
+        "Sessiemenu",
+    "SESSIONMENU_ITEM1": "Start Sessie...",
+
+    "STORAGEDIALOG_TITLE":
+        "Central Opslag",
+    "STORAGEDIALOG_LABEL": [
+        "Voor deze plugin is een centrale opslagmap vereist.",
+        "Selecteer een map voor centrale opslag."],
+
     "Marker": "Melding",
     "Markers": "Meldingen",
 
@@ -65,18 +70,7 @@
     "CONFIRMDIALOG_MAINLABEL2":
         "Bevestig de actie om door te gaan.",
     "CONFIRMDIALOG_INFOLABEL":
-        "Toelichting:",
-
-    "SESSIONMENU_TITLE":
-        "Sessiemenu",
-    "SESSIONMENU_ITEM1": "Start Sessie...",
-
-    "STORAGEDIALOG_TITLE":
-        "Central Opslag",
-    "STORAGEDIALOG_LABEL": [
-        "Voor deze plugin is een centrale opslagmap vereist.",
-        "Selecteer een map voor centrale opslag."]
-
+        "Toelichting:"
 }
 
 

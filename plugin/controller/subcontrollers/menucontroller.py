@@ -9,16 +9,16 @@ from .subcontrollers.toolset.menubutton import MenuButton
 '''
 '''
 class MenuController:
-
-    def __init__(self, iface, toolBar, icon="menuButton"):
-        self._menuButton = MenuButton(toolBar, icon)
+    def __init__(self, iface, toolBar):
+        self._menuButton = MenuButton(toolBar)
 
     def updateActions(self):
         self._menuButton.updateAction()
 
     '''
     Delegate is attached directly to menu.
-    Updates include the menu-toolbarbutton itself, see MenuButton.updateAction.
+    Updates channeled by the menu include the menu-toolbarbutton itself,
+    see MenuButton.updateAction which uses the menu to emit the updaterequest.
     '''
     def setDelegate(self, delegate):
         menu = self._menuButton.getMenu()

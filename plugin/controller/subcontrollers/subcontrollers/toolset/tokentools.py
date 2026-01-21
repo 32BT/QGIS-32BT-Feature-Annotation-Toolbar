@@ -2,18 +2,33 @@
 
 from .toolset import ToolSet
 
+################################################################################
+### Language
+################################################################################
+'''
+'''
+import sys
+_MODULE = sys.modules.get(__name__.split('.')[0])
+_LABELS = _MODULE.LANGUAGE.LABELS({
+    "TOOLBAR_ITEM1": "Add Marker",
+    "TOOLBAR_ITEM2": "Edit Marker",
+    "TOOLBAR_ITEM3": "Remove Marker"})
+
+################################################################################
+### TokenTools
+################################################################################
 
 class TokenTools(ToolSet):
     class TOOL:
         class BUTTON1:
-            NAME = "Add Marker"
-            ICON = "AddMarker"
+            NAME = _LABELS.TOOLBAR_ITEM1
+            ICON = "marker_append"
         class BUTTON2:
-            NAME = "Edit Marker"
-            ICON = "EditMarker"
+            NAME = _LABELS.TOOLBAR_ITEM2
+            ICON = "marker_modify"
         class BUTTON3:
-            NAME = "Remove Marker"
-            ICON = "RemoveMarker"
+            NAME = _LABELS.TOOLBAR_ITEM3
+            ICON = "marker_remove"
 
 
     def __init__(self, toolBar):
@@ -23,8 +38,8 @@ class TokenTools(ToolSet):
             self.TOOL.BUTTON3.NAME: self.TOOL.BUTTON3.ICON
         })
 
-        # Add Marker is a MapTool:
+        # toolbarActionAppend is a MapTool
         self.action(0).setCheckable(True)
-        self.action(0).setObjectName("actionAddMarker")
-        self.action(1).setObjectName("actionEditMarker")
-        self.action(2).setObjectName("actionRemoveMarker")
+        self.action(0).setObjectName("toolbarActionAppend")
+        self.action(1).setObjectName("toolbarActionModify")
+        self.action(2).setObjectName("toolbarActionRemove")

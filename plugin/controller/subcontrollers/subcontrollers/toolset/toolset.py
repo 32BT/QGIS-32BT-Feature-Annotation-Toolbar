@@ -7,9 +7,13 @@ from qgis.PyQt.QtWidgets import *
 from qgis.PyQt.QtGui import *
 
 ################################################################################
-
+'''
+Default objectname for an action is its name with spaces removed.
+This is likely not what we want, as name would be language dependent.
+'''
 def _objectname(name):
-    return name.replace(" ", "")
+    return "action"+name.replace(" ", "")
+
 ################################################################################
 
 
@@ -46,21 +50,17 @@ class ToolSet(QObject):
     def _prepareActions(self, info={}):
         actions = []
         for name, icon in info.items():
-            idx = len(actions)
             action = self._prepareAction(icon, name)
             actions.append(action)
         return actions
 
-    def _prepareAction(self, icon, name, proc=None):
-
+    def _prepareAction(self, icon, name):
         if isinstance(icon, str):
             icon = self._find_icon(icon)
         action = QAction(icon or QIcon(), name)
         action.setObjectName(_objectname(name))
         action.setEnabled(False)
-        if proc: action.triggered.connect(proc)
         return action
-
 
     ########################################################################
     '''

@@ -14,33 +14,39 @@ from qgis.PyQt.QtGui import *
 import sys
 _MODULE = sys.modules.get(__name__.split('.')[0])
 _LABELS = _MODULE.LANGUAGE.LABELS({
-    "MENU_TITLE": "Annotation Markers",
-    "MENU_ITEM1": "Add Marker...",
-    "MENU_ITEM2": "Edit Marker...",
-    "MENU_ITEM3": "Remove Marker..."})
+    "CTXMENU_TITLE": "Annotation Markers",
+    "CTXMENU_ITEM1": "Add Marker...",
+    "CTXMENU_ITEM2": "Edit Marker...",
+    "CTXMENU_ITEM3": "Remove Marker..."})
 
 ################################################################################
 ### ContextMenu
 ################################################################################
 
 from .toolset import ToolSet
-from ..qgs.mapcanvas import MapCanvas
 
 class TokenMenu(ToolSet):
 
     def __init__(self, mapCanvas):
-        super().__init__(QMenu(_LABELS.MENU_TITLE), {
-            _LABELS.MENU_ITEM1: None,
-            _LABELS.MENU_ITEM2: None,
-            _LABELS.MENU_ITEM3: None})
-        self._mapCanvas = MapCanvas(mapCanvas)
-        self._mapCanvas.connectMenuHandler(self.prepareContextMenu)
+        super().__init__(QMenu(_LABELS.CTXMENU_TITLE), {
+            _LABELS.CTXMENU_ITEM1: None,
+            _LABELS.CTXMENU_ITEM2: None,
+            _LABELS.CTXMENU_ITEM3: None})
+        # In this case we also own the toolBox
+        self._toolBox.setObjectName("fat:contextMenu")
+        self.action(0).setObjectName("fat:ctxmenuActionAppend")
+        self.action(1).setObjectName("fat:ctxmenuActionModify")
+        self.action(2).setObjectName("fat:ctxmenuActionRemove")
+        # Connect to mapCanvas
+        self._mapCanvas = mapCanvas
+        self._mapCanvas.contextMenuAboutToShow.connect(self.prepareContextMenu)
 
     def __del__(self):
-        self._mapCanvas.disconnectMenuHandler(self.prepareContextMenu)
+        self._mapCanvas.contextMenuAboutToShow.disconnect(self.prepareContextMenu)
         self._mapCanvas = None
 
-    def prepareContextMenu(self, menu: QMenu, event: QgsMapMouseEvent):
+
+    def prepareContextMenu(self, menu, qgsmouseEvent):
         self.updateActions()
         if len(menu.actions()) == 1:
             menu.addSeparator()

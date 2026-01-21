@@ -49,9 +49,9 @@ class Controller(QObject):
     _NAME = "Feature Annotation Controller"
     _GUID = _IDENTITY.PREFIX+_NAME.replace(" ", "")
 
-    def __init__(self, iface, toolBar, menuIcon="menuButton"):
+    def __init__(self, iface, toolBar):
         super().__init__()
-        self._menuController = MenuController(iface, toolBar, menuIcon)
+        self._menuController = MenuController(iface, toolBar)
         self._toolController = ToolController(iface, toolBar)
         self._menuController.setDelegate(self._toolController)
 
