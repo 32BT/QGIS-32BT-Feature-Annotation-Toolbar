@@ -6,8 +6,11 @@ from qgis.PyQt.QtCore import *
 ################################################################################
 ### Imports
 ################################################################################
-
-# ActionHandler handles actions for Sessions and Markers
+'''
+ActionHandler receives actions for both Sessions and Markers.
+Session actions are a result of menuactions. (update/handleMenuAction)
+Markers actions are a result of toolactions. (update/handleAction)
+'''
 from .subcontrollers import SessionController
 from .subcontrollers import MarkersController
 

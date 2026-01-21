@@ -36,6 +36,16 @@
         "Voor deze plugin is een centrale opslagmap vereist.",
         "Selecteer een map voor centrale opslag."],
 
+    "SESSIONDIALOG_TITLE":
+        "Start Sessie",
+    "SESSIONDIALOG_LABEL": [
+        "Selecteer een bestaande sessie, of geef een nieuwe sessienaam op.",
+        "(Database is: '{}')"],
+    "SESSIONDIALOG_NAMELABEL":
+        "Sessie:",
+
+
+
     "Marker": "Melding",
     "Markers": "Meldingen",
 

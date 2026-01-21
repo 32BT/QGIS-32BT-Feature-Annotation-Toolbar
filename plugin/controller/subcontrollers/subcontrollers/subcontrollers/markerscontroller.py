@@ -11,8 +11,8 @@ from qgis.PyQt.QtCore import *
 from ..actionmanager import ACTION
 
 # Actions involve dialogs
-from .dialog import MarkerDialog
-from .dialog import RemoveDialog
+from .dialogs import MarkerDialog
+from .dialogs import RemoveDialog
 
 # Require QGS.LAYER and TMS.LAYER functions
 from .. import qgs as QGS
@@ -56,7 +56,6 @@ class MarkersController:
     def validateAction(self, action, idx):
         # It is not generally sensible to annotate an empty map
         n = len(QgsProject.instance().mapLayers())
-        if idx == ACTION.INDEX.RESET: return n>0
         if idx == ACTION.INDEX.APPEND: return n>0
         # Modify and Remove require a selection
         n = self._validateActiveLayer() or 0

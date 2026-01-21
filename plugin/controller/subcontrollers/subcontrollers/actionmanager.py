@@ -17,10 +17,11 @@ from .qgs.maptools import PanningMarker as PanningMarkerMapTool
 ################################################################################
 ### Definitions
 ################################################################################
-
+'''
+ActionManager translates toolactions and contextmenuactions to an ACTION.INDEX
+'''
 class ACTION:
     class INDEX:
-        RESET = 0
         APPEND = 1
         MODIFY = 2
         REMOVE = 3

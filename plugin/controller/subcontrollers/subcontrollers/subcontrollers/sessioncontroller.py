@@ -10,11 +10,11 @@ from qgis.PyQt.QtCore import *
 ################################################################################
 
 # Menu indices
-from ..toolsetmenu import SessionMenu as MENU
+from ..toolset.sessionmenu import SessionMenu as MENU
 
 from .database import Database
-
-from .dialog import StorageDialog
+from .dialogs import StorageDialog
+from .dialogs import SessionDialog
 
 ################################################################################
 ### Language
@@ -59,6 +59,10 @@ class SessionController:
         path = Database.getGlobalPath()
         path = path or self.askStorageLocation(path)
         if path:
+            db = Database(path)
+            sessionSet = None #db.getSessionSet()
+            parent = self._iface.mainWindow()
+            SessionDialog(parent).askSessionName(sessionSet)
             print(path)
 
     def askStorageLocation(self, path=None):
