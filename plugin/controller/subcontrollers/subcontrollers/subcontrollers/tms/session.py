@@ -35,21 +35,6 @@ class Session(FSFolder):
         path = cls.get_path(layer)
         if path: return Session(path)
 
-    # Called from menu interaction
-    def start_layer(self, name=None, crs=None):
-        layer = TMS.LAYER.make(name or self.name(), crs)
-        self.set_path(layer, self.path_shrinkuser(self._path))
-        self.set_skipcheck(layer, True)
-        return QGS.LAYER.add_to_toc(layer)
-
-    # Called from Sentinel
-    def refreshLayer(self, layer=None):
-        if self.exists() and self.markersFolder.hasItems():
-            for guid, dct in self.markersFolder.items():
-                marker = Marker.from_dict(dct)
-                TMS.LAYER.appendMarker(layer, marker)
-        return layer
-
     ########################################################################
     ###
     ########################################################################
@@ -77,16 +62,28 @@ class Session(FSFolder):
 
     ########################################################################
 
+    # Called from menu interaction
+    def start_layer(self, name=None, crs=None):
+        layer = TMS.LAYER.make(name or self.name(), crs)
+        self.set_path(layer, self.path_shrinkuser(self._path))
+        self.set_skipcheck(layer, True)
+        return QGS.LAYER.add_to_toc(layer)
+
+    # Called from Sentinel
+    def refreshLayer(self, layer=None):
+        if self.exists() and self.markersFolder.hasItems():
+            for guid, dct in self.markersFolder.items():
+                marker = Marker.from_dict(dct)
+                if marker: TMS.LAYER.appendMarker(layer, marker)
+        return layer
+
     def saveMarker(self, marker):
         folder = self.markersFolder.start(Marker)
         folder.saveTableItem(marker.guid(), marker)
-        #format = Marker.JSON.FORMAT.TYPE.COMPACT
-        #folder.saveItem(marker.guid()+'.json', marker.as_json(format))
 
-    def fileMarker(self, guid):
-        srcFolder = self.markersFolder
-        dstFolder = self.archiveFolder.start()
-        srcPath = srcFolder.itemPath(guid+'.json')
-        dstPath = dstFolder.itemPath(guid+'.json')
-        FSItem(srcPath).moveTo(dstPath, True)
+    def fileMarker(self, marker, reason=None):
+        folder = self.archiveFolder.start()
+        format = Marker.JSON.FORMAT.TYPE.COMPACT
+        folder.saveItem(marker.guid()+'.json', marker.as_json(format))
+        del self.markersFolder[marker.guid()]
 

@@ -13,6 +13,8 @@
         "Notitie Wijzigen",
     "TOOLBAR_ITEM3":
         "Notitie Verwijderen",
+    "TOOLBAR_ITEM4":
+        "Notitie Archiveren",
 
     "CTXMENU_TITLE":
         "Notitie",

@@ -127,12 +127,12 @@ def updateMarker(layer, marker):
     session = Session.from_layer(layer)
     if session: session.saveMarker(marker)
 
-def removeMarkers(layer):
+def removeMarkers(layer, reason=None):
     session = Session.from_layer(layer)
     if session:
         for F in layer.getSelectedFeatures():
-            guid = QGS.FEATURE.getValue(F, 'guid')
-            session.fileMarker(guid)
+            marker = Marker.from_qgsfeature(F)
+            session.fileMarker(marker, reason)
     ids = layer.selectedFeatureIds()
     QGS.LAYER.deleteFeatures(layer, ids)
 

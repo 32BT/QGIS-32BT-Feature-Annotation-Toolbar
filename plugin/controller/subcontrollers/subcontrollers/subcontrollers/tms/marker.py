@@ -84,7 +84,7 @@ class Marker:
         guid = QGS.FEATURE.getValue(F, 'guid')
         date = QGS.FEATURE.getValue(F, 'date')
         note = QGS.FEATURE.getValue(F, 'note')
-        return Marker(P, note, date, guid)
+        return Marker(P, note, date, guid, flag)
 
     def as_qgsfeature(self, fields):
         F = QgsFeature(fields)
@@ -128,14 +128,15 @@ class Marker:
     # Also reads compactform
     @classmethod
     def from_dict(cls, src):
-        P = src.get('properties') or src
-        flag = P.get('flag')
-        guid = P.get('guid')
-        date = P.get('date')
-        note = P.get('note')
-        G = src.get('geometry') or {}
-        P = G.get('coordinates') or P.get('geom') or (0,0)
-        return Marker(P, note, date, guid, flag)
+        if hasattr(src, 'get'):
+            P = src.get('properties') or src
+            flag = P.get('flag')
+            guid = P.get('guid')
+            date = P.get('date')
+            note = P.get('note')
+            G = src.get('geometry') or {}
+            P = G.get('coordinates') or P.get('geom') or (0,0)
+            return Marker(P, note, date, guid, flag)
 
     def as_dict(self):
         P = list(self._location)

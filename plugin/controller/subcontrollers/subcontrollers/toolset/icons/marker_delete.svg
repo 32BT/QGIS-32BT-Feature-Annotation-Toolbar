@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100">
+  <g id="new-label-session-icon">
+    <circle cx="45" cy="50" r="40" fill="#FFFB00" stroke="black" stroke-width="6" />
+  </g>
+
+  <rect x="50" y="50" fill="#c00" width="48" height="48" rx="10" />
+  <rect x="55" y="55" fill="#fff" width="38" height="19" rx="5" opacity=".3" />
+
+  <g stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="10">
+    <path d="M60 74 h28" />
+  </g>
+
+</svg>

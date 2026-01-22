@@ -13,6 +13,7 @@ from ..actionmanager import ACTION
 # Actions involve dialogs
 from .dialogs import MarkerDialog
 from .dialogs import RemoveDialog
+from .dialogs import RemoveDialog as ArchiveDialog
 
 # Require QGS.LAYER and TMS.LAYER functions
 from . import qgs as QGS
@@ -20,6 +21,9 @@ from . import tms as TMS
 
 # Require MapCanvas utilities
 from .qgs.mapcanvas import MapCanvas
+
+# Require Session for Archive update and handling
+from .tms.session import Session
 
 ################################################################################
 '''
@@ -40,6 +44,7 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
 ################################################################################
 
 class MarkersController:
+
     DEFAULT_LAYERNAME = _LABELS.DEFAULT_LAYERNAME
 
     def __init__(self, iface):
@@ -57,13 +62,16 @@ class MarkersController:
         # It is not generally sensible to annotate an empty map
         n = len(QgsProject.instance().mapLayers())
         if idx == ACTION.INDEX.APPEND: return n>0
+
         # Modify and Remove require a selection
         n = self._validateActiveLayer() or 0
         if idx == ACTION.INDEX.MODIFY:
             # Only allow modifying one, unflagged marker at a time
             return n==1 and self._validateActionModify()
         if idx == ACTION.INDEX.REMOVE:
-            return n>=1
+            return n>=1 and self._validateActionDelete()
+        if idx == ACTION.INDEX.ARCHIVE:
+            return n>=1 and self._validateActionArchive()
         return False
 
     '''
@@ -86,6 +94,17 @@ class MarkersController:
         marker = next(TMS.LAYER.fetchMarkers(layer))
         return bool(marker.flag()) == False
 
+    def _validateActionDelete(self):
+        layer = self._iface.activeLayer()
+        for marker in TMS.LAYER.fetchMarkers(layer):
+            if marker.flag(): return False
+        return True
+
+    # Allow archive if layer is sessionlayer
+    def _validateActionArchive(self):
+        layer = self._iface.activeLayer()
+        return Session.validate_layer(layer)
+
     ########################################################################
     ### Handle Action
     ########################################################################
@@ -97,6 +116,8 @@ class MarkersController:
             return self.startModify()
         if idx == ACTION.INDEX.REMOVE:
             return self.startRemove()
+        if idx == ACTION.INDEX.ARCHIVE:
+            return self.startArchive()
 
     ########################################################################
 
@@ -127,6 +148,13 @@ class MarkersController:
             TMS.LAYER.removeMarkers(layer)
             self._layerID = layer.id()
 
+    def startArchive(self):
+        layer = self._iface.activeLayer()
+        reason = self.runArchiveDialog(layer)
+        if reason:
+            TMS.LAYER.removeMarkers(layer, reason)
+            self._layerID = layer.id()
+
     ########################################################################
     ########################################################################
 
@@ -146,6 +174,10 @@ class MarkersController:
     def runRemoveDialog(self, layer):
         parent = self._iface.mapCanvas()
         return RemoveDialog(parent).confirmAction(layer)
+
+    def runArchiveDialog(self, layer):
+        parent = self._iface.mapCanvas()
+        return ArchiveDialog(parent).confirmAction(layer)
 
     ########################################################################
     ### Layer management
