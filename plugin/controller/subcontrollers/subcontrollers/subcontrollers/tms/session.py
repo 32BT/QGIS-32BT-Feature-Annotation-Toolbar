@@ -3,6 +3,8 @@
 from ..database import FSItem, FSFile, FSFolder
 from ..database import JSONTable
 from .marker import Marker
+from .. import tms as TMS
+from .. import qgs as QGS
 
 class Session(FSFolder):
 
@@ -31,7 +33,14 @@ class Session(FSFolder):
     @classmethod
     def from_layer(cls, layer):
         path = cls.get_path(layer)
-        if path and FSItem.path_exists(path): return Session(path)
+        if path: return Session(path)
+
+
+    def start_layer(self, name=None, crs=None):
+        layer = TMS.LAYER.make(name or self.name(), crs)
+        self.set_path(layer, self.path_shrinkuser(self._path))
+        self.set_skipcheck(layer, True)
+        return QGS.LAYER.add_to_toc(layer)
 
     ########################################################################
     ###

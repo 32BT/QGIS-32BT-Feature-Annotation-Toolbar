@@ -16,6 +16,7 @@ from ..toolset.sessionmenu import SessionMenu as MENU
 from .database import Database
 from .dialogs import StorageDialog
 from .dialogs import SessionDialog
+from .tms.session import Session
 
 ################################################################################
 ### Language
@@ -65,14 +66,14 @@ class SessionController:
             return self.askStorageLocation()
 
     def startSession(self):
-        print('SessionController.startSession')
         path = self.getStorageLocation()
         if path:
-            db = Database(path)
-            sessionSet = db.getSessionSet()
-            parent = self._iface.mainWindow()
-            name = SessionDialog(parent).askSessionName(sessionSet)
-            print(path, name)
+            sessionSet = Database(path).getSessionSet()
+            name = self.askSessionName(sessionSet)
+            if name:
+                path = sessionSet.itemPath(name)
+                layer = Session(path).start_layer()
+                self._iface.setActiveLayer(layer)
 
     ########################################################################
     ### Storage Location
@@ -93,3 +94,7 @@ class SessionController:
             return path
 
     ########################################################################
+
+    def askSessionName(self, sessionSet):
+        parent = self._iface.mainWindow()
+        return SessionDialog(parent).askInput(sessionSet)

@@ -39,13 +39,9 @@ _LABELS.SESSIONDIALOG_LABEL = '\n'.join(_LABELS.SESSIONDIALOG_LABEL)
 ### Session Dialog
 ################################################################################
 '''
-Pattern:
-
-    note = NoteDialog(parent).askInfo(layer, marker)
-    if note:
-        marker = marker or Marker()
-        marker.date = date
-        marker.note = note
+Ask user for existing or new session name
+pattern:
+    result = SessionDialog(parent).askInput(sessionSet)
 '''
 
 class Dialog(QDialog, _form()):
@@ -58,9 +54,7 @@ class Dialog(QDialog, _form()):
         self.mainLabel.setText(_LABELS.SESSIONDIALOG_LABEL)
         self.comboBoxLabel.setText(_LABELS.SESSIONDIALOG_NAMELABEL)
 
-    # Ask user for existing or new session name
-    # pattern: SessionDialog(parent).askSessionName(sessionSet)
-    def askSessionName(self, sessionSet):
+    def askInput(self, sessionSet):
         if sessionSet: self.setSessionSet(sessionSet)
         if self.exec():
             return self.textValue()
