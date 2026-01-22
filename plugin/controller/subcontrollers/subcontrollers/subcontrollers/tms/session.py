@@ -1,7 +1,8 @@
 
 
 from ..database import FSItem, FSFile, FSFolder
-
+from ..database import JSONTable
+from .marker import Marker
 
 class Session(FSFolder):
 
@@ -35,20 +36,40 @@ class Session(FSFolder):
     ########################################################################
     ###
     ########################################################################
+    '''
+    The two main "tables" in a session "database" are:
+        1. Markers; a folder holding active markers as geojson files
+        2. Archive; a folder holding archived markers as geojson files
+    '''
     _MARKERS_FOLDER_NAME = "markers"
     _ARCHIVE_FOLDER_NAME = "archive"
 
-    def getMarkersFolder(self):
-        path = self.itemPath(self._MARKERS_FOLDER_NAME)
-        return FSFolder(path).start()
+    @property
+    def markersFolder(self):
+        if not hasattr(self, '_markersFolder'):
+            path = self.itemPath(self._MARKERS_FOLDER_NAME)
+            self._markersFolder = JSONTable(path)
+        return self._markersFolder
 
-    def getArchiveFolder(self):
-        path = self.itemPath(self._ARCHIVE_FOLDER_NAME)
-        return FSFolder(path).start()
+    @property
+    def archiveFolder(self):
+        if not hasattr(self, '_archiveFolder'):
+            path = self.itemPath(self._ARCHIVE_FOLDER_NAME)
+            self._archiveFolder = FSFolder(path)
+        return self._archiveFolder
+
+    ########################################################################
 
     def saveMarker(self, marker):
-        folder = self.getMarkersFolder()
-        folder.saveItem(marker.guid()+'.json', marker.as_json())
+        folder = self.markersFolder.start(Marker)
+        folder.saveTableItem(marker.guid(), marker)
+        #format = Marker.JSON.FORMAT.TYPE.COMPACT
+        #folder.saveItem(marker.guid()+'.json', marker.as_json(format))
 
     def fileMarker(self, guid):
-        pass
+        srcFolder = self.markersFolder
+        dstFolder = self.archiveFolder.start()
+        srcPath = srcFolder.itemPath(guid+'.json')
+        dstPath = dstFolder.itemPath(guid+'.json')
+        FSItem(srcPath).moveTo(dstPath, True)
+

@@ -38,6 +38,10 @@ from .. import qgs as QGS
 ################################################################################
 
 class Marker:
+    @staticmethod
+    def class_round(v, p=3):
+        if isinstance(v, float): return _round(v, p)
+        return v.__class__(*[_round(x, p) for x in v])
     @classmethod
     def class_guid(cls): return local_uuid_as_str()
     @classmethod
@@ -70,6 +74,8 @@ class Marker:
         return False
 
     ########################################################################
+    ### QGIS
+    ########################################################################
 
     @classmethod
     def from_qgsfeature(cls, F):
@@ -90,29 +96,76 @@ class Marker:
         QGS.FEATURE.setValue(F, 'note', self._note)
         return F
 
+    ########################################################################
+    ### JSON
+    ########################################################################
+
+    class JSON:
+        class FORMAT:
+            class TYPE:
+                COMPACT = "compact"
+                GEOJSON = "geojson"
+        class DEFAULT:
+            FORMAT = "geojson"
+            INDENT = 2
+
+    ########################################################################
 
     @classmethod
     def from_json(cls, src):
-        # Allow json-string or json-dict
-        if isinstance(src, str): src = json.loads(txt)
-        P = src.get('properties') or {}
+        if isinstance(src, str): src = json.loads(src)
+        return cls.from_dict(src)
+
+    def as_json(self, format="geojson"):
+        format = (format or self.JSON.DEFAULT.FORMAT).lower()
+        if format == self.JSON.FORMAT.TYPE.COMPACT:
+            return json.dumps(self.as_properties())
+        else:
+            return json.dumps(self.as_dict(), indent=self.JSON.DEFAULT.INDENT)
+
+    ########################################################################
+
+    # Also reads compactform
+    @classmethod
+    def from_dict(cls, src):
+        P = src.get('properties') or src
         flag = P.get('flag')
         guid = P.get('guid')
         date = P.get('date')
         note = P.get('note')
         G = src.get('geometry') or {}
-        P = G.get('coordinates') or (0,0)
+        P = G.get('coordinates') or P.get('geom') or (0,0)
         return Marker(P, note, date, guid, flag)
 
-    def as_json(self, precision=3):
-        P = [_round(p, precision) for p in self._location]
+    def as_dict(self):
+        P = list(self._location)
         G = dict(type="Point", coordinates=P)
         P = dict()
         if self._flag: P['flag'] = self._flag
         if self._guid: P['guid'] = self._guid
         if self._date: P['date'] = self._date
         if self._note: P['note'] = self._note
-        D = dict(geometry=G, properties=P)
-        return json.dumps(D, indent=2)
+        return dict(type="Feature", geometry=G, properties=P)
 
     ########################################################################
+    # Compact form
+
+    def from_properties(cls, P):
+        geom = P.get('geom') or (0, 0)
+        flag = P.get('flag')
+        guid = P.get('guid')
+        date = P.get('date')
+        note = P.get('note')
+        return Marker(geom, note, date, guid, flag)
+
+    def as_properties(self):
+        P = list(self._location)
+        P = dict(geom=P)
+        if self._flag: P['flag'] = self._flag
+        if self._guid: P['guid'] = self._guid
+        if self._date: P['date'] = self._date
+        if self._note: P['note'] = self._note
+        return P
+
+    ########################################################################
+

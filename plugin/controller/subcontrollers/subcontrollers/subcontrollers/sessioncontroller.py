@@ -42,16 +42,16 @@ class SessionController:
 
     def validateAction(self, action, idx):
         if idx == MENU.BUTTON.INDEX:
-            return self.validateStartSession()
+            return True
         if idx == MENU.ITEM.INDEX.START_SESSION:
-            return self.validateStartSession()
+            return self.validateActionStartSession()
         if idx == MENU.ITEM.INDEX.STORAGE_LOCATION:
-            return self.validateStorageLocation()
+            return self.validateActionStorageLocation()
 
-    def validateStartSession(self):
+    def validateActionStartSession(self):
         return True
 
-    def validateStorageLocation(self):
+    def validateActionStorageLocation(self):
         return True
 
     ########################################################################

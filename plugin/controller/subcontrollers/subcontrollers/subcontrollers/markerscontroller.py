@@ -106,6 +106,8 @@ class MarkersController:
         if note:
             layer = self.assertLayer(layer)
             mapPoint = self._getLastMapPoint(layer.crs())
+            # TODO: make precision dependent on crs/user settings
+            mapPoint = TMS.Marker.class_round(mapPoint, 3)
             marker = TMS.Marker(mapPoint, note)
             print(marker.as_json())
             TMS.LAYER.appendMarker(layer, marker)

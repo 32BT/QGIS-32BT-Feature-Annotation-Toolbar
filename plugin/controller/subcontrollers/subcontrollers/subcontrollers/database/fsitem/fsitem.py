@@ -134,6 +134,15 @@ class FSItem:
             os.rename(self.path(), item.path())
         return item
 
+    def moveTo(self, path, replace=False):
+        if self.exists():
+            move = os.replace if replace else os.rename
+            try:
+                move(self.path(), path)
+                return self.__class__(path)
+            except Exception as error:
+                print(error)
+
 ################################################################################
 ### Temporary backup
 ################################################################################
