@@ -59,15 +59,15 @@ class ActionManager(QObject):
         super().__init__()
         self._iface = iface
 
-        # Toolbar buttons
-        self._tools = TokenTools(toolBar)
-        self._tools.updateAction.connect(self._updateAction)
-        self._tools.handleAction.connect(self._handleAction)
-
         # Context menu
         self._menus = TokenMenu(iface.mapCanvas())
         self._menus.updateAction.connect(self._updateAction)
         self._menus.handleAction.connect(self._handleAction)
+
+        # Toolbar buttons
+        self._tools = TokenTools(toolBar)
+        self._tools.updateAction.connect(self._updateAction)
+        self._tools.handleAction.connect(self._handleAction)
 
         self._adminTools = AdminTools(toolBar)
         self._adminTools.updateAction.connect(self._updateAction)
@@ -94,10 +94,11 @@ class ActionManager(QObject):
     '''
     # Translate sender.action to ACTION.INDEX
     def _updateAction(self, sender, action, idx):
-        if sender == self._tools:
-            self.updateAction.emit(action, ACTION.INDEX.CREATE+idx)
-        elif sender == self._adminTools:
+        if sender == self._adminTools:
             self.updateAction.emit(action, ACTION.INDEX.FREEZE+idx)
+        else:
+            # Both tokentools and contextmenu
+            self.updateAction.emit(action, ACTION.INDEX.CREATE+idx)
 
     ########################################################################
     ### Handle Actions
@@ -107,12 +108,14 @@ class ActionManager(QObject):
     needs to run a MapTool.
     '''
     def _handleAction(self, sender, action, idx):
-        if sender == self._tools:
+        if sender == self._adminTools:
+            self.handleAction.emit(self, ACTION.INDEX.FREEZE+idx)
+        else:
+            # Catch toolbar-create which first requires location from MapTool
+            # (contextmenu-create already has location from where it was opened)
             if action == self._tools.action(0):
                 return self._parseToolAction1(action.isChecked())
             self.handleAction.emit(self, ACTION.INDEX.CREATE+idx)
-        elif sender == self._adminTools:
-            self.handleAction.emit(self, ACTION.INDEX.FREEZE+idx)
 
     ########################################################################
     ### ToolAction Handlers
