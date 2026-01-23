@@ -13,7 +13,7 @@ from ..actionmanager import ACTION
 # Actions involve dialogs
 from .dialogs import MarkerDialog
 from .dialogs import RemoveDialog
-from .dialogs import RemoveDialog as ArchiveDialog
+from .dialogs import ArchiveDialog
 
 # Require QGS.LAYER and TMS.LAYER functions
 from . import qgs as QGS
@@ -61,19 +61,24 @@ class MarkersController:
     def validateAction(self, action, idx):
         # It is not generally sensible to annotate an empty map
         n = len(QgsProject.instance().mapLayers())
-        if idx == ACTION.INDEX.APPEND: return n>0
-
-        # Modify and Remove require a selection
+        if idx == ACTION.INDEX.CREATE: return n>0
+        # Remaining actions require a selection
         n = self._validateActiveLayer() or 0
         if idx == ACTION.INDEX.MODIFY:
-            # Only allow modifying one, unflagged marker at a time
             return n==1 and self._validateActionModify()
-        if idx == ACTION.INDEX.REMOVE:
+        if idx == ACTION.INDEX.DELETE:
             return n>=1 and self._validateActionDelete()
+        if idx == ACTION.INDEX.FREEZE:
+            return n>=1 and self._validateActionFreeze()
+        if idx == ACTION.INDEX.EXPORT:
+            return n>=1 and self._validateActionExport()
         if idx == ACTION.INDEX.ARCHIVE:
             return n>=1 and self._validateActionArchive()
         return False
 
+    ########################################################################
+    ### Validate Action
+    ########################################################################
     '''
     _validateActiveLayer
     --------------------
@@ -94,10 +99,19 @@ class MarkersController:
         marker = next(TMS.LAYER.fetchMarkers(layer))
         return bool(marker.flag()) == False
 
+    # Only allow unflagged items in a deleteset
     def _validateActionDelete(self):
         layer = self._iface.activeLayer()
         for marker in TMS.LAYER.fetchMarkers(layer):
             if marker.flag(): return False
+        return True
+
+    # TODO: unfreeze?
+    def _validateActionFreeze(self):
+        return True
+
+    # Any selectionset can be exported
+    def _validateActionExport(self):
         return True
 
     # Allow archive if layer is sessionlayer
@@ -110,12 +124,14 @@ class MarkersController:
     ########################################################################
 
     def handleAction(self, sender, idx):
-        if idx == ACTION.INDEX.APPEND:
+        if idx == ACTION.INDEX.CREATE:
             return self.startAppend()
         if idx == ACTION.INDEX.MODIFY:
             return self.startModify()
-        if idx == ACTION.INDEX.REMOVE:
+        if idx == ACTION.INDEX.DELETE:
             return self.startRemove()
+        if idx == ACTION.INDEX.FREEZE:
+            return self.startFreeze()
         if idx == ACTION.INDEX.ARCHIVE:
             return self.startArchive()
 
@@ -147,6 +163,14 @@ class MarkersController:
         if self.runRemoveDialog(layer):
             TMS.LAYER.removeMarkers(layer)
             self._layerID = layer.id()
+
+    ########################################################################
+
+    def startFreeze(self):
+        layer = self._iface.activeLayer()
+        flag = 'L'
+        TMS.LAYER.freezeMarkers(layer, flag)
+        layer.removeSelection()
 
     def startArchive(self):
         layer = self._iface.activeLayer()

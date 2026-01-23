@@ -23,10 +23,12 @@ The signal emits an ACTION.INDEX.
 '''
 class ACTION:
     class INDEX:
-        APPEND = 1
+        CREATE = 1
         MODIFY = 2
-        REMOVE = 3
-        ARCHIVE = 4
+        DELETE = 3
+        FREEZE = 4
+        EXPORT = 5
+        ARCHIVE = 6
 
 ################################################################################
 '''
@@ -128,7 +130,7 @@ class ActionManager(QObject):
 
     def canvasClicked(self, location=None, button=None):
         #self.lastMapLocation = location
-        self.handleAction.emit(self, ACTION.INDEX.APPEND)
+        self.handleAction.emit(self, ACTION.INDEX.CREATE)
 
 
 

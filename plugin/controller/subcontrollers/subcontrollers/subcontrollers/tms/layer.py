@@ -136,4 +136,9 @@ def removeMarkers(layer, reason=None):
     ids = layer.selectedFeatureIds()
     QGS.LAYER.deleteFeatures(layer, ids)
 
+def freezeMarkers(layer, flag='\x01'):
+    for F in layer.getSelectedFeatures():
+        QGS.FEATURE.setValue(F, 'flag', flag)
+        QGS.LAYER.updateFeature(layer, F)
+
 ################################################################################

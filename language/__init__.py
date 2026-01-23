@@ -14,13 +14,8 @@ Following will all return the same result:
     LABELS["CUSTOM_LABEL"]
     LABELS.get("CUSTOM_LABEL")
 '''
-import os, json
 
-class LABELS(dict):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        super().update(self.loadLanguage() or {})
-
+class _LABELS(dict):
     def __call__(self, k):
         return self.get(k)
 
@@ -31,7 +26,16 @@ class LABELS(dict):
         return self.get(k)
 
     def get(self, k):
-        return super().get(k) or k or ""
+        v = super().get(k)
+        if isinstance(v, dict): v = _LABELS(v)
+        return v or k or ""
+
+import os, json
+
+class LABELS(_LABELS):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        super().update(self.loadLanguage() or {})
 
     @classmethod
     def loadLanguage(cls, lang=None):

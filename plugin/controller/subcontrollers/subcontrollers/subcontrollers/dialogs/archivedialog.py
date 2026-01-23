@@ -12,42 +12,23 @@ import sys
 _MODULE = sys.modules.get(__name__.split('.')[0])
 
 _LABELS = _MODULE.LANGUAGE.LABELS({
-    "REMOVEDIALOG_TITLE":
-        "Delete",
-    "REMOVEDIALOG_MAINLABEL": [
-        "You are about to remove {} marker from layer '{}'.",
-        "You are about to remove {} markers from layer '{}'."],
-    "REMOVEDIALOG_MAINLABEL2":
-        "Confirm this action to continue."
+    "ARCHIVEDIALOG": {
+        "TITLE":
+            "Archive",
+        "LABEL": {
+            "LINE1": [
+                "You are about to archive {} marker from layer '{}'.",
+                "You are about to archive {} markers from layer '{}'."],
+            "LINE2":
+                "Confirm this action to continue." },
+        "INFOLABEL":
+            "Reason:",
+        "INFOTEXT":
+            "Completed" }
     })
 
 ################################################################################
 ### Confirmation Dialog
-################################################################################
-'''
-Pattern:
-
-    result = Dialog(parent).confirmAction(layer)
-'''
-
-class Dialog:
-    def __init__(self, parent):
-        self._parent = parent
-
-    def confirmAction(self, layer):
-        title = _LABELS.REMOVEDIALOG_TITLE
-        n = layer.selectedFeatureCount()
-        label = _LABELS.REMOVEDIALOG_MAINLABEL[n>1]
-        label += '\n'
-        label += _LABELS.REMOVEDIALOG_MAINLABEL2
-        label = label.format(n, layer.name())
-
-        result = \
-        QMessageBox.warning(self._parent, title, label,
-        QMessageBox.StandardButton.Ok,
-        QMessageBox.StandardButton.Cancel)
-        return result == QMessageBox.StandardButton.Ok
-
 ################################################################################
 
 import os
@@ -59,12 +40,14 @@ def _form():
 
 ################################################################################
 
-class _Dialog(QDialog, _form()):
+class Dialog(QDialog, _form()):
 
     def __init__(self, parent):
         super().__init__(parent)
         self.setupUi(self)
-        self.setWindowTitle(_LABELS.REMOVEDIALOG_TITLE)
+        self.setWindowTitle(_LABELS.ARCHIVEDIALOG.TITLE)
+        self.infoLabel.setText(_LABELS.ARCHIVEDIALOG.INFOLABEL)
+        self.infoText.setText(_LABELS.ARCHIVEDIALOG.INFOTEXT)
 
     ########################################################################
     ### Entrypoint
@@ -73,13 +56,14 @@ class _Dialog(QDialog, _form()):
     def confirmAction(self, layer=None):
         if layer:
             n = layer.selectedFeatureCount()
-            label = _LABELS.REMOVEDIALOG_MAINLABEL[n>1]
+            label = _LABELS.ARCHIVEDIALOG.MAINLABEL.LINE1[n>1]
             label += '\n'
-            label += _LABELS.REMOVEDIALOG_MAINLABEL2
+            label += _LABELS.ARCHIVEDIALOG.MAINLABEL.LINE2
             label = label.format(n, layer.name())
             self.mainLabel.setText(label)
 
-        return self.exec()
+        if self.exec():
+            return self.infoText.text().strip()
 
     ########################################################################
 
