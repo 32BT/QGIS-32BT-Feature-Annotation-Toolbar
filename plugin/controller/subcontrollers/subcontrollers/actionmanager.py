@@ -8,6 +8,7 @@
 from qgis.PyQt.QtCore import QObject, pyqtSignal
 
 # ActionsController handles a toolbar and a contextmenu
+from .toolset import AdminTools
 from .toolset import TokenTools
 from .toolset import TokenMenu
 
@@ -68,6 +69,9 @@ class ActionManager(QObject):
         self._menus.updateAction.connect(self._updateAction)
         self._menus.handleAction.connect(self._handleAction)
 
+        self._adminTools = AdminTools(toolBar)
+        self._adminTools.updateAction.connect(self._updateAction)
+        self._adminTools.handleAction.connect(self._handleAction)
 
     def setResponder(self, controller):
         self.updateAction.connect(controller.updateAction)
@@ -82,6 +86,7 @@ class ActionManager(QObject):
     '''
     def updateActions(self):
         self._tools.updateActions()
+        self._adminTools.updateActions()
 
     '''
     Both Toolbar as well as Contextmenu actions trigger updates.
@@ -89,7 +94,10 @@ class ActionManager(QObject):
     '''
     # Translate sender.action to ACTION.INDEX
     def _updateAction(self, sender, action, idx):
-        self.updateAction.emit(action, idx+1)
+        if sender == self._tools:
+            self.updateAction.emit(action, ACTION.INDEX.CREATE+idx)
+        elif sender == self._adminTools:
+            self.updateAction.emit(action, ACTION.INDEX.FREEZE+idx)
 
     ########################################################################
     ### Handle Actions
@@ -99,11 +107,12 @@ class ActionManager(QObject):
     needs to run a MapTool.
     '''
     def _handleAction(self, sender, action, idx):
-        #raise NotImplementedError
-        if action != self._tools.action(0):
-            self.handleAction.emit(self, idx+1)
-        else:
-            self._parseToolAction1(action.isChecked())
+        if sender == self._tools:
+            if action == self._tools.action(0):
+                return self._parseToolAction1(action.isChecked())
+            self.handleAction.emit(self, ACTION.INDEX.CREATE+idx)
+        elif sender == self._adminTools:
+            self.handleAction.emit(self, ACTION.INDEX.FREEZE+idx)
 
     ########################################################################
     ### ToolAction Handlers

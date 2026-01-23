@@ -10,31 +10,30 @@ from .toolset import ToolSet
 import sys
 _MODULE = sys.modules.get(__name__.split('.')[0])
 _LABELS = _MODULE.LANGUAGE.LABELS({
-    "TOKENTOOLS": {
-        "ITEM1": "Add Marker",
-        "ITEM2": "Edit Marker",
-        "ITEM3": "Remove Marker" }
+    "ADMINTOOLS": {
+        "ITEM1": "Lock Markers",
+        "ITEM2": "Export Markers",
+        "ITEM3": "Archive Markers" }
     })
 
 ################################################################################
 ### TokenTools
 ################################################################################
 
-class TokenTools(ToolSet):
+class AdminTools(ToolSet):
     class TOOL:
         class BUTTON1:
-            NAME = _LABELS.TOKENTOOLS.ITEM1
-            ICON = "marker_create"
-            UIID = "toolbarActionCreate"
+            NAME = _LABELS.ADMINTOOLS.ITEM1
+            ICON = "marker_freeze"
+            UIID = "toolbarActionFreeze"
         class BUTTON2:
-            NAME = _LABELS.TOKENTOOLS.ITEM2
-            ICON = "marker_modify"
-            UIID = "toolbarActionModify"
+            NAME = _LABELS.ADMINTOOLS.ITEM2
+            ICON = "marker_export"
+            UIID = "toolbarActionExport"
         class BUTTON3:
-            NAME = _LABELS.TOKENTOOLS.ITEM3
-            ICON = "marker_delete"
-            UIID = "toolbarActionDelete"
-
+            NAME = _LABELS.ADMINTOOLS.ITEM3
+            ICON = "marker_archive"
+            UIID = "toolbarActionArchive"
 
     def __init__(self, toolBar):
         super().__init__(toolBar, {
@@ -43,9 +42,7 @@ class TokenTools(ToolSet):
             self.TOOL.BUTTON3.NAME: self.TOOL.BUTTON3.ICON
         })
 
-        # toolbarActionAppend is a MapTool
-        self.action(0).setCheckable(True)
-        self.action(0).setObjectName("toolbarActionCreate")
-        self.action(1).setObjectName("toolbarActionModify")
-        self.action(2).setObjectName("toolbarActionDelete")
+        self.action(0).setObjectName("toolbarActionFreeze")
+        self.action(1).setObjectName("toolbarActionExport")
+        self.action(2).setObjectName("toolbarActionArchive")
 

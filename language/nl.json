@@ -5,20 +5,24 @@
     "TOOLBAR_TITLE":
         "Werkbalk Objectannotatie",
 
-    "TOOLBAR_ITEM0":
-        "Sessiemenu",
-    "TOOLBAR_ITEM1":
-        "Notitie Aanmaken",
-    "TOOLBAR_ITEM2":
-        "Notitie Wijzigen",
-    "TOOLBAR_ITEM3":
-        "Notitie Verwijderen",
-    "TOOLBAR_ITEM4":
-        "Notities Vastleggen",
-    "TOOLBAR_ITEM5":
-        "Notities Exporteren",
-    "TOOLBAR_ITEM6":
-        "Notities Archiveren",
+    "TOKENTOOLS": {
+        "ITEM1":
+            "Notitie Aanmaken",
+        "ITEM2":
+            "Notitie Wijzigen",
+        "ITEM3":
+            "Notitie Verwijderen"
+    },
+
+
+    "ADMINTOOLS": {
+        "ITEM1":
+            "Notities Vastleggen",
+        "ITEM2":
+            "Notities Exporteren",
+        "ITEM3":
+            "Notities Archiveren"
+    },
 
     "CTXMENU_TITLE":
         "Notitie",
@@ -117,8 +121,8 @@
             "Archiveren",
         "LABEL": {
             "LINE1": [
-                "Er zal {} notitie gearchiveerd worden uit laag '{}'.",
-                "Er zullen {} notities gearchiveerd worden uit laag '{}'."],
+                "Er zal {} notitie gearchiveerd worden van laag '{}'.",
+                "Er zullen {} notities gearchiveerd worden van laag '{}'."],
             "LINE2":
                 "Bevestig de actie om door te gaan." },
         "INFOLABEL":
