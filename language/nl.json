@@ -82,38 +82,40 @@
     ],
 
 
-    "REMOVEDIALOG_TITLE":
-        "Verwijderen",
-    "REMOVEDIALOG_MAINLABEL": [
-        "Er zal {} notitie verwijderd worden uit laag '{}'.",
-        "Er zullen {} notities verwijderd worden uit laag '{}'."],
-    "REMOVEDIALOG_MAINLABEL2":
-        "Bevestig de actie om door te gaan.",
-    "REMOVEDIALOG_INFOLABEL":
-        "Toelichting:",
+    "REMOVEDIALOG": {
+        "TITLE":
+            "Verwijderen",
+        "LABEL": {
+            "LINE1": [
+                "Er zal {} notitie verwijderd worden uit laag '{}'.",
+                "Er zullen {} notities verwijderd worden uit laag '{}'."],
+            "LINE2":
+                "Bevestig de actie om door te gaan."
+            }
+        },
 
 
-    "FREEZEDIALOG_FLAGOPTIONS": [
-        "Vastleggen",
-        "Heropenen"],
-
-
-    "ARCHIVEDIALOG_TITLE":
-        "Archiveren",
-    "ARCHIVEDIALOG_MAINLABEL": [
-        "Er zal {} notitie gearchiveerd worden uit laag '{}'.",
-        "Er zullen {} notities gearchiveerd worden uit laag '{}'."],
-    "ARCHIVEDIALOG_MAINLABEL2":
-        "Bevestig de actie om door te gaan.",
-    "ARCHIVEDIALOG_INFOLABEL":
-        "Toelichting:",
-    "ARCHIVEDIALOG_INFOTEXT":
-        "Verwerkt",
+    "FREEZEDIALOG": {
+        "TITLE":
+            "Notities Vastleggen",
+        "LABEL": {
+            "LINE1": [
+                "Er zal {} notitie gemarkeerd worden in laag '{}'.",
+                "Er zullen {} notities gemarkeerd worden in laag '{}'."],
+            "LINE2":
+                "Geef een markering op om door te gaan." },
+        "FLAGLABEL":
+            "Markering:",
+        "FLAGTEXT":
+            "L",
+        "FLAGINFO":
+            "(Maak het veld leeg om de markering te wissen.)"
+        },
 
     "ARCHIVEDIALOG": {
         "TITLE":
             "Archiveren",
-        "MAINLABEL": {
+        "LABEL": {
             "LINE1": [
                 "Er zal {} notitie gearchiveerd worden uit laag '{}'.",
                 "Er zullen {} notities gearchiveerd worden uit laag '{}'."],

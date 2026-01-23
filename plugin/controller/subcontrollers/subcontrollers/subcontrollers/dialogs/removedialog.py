@@ -12,13 +12,17 @@ import sys
 _MODULE = sys.modules.get(__name__.split('.')[0])
 
 _LABELS = _MODULE.LANGUAGE.LABELS({
-    "REMOVEDIALOG_TITLE":
-        "Delete",
-    "REMOVEDIALOG_MAINLABEL": [
-        "You are about to remove {} marker from layer '{}'.",
-        "You are about to remove {} markers from layer '{}'."],
-    "REMOVEDIALOG_MAINLABEL2":
-        "Confirm this action to continue."
+    "REMOVEDIALOG": {
+        "TITLE":
+            "Delete",
+        "LABEL": {
+            "LINE1": [
+                "You are about to remove {} marker from layer '{}'.",
+                "You are about to remove {} markers from layer '{}'."],
+            "LINE2":
+                "Confirm this action to continue."
+            }
+        }
     })
 
 ################################################################################
@@ -35,11 +39,11 @@ class Dialog:
         self._parent = parent
 
     def confirmAction(self, layer):
-        title = _LABELS.REMOVEDIALOG_TITLE
+        title = _LABELS.REMOVEDIALOG.TITLE
         n = layer.selectedFeatureCount()
-        label = _LABELS.REMOVEDIALOG_MAINLABEL[n>1]
+        label = _LABELS.REMOVEDIALOG.LABEL.LINE1[n>1]
         label += '\n'
-        label += _LABELS.REMOVEDIALOG_MAINLABEL2
+        label += _LABELS.REMOVEDIALOG.LABEL.LINE2
         label = label.format(n, layer.name())
 
         result = \
@@ -49,38 +53,4 @@ class Dialog:
         return result == QMessageBox.StandardButton.Ok
 
 ################################################################################
-
-import os
-
-def _form():
-    path, ext = os.path.splitext(__file__)
-    form, _ = uic.loadUiType(path+'.ui')
-    return form
-
-################################################################################
-
-class _Dialog(QDialog, _form()):
-
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.setupUi(self)
-        self.setWindowTitle(_LABELS.REMOVEDIALOG_TITLE)
-
-    ########################################################################
-    ### Entrypoint
-    ########################################################################
-
-    def confirmAction(self, layer=None):
-        if layer:
-            n = layer.selectedFeatureCount()
-            label = _LABELS.REMOVEDIALOG_MAINLABEL[n>1]
-            label += '\n'
-            label += _LABELS.REMOVEDIALOG_MAINLABEL2
-            label = label.format(n, layer.name())
-            self.mainLabel.setText(label)
-
-        return self.exec()
-
-    ########################################################################
-
 

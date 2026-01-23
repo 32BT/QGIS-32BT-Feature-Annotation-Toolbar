@@ -14,6 +14,7 @@ from ..actionmanager import ACTION
 from .dialogs import MarkerDialog
 from .dialogs import RemoveDialog
 from .dialogs import ArchiveDialog
+from .dialogs import FreezeDialog
 
 # Require QGS.LAYER and TMS.LAYER functions
 from . import qgs as QGS
@@ -168,9 +169,10 @@ class MarkersController:
 
     def startFreeze(self):
         layer = self._iface.activeLayer()
-        flag = 'L'
-        TMS.LAYER.freezeMarkers(layer, flag)
-        layer.removeSelection()
+        flag = self.runFreezeDialog(layer)
+        if flag is not None:
+            TMS.LAYER.freezeMarkers(layer, flag)
+            layer.removeSelection()
 
     def startArchive(self):
         layer = self._iface.activeLayer()
@@ -198,6 +200,10 @@ class MarkersController:
     def runRemoveDialog(self, layer):
         parent = self._iface.mapCanvas()
         return RemoveDialog(parent).confirmAction(layer)
+
+    def runFreezeDialog(self, layer):
+        parent = self._iface.mapCanvas()
+        return FreezeDialog(parent).askInput(layer)
 
     def runArchiveDialog(self, layer):
         parent = self._iface.mapCanvas()

@@ -12,23 +12,26 @@ import sys
 _MODULE = sys.modules.get(__name__.split('.')[0])
 
 _LABELS = _MODULE.LANGUAGE.LABELS({
-    "ARCHIVEDIALOG": {
+    "FREEZEDIALOG": {
         "TITLE":
-            "Archive",
+            "Flag Markers",
         "LABEL": {
             "LINE1": [
-                "You are about to archive {} marker from layer '{}'.",
-                "You are about to archive {} markers from layer '{}'."],
+                "You are about to flag {} marker from layer '{}'.",
+                "You are about to flag {} markers from layer '{}'."],
             "LINE2":
                 "Confirm this action to continue." },
-        "INFOLABEL":
-            "Reason:",
-        "INFOTEXT":
-            "Completed" }
+        "FLAGLABEL":
+            "Flag:",
+        "FLAGTEXT":
+            "L",
+        "FLAGINFO":
+            "(Leave empty to remove flag.)"
+        }
     })
 
 ################################################################################
-### Confirmation Dialog
+### Freeze Dialog
 ################################################################################
 
 import os
@@ -45,25 +48,26 @@ class Dialog(QDialog, _form()):
     def __init__(self, parent):
         super().__init__(parent)
         self.setupUi(self)
-        self.setWindowTitle(_LABELS.ARCHIVEDIALOG.TITLE)
-        self.infoLabel.setText(_LABELS.ARCHIVEDIALOG.INFOLABEL)
-        self.infoText.setText(_LABELS.ARCHIVEDIALOG.INFOTEXT)
+        self.setWindowTitle(_LABELS.FREEZEDIALOG.TITLE)
+        self.flagLabel.setText(_LABELS.FREEZEDIALOG.FLAGLABEL)
+        self.flagText.setText(_LABELS.FREEZEDIALOG.FLAGTEXT)
+        self.flagInfo.setText(_LABELS.FREEZEDIALOG.FLAGINFO)
 
     ########################################################################
     ### Entrypoint
     ########################################################################
 
-    def confirmAction(self, layer=None):
+    def askInput(self, layer=None):
         if layer:
             n = layer.selectedFeatureCount()
-            label = _LABELS.ARCHIVEDIALOG.LABEL.LINE1[n>1]
+            label = _LABELS.FREEZEDIALOG.LABEL.LINE1[n>1]
             label += '\n'
-            label += _LABELS.ARCHIVEDIALOG.LABEL.LINE2
+            label += _LABELS.FREEZEDIALOG.LABEL.LINE2
             label = label.format(n, layer.name())
             self.mainLabel.setText(label)
 
         if self.exec():
-            return self.infoText.text().strip()
+            return self.flagText.text().strip()
 
     ########################################################################
 

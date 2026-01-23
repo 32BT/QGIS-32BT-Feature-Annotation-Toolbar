@@ -137,8 +137,13 @@ def removeMarkers(layer, reason=None):
     QGS.LAYER.deleteFeatures(layer, ids)
 
 def freezeMarkers(layer, flag='\x01'):
+    if not flag: flag = None
+    session = Session.from_layer(layer)
     for F in layer.getSelectedFeatures():
         QGS.FEATURE.setValue(F, 'flag', flag)
         QGS.LAYER.updateFeature(layer, F)
+        if session:
+            marker = Marker.from_qgsfeature(F)
+            session.saveMarker(marker)
 
 ################################################################################
