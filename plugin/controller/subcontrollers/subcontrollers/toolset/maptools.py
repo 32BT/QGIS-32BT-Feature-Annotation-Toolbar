@@ -13,16 +13,32 @@ from qgis.PyQt.QtCore import *
 class MarkerMapTool(QgsMapTool):
     canvasClicked = pyqtSignal(object, object)
 
+    def __init__(self, canvas):
+        super().__init__(canvas)
+        self._position = None
+
+    def activate(self):
+        super().activate()
+        self._position = None
+
+    def flags(self):
+        flags = super().flags
+        if self._position is None:
+            flags |= self.ShowContextMenu
+        return flags
+
     def canvasPressEvent(self, event):
-        self._mouseDownPosition = None
-        if event.buttons() == Qt.LeftButton:
-            self._mouseDownPosition = event.pos()
+        if self._position is None:
+            if event.button() == Qt.LeftButton:
+                self._position = event.pos()
 
     def canvasReleaseEvent(self, event):
-        if self._mouseDownPosition is not None:
-            p = self.snappedPosition(event.pos())
-            p = self.toMapCoordinates(p)
-            self.canvasClicked.emit(p, event.button())
+        if self._position is not None:
+            if not event.buttons():
+                p = self.snappedPosition(event.pos())
+                p = self.toMapCoordinates(p)
+                self.canvasClicked.emit(p, event.button())
+                self._position = None
 
     def snappedPosition(self, position):
         if self.shouldSnapPosition(position):
@@ -31,8 +47,8 @@ class MarkerMapTool(QgsMapTool):
 
     def shouldSnapPosition(self, position):
         if hasattr(self, 'tolerance') and self.tolerance:
-            dx = abs(position.x()-self._mouseDownPosition.x())
-            dy = abs(position.y()-self._mouseDownPosition.y())
+            dx = abs(position.x()-self._position.x())
+            dy = abs(position.y()-self._position.y())
             return (dx*dx+dy*dy)<=(self.tolerance*self.tolerance)
 
 ################################################################################
@@ -47,12 +63,6 @@ class PanningMarkerMapTool(QgsMapTool):
         self.resetTracking()
         self.tolerance = 5
 
-    def flags(self):
-        flags = self.Flag() #super().flags()
-        if self._position is None:
-            flags |= self.ShowContextMenu
-        return flags
-
     def activate(self):
         super().activate()
         self.resetTracking()
@@ -60,6 +70,12 @@ class PanningMarkerMapTool(QgsMapTool):
     def resetTracking(self):
         self._tracking = False
         self._position = None
+
+    def flags(self):
+        flags = super().flags()
+        if self._position is None:
+            flags |= self.ShowContextMenu
+        return flags
 
     '''
     If right-button is pressed before left-button, then contextmenu takes over.
