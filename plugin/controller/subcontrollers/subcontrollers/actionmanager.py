@@ -73,6 +73,7 @@ class ActionManager(QObject):
         self._adminTools.updateAction.connect(self._updateAction)
         self._adminTools.handleAction.connect(self._handleAction)
 
+    # ToolController will set ActionHandler as responder
     def setResponder(self, controller):
         self.updateAction.connect(controller.updateAction)
         self.handleAction.connect(controller.handleAction)
@@ -110,12 +111,12 @@ class ActionManager(QObject):
     def _handleAction(self, sender, action, idx):
         if sender == self._adminTools:
             self.handleAction.emit(self, ACTION.INDEX.FREEZE+idx)
+        elif action != self._tools.action(0):
+            self.handleAction.emit(self, ACTION.INDEX.CREATE+idx)
         else:
             # Catch toolbar-create which first requires location from MapTool
             # (contextmenu-create already has location from where it was opened)
-            if action == self._tools.action(0):
-                return self._parseToolAction1(action.isChecked())
-            self.handleAction.emit(self, ACTION.INDEX.CREATE+idx)
+            self._parseToolAction1(action.isChecked())
 
     ########################################################################
     ### ToolAction Handlers
