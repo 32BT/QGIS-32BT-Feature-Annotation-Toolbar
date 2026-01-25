@@ -36,9 +36,18 @@
     "SESSIONMENU_TITLE":
         "Sessiemenu",
     "SESSIONMENU_ITEM1":
-        "Centrale opslagmap...",
-    "SESSIONMENU_ITEM2":
         "Start sessie...",
+    "SESSIONMENU_ITEM2":
+        "Eigenschappen...",
+
+    "SETTINGSDIALOG": {
+        "TITLE":
+            "Eigenschappen",
+        "ADMINTOOLS": {
+            "LABEL":
+                "Toon Admin Tools"
+            }
+        },
 
     "STORAGEDIALOG_TITLE":
         "Centrale Opslag",

@@ -16,8 +16,8 @@ _IDENTITY = _MODULE.IDENTITY
 _LANGUAGE = _MODULE.LANGUAGE
 _LABELS = _LANGUAGE.LABELS({
     "SESSIONMENU_TITLE": "Sessionmenu",
-    "SESSIONMENU_ITEM1": "Storage location...",
-    "SESSIONMENU_ITEM2": "Start session..."
+    "SESSIONMENU_ITEM1": "Start session...",
+    "SESSIONMENU_ITEM2": "Settings..."
     })
 
 ################################################################################
@@ -34,8 +34,9 @@ class SessionMenu(QMenu):
         INDEX                = -1
     class ITEM:
         class INDEX:
-            STORAGE_LOCATION = 0
-            START_SESSION    = 1
+            START_SESSION    = 0
+            SETTINGS         = 1
+            STORAGE_LOCATION = 2
 
     ########################################################################
 
@@ -47,10 +48,10 @@ class SessionMenu(QMenu):
         self.setObjectName("fat:sessionMenu")
 
         action = self.addAction(_LABELS.SESSIONMENU_ITEM1)
-        action.setObjectName("fat:menuActionStorageLocation")
+        action.setObjectName("fat:menuActionStartSession")
         action = self.addSeparator()
         action = self.addAction(_LABELS.SESSIONMENU_ITEM2)
-        action.setObjectName("fat:menuActionStartSession")
+        action.setObjectName("fat:menuActionSettings")
         self._actions = [a for a in self.actions() if not a.isSeparator()]
 
         self.aboutToShow.connect(self.updateActions)

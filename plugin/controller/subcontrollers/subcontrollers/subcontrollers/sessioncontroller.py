@@ -14,18 +14,12 @@ from qgis.PyQt.QtCore import *
 from ..toolset.sessionmenu import SessionMenu as MENU
 
 from .database import Database
-from .dialogs import StorageDialog
-from .dialogs import SessionDialog
 from .tms.session import Session
 from .tms.sentinel import Sentinel
 
-################################################################################
-### Language
-################################################################################
-
-import sys
-_MODULE = sys.modules.get(__name__.split('.')[0])
-_LABELS = _MODULE.LANGUAGE.LABELS({})
+from .dialogs import StorageDialog
+from .dialogs import SessionDialog
+from .dialogs import SettingsDialog
 
 ################################################################################
 ### Controller
@@ -49,16 +43,17 @@ class SessionController:
             return True
         if idx == MENU.ITEM.INDEX.START_SESSION:
             return self.validateActionStartSession()
-        if idx == MENU.ITEM.INDEX.STORAGE_LOCATION:
-            return self.validateActionStorageLocation()
+        if idx == MENU.ITEM.INDEX.SETTINGS:
+            return self.validateActionSettings()
 
-    # Setting the central storagelocation is always possible
-    def validateActionStorageLocation(self):
-        return True
 
     # Annotations are only useful if there is something to annotate...
     def validateActionStartSession(self):
         return len(QgsProject.instance().mapLayers())>0
+
+    # Settings are always available
+    def validateActionSettings(self):
+        return True
 
     ########################################################################
     ### Handle Action
@@ -67,8 +62,26 @@ class SessionController:
     def handleAction(self, sender, idx):
         if idx == MENU.ITEM.INDEX.START_SESSION:
             return self.startSession()
-        if idx == MENU.ITEM.INDEX.STORAGE_LOCATION:
-            return self.askStorageLocation()
+        if idx == MENU.ITEM.INDEX.SETTINGS:
+            return self.askSettings()
+
+    ########################################################################
+    ### Session
+    ########################################################################
+    '''
+    Only option currently is a name for a folder (in the  sessionSet folder).
+    If name refers to an existing folder, then items will be appended to that
+    existing folder. If name is new, then a new folder will be created within
+    the sessionSet folder.
+
+    Folder hierarchy is:
+
+        /centralstorage         (selected by user)
+            /sessions           (sessionSet folder, created by Database)
+                /<sessionName>  (user input from askSessionName)
+                    /markers    (new markers are stored here)
+                    /archive    (deleted markers are stored here)
+    '''
 
     def startSession(self):
         path = self.getStorageLocation()
@@ -79,6 +92,21 @@ class SessionController:
                 path = sessionSet.itemPath(name)
                 layer = Session(path).start_layer()
                 self._iface.setActiveLayer(layer)
+
+    def askSessionName(self, sessionSet):
+        parent = self._iface.mainWindow()
+        return SessionDialog(parent).askInput(sessionSet)
+
+    ########################################################################
+    ### Settings
+    ########################################################################
+
+    def askSettings(self):
+        parent = self._iface.mainWindow()
+        params = dict(
+            path = Database.getGlobalPath(),
+            show = True)
+        params = SettingsDialog(parent).askSettings(params)
 
     ########################################################################
     ### Storage Location
@@ -97,24 +125,9 @@ class SessionController:
         parent = self._iface.mainWindow()
         path = path or Database.getGlobalPath()
         path = StorageDialog(parent).askStorageLocation(path)
+        #path = SettingsDialog(parent).askSettings()
         if path:
             Database.setGlobalPath(path)
             return path
 
     ########################################################################
-    '''
-    Only option currently is a name for a folder (in the  sessionSet folder).
-    If name refers to an existing folder, then items will be appended to that
-    existing folder. If name is new, then a new folder will be created.
-
-    Folder hierarchy is:
-
-        /Centralstorage         (selected by user)
-            /sessions           (sessionSet folder, created by Database)
-                /<name>         (user input)
-                    /markers    (new markers are stored here)
-                    /archive    (deleted markers are stored here)
-    '''
-    def askSessionName(self, sessionSet):
-        parent = self._iface.mainWindow()
-        return SessionDialog(parent).askInput(sessionSet)

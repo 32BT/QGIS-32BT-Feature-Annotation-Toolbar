@@ -23,11 +23,18 @@ def _form():
 
 import sys
 _MODULE = sys.modules.get(__name__.split('.')[0])
-
 _LABELS = _MODULE.LANGUAGE.LABELS({
-    "STORAGEDIALOG_TITLE":
-        "Central Storage Location"
+    "SETTINGSDIALOG": {
+        "TITLE":
+            "Settings",
+        "ADMINTOOLS": {
+            "LABEL":
+                "Show Admin Tools"
+            }
+        }
     })
+
+_LABELS = _LABELS.SETTINGSDIALOG
 
 ################################################################################
 ### Storage Dialog
@@ -40,11 +47,16 @@ class Dialog(QDialog, _form()):
     def __init__(self, parent):
         super().__init__(parent)
         self.setupUi(self)
-        self.setWindowTitle(_LABELS.STORAGEDIALOG_TITLE)
+        self.setWindowTitle(_LABELS.TITLE)
         self._storageSettings = StorageSettings()
         self.layout().insertWidget(0, self._storageSettings)
 
-    def askStorageLocation(self, path=None):
-        self._storageSettings.setPath(path)
+        self.adminTools.setText(_LABELS.ADMINTOOLS.LABEL)
+
+    def askSettings(self, params=None):
+        params = params or {}
+        self._storageSettings.setPath(params.get('path'))
+        self.adminTools.setChecked(params.get('show'))
         if self.exec():
-            return self._storageSettings.getPath()
+            return params
+
