@@ -110,9 +110,9 @@ class ActionManager(QObject):
     '''
     def _handleAction(self, sender, action, idx):
         if sender == self._adminTools:
-            self.handleAction.emit(self, ACTION.INDEX.FREEZE+idx)
+            self.handleAction.emit(sender, ACTION.INDEX.FREEZE+idx)
         elif action != self._tools.action(0):
-            self.handleAction.emit(self, ACTION.INDEX.CREATE+idx)
+            self.handleAction.emit(sender, ACTION.INDEX.CREATE+idx)
         else:
             # Catch toolbar-create which first requires location from MapTool
             # (contextmenu-create already has location from where it was opened)
@@ -142,7 +142,6 @@ class ActionManager(QObject):
         return self._marker
 
     def canvasClicked(self, location=None, button=None):
-        #self.lastMapLocation = location
         self.handleAction.emit(self, ACTION.INDEX.CREATE)
 
 

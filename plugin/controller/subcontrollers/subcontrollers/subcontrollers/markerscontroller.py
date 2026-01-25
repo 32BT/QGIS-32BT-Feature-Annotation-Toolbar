@@ -143,10 +143,12 @@ class MarkersController:
         note = self.runInputDialog(layer)
         if note:
             layer = self.assertLayer(layer)
-            mapPoint = self._getLastMapPoint(layer.crs())
-            # TODO: make precision dependent on crs/user settings
-            mapPoint = TMS.Marker.class_round(mapPoint, 3)
-            marker = TMS.Marker(mapPoint, note)
+            layerPoint = self._getLastEventLocation(layer.crs())
+            # WARNING: A rather broad assumption...
+            if layer.crs().mapUnits() == QgsUnitTypes.DistanceMeters:
+                layerPoint = TMS.Marker.class_round(layerPoint, 3)
+            # END-OF-WARNING
+            marker = TMS.Marker(layerPoint, note)
             print(marker.as_json())
             TMS.LAYER.appendMarker(layer, marker)
             self._layerID = layer.id()
@@ -281,7 +283,10 @@ class MarkersController:
             self._mapCanvas = MapCanvas(self._iface.mapCanvas())
         return self._mapCanvas
 
-    def _getLastMapPoint(self, crs=None):
+    def _convertMapPoint(self, mapPoint, crs):
+        return self.mapCanvas().convertMapPoint(mapPoint, crs)
+
+    def _getLastEventLocation(self, crs=None):
         return self.mapCanvas().getLastEventLocation(crs)
 
     def _getMapCrs(self):
