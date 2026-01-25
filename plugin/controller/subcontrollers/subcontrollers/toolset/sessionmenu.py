@@ -16,9 +16,31 @@ _IDENTITY = _MODULE.IDENTITY
 _LANGUAGE = _MODULE.LANGUAGE
 _LABELS = _LANGUAGE.LABELS({
     "SESSIONMENU_TITLE": "Sessionmenu",
-    "SESSIONMENU_ITEM1": "Start session...",
-    "SESSIONMENU_ITEM2": "Settings..."
+    "SESSIONMENU_ITEM1": "Session",
+    "SESSIONMENU_ITEM2": "Settings...",
+    "STARTMENU_TITLE": "Session",
+    "STARTMENU_ITEM1": "Start..."
     })
+
+
+from ..subcontrollers.database import Database
+
+class StartMenu(QMenu):
+    class ITEM:
+        class INDEX:
+            START = 0
+
+    def updateMenu(self):
+        self.clear()
+        self.addAction(_LABELS.STARTMENU_ITEM1)
+        db = Database()
+        if db and db.exists():
+            sessionSet = db.getSessionSet()
+            items = list(sessionSet.folderItemNames())
+            for item in items:
+                action = self.addAction(item)
+                action.setData(sessionSet.itemPath(item))
+
 
 ################################################################################
 ### SessionMenu
@@ -34,8 +56,9 @@ class SessionMenu(QMenu):
         INDEX                = -1
     class ITEM:
         class INDEX:
-            START_SESSION    = 0
+            SESSION          = 0
             SETTINGS         = 1
+            SESSION_START    = 2
 
     ########################################################################
 
@@ -46,25 +69,43 @@ class SessionMenu(QMenu):
         super().__init__(_LABELS.SESSIONMENU_TITLE, parent)
         self.setObjectName("fat:sessionMenu")
 
-        action = self.addAction(_LABELS.SESSIONMENU_ITEM1)
-        action.setObjectName("fat:menuActionStartSession")
+        self._actions = []
+
+        self._startMenu = StartMenu(_LABELS.STARTMENU_TITLE)
+        action = self.addMenu(self._startMenu)
+        action.setObjectName("fat:menuActionStartMenu")
+        self._actions.append(action)
+
         action = self.addSeparator()
+
         action = self.addAction(_LABELS.SESSIONMENU_ITEM2)
         action.setObjectName("fat:menuActionSettings")
-        self._actions = [a for a in self.actions() if not a.isSeparator()]
+        self._actions.append(action)
 
         self.aboutToShow.connect(self.updateActions)
         self.triggered.connect(self.actionTriggered)
 
+
+    def action(self, idx):
+        if idx < len(self._actions):
+            return self._actions[idx]
+        else:
+            idx -= len(self._actions)
+            return self._startMenu.actions()[idx]
+
     ########################################################################
 
     def updateActions(self):
-        for idx, action in enumerate(self._actions):
+        self._startMenu.updateMenu()
+        actions = self._actions + self._startMenu.actions()
+        for idx, action in enumerate(actions):
             self.emitUpdate(action, idx)
 
     def actionTriggered(self, action):
-        idx = self._actions.index(action)
-        self.emitAction(action, idx)
+        actions = self._actions + self._startMenu.actions()
+        if action in actions:
+            idx = actions.index(action)
+            self.emitAction(action, idx)
 
     ########################################################################
     def emitUpdate(self, action, idx):

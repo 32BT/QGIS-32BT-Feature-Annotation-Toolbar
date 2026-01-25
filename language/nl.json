@@ -36,9 +36,8 @@
     "SESSIONMENU_TITLE":
         "Sessiemenu",
     "SESSIONMENU_ITEM1":
-        "Start sessie...",
-    "SESSIONMENU_ITEM2":
         "Eigenschappen...",
+
 
     "SETTINGSDIALOG": {
         "TITLE":

@@ -41,10 +41,13 @@ class SessionController:
     def validateAction(self, action, idx):
         if idx == MENU.BUTTON.INDEX:
             return True
-        if idx == MENU.ITEM.INDEX.START_SESSION:
+        if idx == MENU.ITEM.INDEX.SESSION:
             return self.validateActionStartSession()
         if idx == MENU.ITEM.INDEX.SETTINGS:
             return self.validateActionSettings()
+        if idx == MENU.ITEM.INDEX.SESSION_START:
+            return self.validateActionStartSession()
+        return self.validateActionStartSession()
 
 
     # Annotations are only useful if there is something to annotate...
@@ -60,10 +63,13 @@ class SessionController:
     ########################################################################
 
     def handleAction(self, sender, idx):
-        if idx == MENU.ITEM.INDEX.START_SESSION:
-            return self.startSession()
         if idx == MENU.ITEM.INDEX.SETTINGS:
             return self.askSettings()
+        if idx == MENU.ITEM.INDEX.SESSION_START:
+            return self.startSession()
+        if idx > MENU.ITEM.INDEX.SESSION_START:
+            action = sender.action(idx)
+            return self.startSessionWithPath(action.data())
 
     ########################################################################
     ### Session
@@ -90,12 +96,15 @@ class SessionController:
             name = self.askSessionName(sessionSet)
             if name:
                 path = sessionSet.itemPath(name)
-                layer = Session(path).start_layer()
-                self._iface.setActiveLayer(layer)
+                self.startSessionWithPath(path)
 
     def askSessionName(self, sessionSet):
         parent = self._iface.mainWindow()
         return SessionDialog(parent).askInput(sessionSet)
+
+    def startSessionWithPath(self, path):
+        layer = Session(path).start_layer()
+        self._iface.setActiveLayer(layer)
 
     ########################################################################
     ### Storage Location
