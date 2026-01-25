@@ -36,7 +36,6 @@ class SessionMenu(QMenu):
         class INDEX:
             START_SESSION    = 0
             SETTINGS         = 1
-            STORAGE_LOCATION = 2
 
     ########################################################################
 

@@ -151,6 +151,7 @@ class Marker:
     ########################################################################
     # Compact form
 
+    @classmethod
     def from_properties(cls, P):
         geom = P.get('geom') or (0, 0)
         flag = P.get('flag')

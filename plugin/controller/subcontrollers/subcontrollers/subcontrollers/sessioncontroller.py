@@ -98,17 +98,6 @@ class SessionController:
         return SessionDialog(parent).askInput(sessionSet)
 
     ########################################################################
-    ### Settings
-    ########################################################################
-
-    def askSettings(self):
-        parent = self._iface.mainWindow()
-        params = dict(
-            path = Database.getGlobalPath(),
-            show = True)
-        params = SettingsDialog(parent).askSettings(params)
-
-    ########################################################################
     ### Storage Location
     ########################################################################
     '''
@@ -125,9 +114,22 @@ class SessionController:
         parent = self._iface.mainWindow()
         path = path or Database.getGlobalPath()
         path = StorageDialog(parent).askStorageLocation(path)
-        #path = SettingsDialog(parent).askSettings()
         if path:
             Database.setGlobalPath(path)
             return path
+
+    ########################################################################
+    ### Settings
+    ########################################################################
+
+    def askSettings(self):
+        parent = self._iface.mainWindow()
+        params = dict(
+            path = Database.getGlobalPath(),
+            show = True)
+        result = SettingsDialog(parent).askSettings(params)
+        if result:
+            if result.get('path') != params.get('path'):
+                Database.setGlobalPath(result.get('path'))
 
     ########################################################################

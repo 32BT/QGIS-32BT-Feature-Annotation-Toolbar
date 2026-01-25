@@ -55,8 +55,12 @@ class Dialog(QDialog, _form()):
 
     def askSettings(self, params=None):
         params = params or {}
-        self._storageSettings.setPath(params.get('path'))
-        self.adminTools.setChecked(params.get('show'))
+        path = params.get('path')
+        show = params.get('show')
+        self._storageSettings.setPath(path)
+        self.adminTools.setChecked(show)
         if self.exec():
-            return params
+            path = self._storageSettings.getPath()
+            show = self.adminTools.isChecked()
+            return dict(path=path, show=show)
 
