@@ -183,7 +183,7 @@ class MarkersController:
         layer = self._iface.activeLayer()
         format = self.runExportDialog(layer)
         if format:
-            pass
+            print('\n'.join(TMS.LAYER.export_as_json(layer)))
 
     def startArchive(self):
         layer = self._iface.activeLayer()

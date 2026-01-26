@@ -51,7 +51,8 @@ class Dialog(QDialog, _form()):
         self.pathLabel.setText(_DIALOG.PATH.LABEL)
         self.pathButton.clicked.connect(self.startBrowser)
 
-        self.pathText.setText(os.getcwd())
+        path = os.path.join(os.getcwd(), "export.gpkg")
+        self.pathText.setText(path)
 
 
     ########################################################################
@@ -68,7 +69,7 @@ class Dialog(QDialog, _form()):
             self.mainLabel.setText(label)
 
         if self.exec():
-            return None
+            return True
 
     ########################################################################
 

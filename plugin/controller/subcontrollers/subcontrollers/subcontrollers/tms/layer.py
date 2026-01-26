@@ -89,6 +89,28 @@ def set_style(layer, path):
 
 ################################################################################
 
+def name_as_json(layer):
+    return json.dumps(layer.name())
+
+def crs_as_json(layer):
+    return json.dumps(dict(type="name",
+    properties=dict(name=layer.crs().toOgcUrn())))
+
+def export_as_json(layer):
+    yield '{'
+    yield '"type": "FeatureCollection",'
+    yield '"name": '+name_as_json(layer)+','
+    yield '"crs": '+crs_as_json(layer)+','
+    yield '"Features": ['
+    n = layer.selectedFeatureCount()
+    for F in layer.getSelectedFeatures():
+        marker = Marker.from_qgsfeature(F)
+        yield json.dumps(marker.as_dict())+('',',')[n>1]
+        n -= 1
+    yield ']}'
+
+################################################################################
+
 def validate(layer, mode='r'):
     if is_valid(layer):
         if mode == 'r':
