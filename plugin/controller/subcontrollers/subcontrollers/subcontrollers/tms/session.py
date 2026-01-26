@@ -152,7 +152,7 @@ class Session(FSFolder):
 
     ########################################################################
     '''
-    IMPORTANT: markers are stored as GeoJSON with session.crs coordinates.
+    IMPORTANT: markers are stored as GeoJSON with layer.crs coordinates.
     '''
 
     def saveMarker(self, marker, info=''):
