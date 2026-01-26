@@ -13,8 +13,9 @@ from ..actionmanager import ACTION
 # Actions involve dialogs
 from .dialogs import MarkerDialog
 from .dialogs import RemoveDialog
-from .dialogs import ArchiveDialog
 from .dialogs import FreezeDialog
+from .dialogs import ExportDialog
+from .dialogs import ArchiveDialog
 
 # Require QGS.LAYER and TMS.LAYER functions
 from . import qgs as QGS
@@ -133,6 +134,8 @@ class MarkersController:
             return self.startRemove()
         if idx == ACTION.INDEX.FREEZE:
             return self.startFreeze()
+        if idx == ACTION.INDEX.EXPORT:
+            return self.startExport()
         if idx == ACTION.INDEX.ARCHIVE:
             return self.startArchive()
 
@@ -176,6 +179,12 @@ class MarkersController:
             TMS.LAYER.freezeMarkers(layer, flag)
             layer.removeSelection()
 
+    def startExport(self):
+        layer = self._iface.activeLayer()
+        format = self.runExportDialog(layer)
+        if format:
+            pass
+
     def startArchive(self):
         layer = self._iface.activeLayer()
         reason = self.runArchiveDialog(layer)
@@ -206,6 +215,10 @@ class MarkersController:
     def runFreezeDialog(self, layer):
         parent = self._iface.mapCanvas()
         return FreezeDialog(parent).askInput(layer)
+
+    def runExportDialog(self, layer):
+        parent = self._iface.mapCanvas()
+        return ExportDialog(parent).askInput(layer)
 
     def runArchiveDialog(self, layer):
         parent = self._iface.mapCanvas()

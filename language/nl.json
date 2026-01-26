@@ -135,6 +135,22 @@
             "(Maak het veld leeg om de markering te wissen.)"
         },
 
+    "EXPORTDIALOG": {
+        "TITLE":
+            "Export",
+        "LABEL": {
+            "LINE1": [
+                "Er zal {} notitie weggeschreven worden uit laag '{}'.",
+                "Er zullen {} notities weggeschreven worden uit laag '{}'."],
+            "LINE2":
+                "Selecteer een bestandslocatie om door te gaan." },
+        "PATH": {
+            "LABEL":
+                "Locatie:" }
+        },
+
+
+
     "ARCHIVEDIALOG": {
         "TITLE":
             "Archiveren",
