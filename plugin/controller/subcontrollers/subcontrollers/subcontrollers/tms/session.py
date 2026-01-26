@@ -1,6 +1,6 @@
 
 
-from ..database import FSItem, FSFile, FSFolder
+from ..database import FSItem, FSFile, FSFolder, LOGFile
 from ..database import JSONTable
 from .marker import Marker
 from .. import tms as TMS
@@ -61,6 +61,18 @@ class Session(FSFolder):
         return self._archiveFolder
 
     ########################################################################
+    _LOG_FILE_NAME = "log.csv"
+
+    @property
+    def logFile(self):
+        if not hasattr(self, '_logFile'):
+            path = self.itemPath(self._LOG_FILE_NAME)
+            self._logFile = LOGFile(path)
+        return self._logFile
+
+    def log(self, actionType, guid, info):
+        self.logFile.append(actionType, guid, info)
+    ########################################################################
 
     # Called from menu interaction
     def start_layer(self, name=None, crs=None):
@@ -74,16 +86,20 @@ class Session(FSFolder):
         if self.exists() and self.markersFolder.hasItems():
             for guid, dct in self.markersFolder.items():
                 marker = Marker.from_dict(dct)
-                if marker: TMS.LAYER.appendMarker(layer, marker)
+                if marker: TMS.LAYER.loadMarker(layer, marker)
         return layer
 
-    def saveMarker(self, marker):
+    def saveMarker(self, marker, info=''):
         folder = self.markersFolder.start(Marker)
-        folder.saveTableItem(marker.guid(), marker)
+        exists = folder.saveTableItem(marker.guid(), marker)
+        action = ('CREATE', 'UPDATE')[exists]
+        self.log(action, marker.guid(), info)
 
-    def fileMarker(self, marker, reason=None):
+    def fileMarker(self, marker, info=''):
         folder = self.archiveFolder.start()
         format = Marker.JSON.FORMAT.TYPE.COMPACT
         folder.saveItem(marker.guid()+'.json', marker.as_json(format))
         del self.markersFolder[marker.guid()]
+        action = ('DELETE', 'ARCHIVE')[bool(info)]
+        self.log(action, marker.guid(), info)
 

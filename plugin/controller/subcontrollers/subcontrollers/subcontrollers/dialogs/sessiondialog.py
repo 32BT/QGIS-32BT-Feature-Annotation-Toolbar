@@ -61,7 +61,7 @@ class Dialog(QDialog, _form()):
 
     def setSessionSet(self, sessionSet):
         db = sessionSet.parent()
-        self.setWindowTitle(db.name())
+        #self.setWindowTitle(db.name())
         self.mainLabel.setText(self._LABEL.format(db.path()))
         self.comboBox.clear()
         self.comboBox.addItems(list(sessionSet.folderItemNames()))

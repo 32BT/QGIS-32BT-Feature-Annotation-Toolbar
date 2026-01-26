@@ -112,6 +112,12 @@ def findMarker(layer, guid):
             return Marker.from_qgsfeature(F)
 
 ################################################################################
+'''
+Refresh needs to load existing markers into layer, without rewriting to session
+'''
+def loadMarker(layer, marker):
+    feature = marker.as_qgsfeature(layer.fields())
+    QGS.LAYER.appendFeature(layer, feature)
 
 def appendMarker(layer, marker):
     feature = marker.as_qgsfeature(layer.fields())
@@ -127,7 +133,7 @@ def updateMarker(layer, marker):
     session = Session.from_layer(layer)
     if session: session.saveMarker(marker)
 
-def removeMarkers(layer, reason=None):
+def removeMarkers(layer, reason=''):
     session = Session.from_layer(layer)
     if session:
         for F in layer.getSelectedFeatures():
@@ -136,7 +142,7 @@ def removeMarkers(layer, reason=None):
     ids = layer.selectedFeatureIds()
     QGS.LAYER.deleteFeatures(layer, ids)
 
-def freezeMarkers(layer, flag='\x01'):
+def freezeMarkers(layer, flag=''):
     if not flag: flag = None
     session = Session.from_layer(layer)
     for F in layer.getSelectedFeatures():
@@ -144,6 +150,7 @@ def freezeMarkers(layer, flag='\x01'):
         QGS.LAYER.updateFeature(layer, F)
         if session:
             marker = Marker.from_qgsfeature(F)
-            session.saveMarker(marker)
+            info = f"flagged:{flag}" if flag else "unflagged"
+            session.saveMarker(marker, info)
 
 ################################################################################

@@ -24,6 +24,7 @@ and the result of assigning the label, is the label value.
 Since we only log labels, we can skip the opcode.
 Code is currently in Session using a normal CSVFile.
 '''
+import os
 
 class LOGFile(CSVFile):
 
