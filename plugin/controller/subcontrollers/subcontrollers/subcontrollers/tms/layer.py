@@ -52,27 +52,37 @@ bits
 mark
 '''
 _URI = '&'.join((
-    "Point?crs=epsg:28992",
+    "Point?",
+    # "crs=epsg:28992",
     "field=flag:text(1)",
     "field=guid:text(32)",
     "field=date:text(32)",
     "field=note:text(190)",
     "index=yes"))
 
-def make(name='Terugmeldingen', crs=None):
+def make(name='Terugmeldingen', crs=None, qml=None):
     layer = QgsVectorLayer(_URI, name, 'memory')
     set_type(layer, TYPE.SOURCE)
-    set_style(layer, 'layer.qml')
-    if crs: layer.setCrs(crs)
+    set_crs(layer, crs)
+    set_qml(layer, qml)
     return layer
 
 
-def set_style(layer, fileName=None):
-    path = os.path.split(__file__)[0]
-    path = os.path.join(path, fileName or 'layer.qml')
-    if os.path.exists(path):
+def set_crs(layer, crs):
+    if isinstance(crs, str):
+        crs = QgsCoordinateReferenceSystem(crs)
+    layer.setCrs(crs or QgsProject.instance().crs())
+
+def set_qml(layer, path=''):
+    if not (path and os.path.exists(path)):
+        path = os.path.split(__file__)[0]
+        path = os.path.join(path, 'layer.qml')
+    set_style(layer, path)
+
+def set_style(layer, path):
+    if path and os.path.exists(path):
         layer.loadNamedStyle(path,
-            flags=Qgis.LoadStyleFlag.IgnoreMissingStyleErrors)
+        flags=Qgis.LoadStyleFlag.IgnoreMissingStyleErrors)
     else:
         symbol = layer.renderer().symbol()
         symbol.setColor(QColor.fromRgb(255,255,0))
@@ -113,12 +123,17 @@ def findMarker(layer, guid):
 
 ################################################################################
 '''
-Refresh needs to load existing markers into layer, without rewriting to session
+Session.refresh needs to load existing markers into layer,
+without rewriting to session.
 '''
 def loadMarker(layer, marker):
     feature = marker.as_qgsfeature(layer.fields())
     QGS.LAYER.appendFeature(layer, feature)
 
+'''
+Append marker to layer and, if available, to session as well.
+(Marker is already created, and it is a true append, hence the name.)
+'''
 def appendMarker(layer, marker):
     feature = marker.as_qgsfeature(layer.fields())
     QGS.LAYER.appendFeature(layer, feature)
@@ -133,6 +148,11 @@ def updateMarker(layer, marker):
     session = Session.from_layer(layer)
     if session: session.saveMarker(marker)
 
+'''
+In a session, markers are never deleted. Instead, they are always moved to
+the archive folder. A removal without reason will be logged by the session
+as a delete action.
+'''
 def removeMarkers(layer, reason=''):
     session = Session.from_layer(layer)
     if session:
@@ -142,6 +162,9 @@ def removeMarkers(layer, reason=''):
     ids = layer.selectedFeatureIds()
     QGS.LAYER.deleteFeatures(layer, ids)
 
+'''
+A freeze will be logged as a MODIFY with either the flagvalue or "unflagged".
+'''
 def freezeMarkers(layer, flag=''):
     if not flag: flag = None
     session = Session.from_layer(layer)

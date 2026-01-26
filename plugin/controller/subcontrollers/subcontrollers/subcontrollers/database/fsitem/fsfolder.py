@@ -6,7 +6,6 @@ from .fsfile import FSFile
 
 ################################################################################
 '''
-
 start
 -----
 If path does not exist, it will be created as folder (recursively if necessary).
