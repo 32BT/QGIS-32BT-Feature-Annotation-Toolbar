@@ -15,11 +15,13 @@ _MODULE = sys.modules.get(__name__.split('.')[0])
 _IDENTITY = _MODULE.IDENTITY
 _LANGUAGE = _MODULE.LANGUAGE
 _LABELS = _LANGUAGE.LABELS({
-    "SESSIONMENU_TITLE": "Sessionmenu",
-    "SESSIONMENU_ITEM1": "Session",
-    "SESSIONMENU_ITEM2": "Settings...",
-    "STARTMENU_TITLE": "Session",
-    "STARTMENU_ITEM1": "Start..."
+    "SESSIONMENU": {
+        "TITLE": "Sessionmenu",
+        "ITEM1": "Session",
+        "ITEM2": "Settings..." },
+    "STARTMENU": {
+        "TITLE": "Session",
+        "ITEM1": "Start..." }
     })
 
 
@@ -32,7 +34,7 @@ class StartMenu(QMenu):
 
     def updateMenu(self):
         self.clear()
-        self.addAction(_LABELS.STARTMENU_ITEM1)
+        self.addAction(_LABELS.STARTMENU.ITEM1)
         db = Database()
         if db and db.exists():
             sessionSet = db.getSessionSet()
@@ -66,19 +68,19 @@ class SessionMenu(QMenu):
     handleAction = pyqtSignal(object, object, object)
 
     def __init__(self, parent=None):
-        super().__init__(_LABELS.SESSIONMENU_TITLE, parent)
+        super().__init__(_LABELS.SESSIONMENU.TITLE, parent)
         self.setObjectName("fat:sessionMenu")
 
         self._actions = []
 
-        self._startMenu = StartMenu(_LABELS.STARTMENU_TITLE)
+        self._startMenu = StartMenu(_LABELS.STARTMENU.TITLE)
         action = self.addMenu(self._startMenu)
         action.setObjectName("fat:menuActionStartMenu")
         self._actions.append(action)
 
         action = self.addSeparator()
 
-        action = self.addAction(_LABELS.SESSIONMENU_ITEM2)
+        action = self.addAction(_LABELS.SESSIONMENU.ITEM2)
         action.setObjectName("fat:menuActionSettings")
         self._actions.append(action)
 

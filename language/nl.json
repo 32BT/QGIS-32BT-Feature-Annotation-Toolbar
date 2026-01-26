@@ -14,7 +14,6 @@
             "Notitie Verwijderen"
     },
 
-
     "ADMINTOOLS": {
         "ITEM1":
             "Notities Vastleggen",
@@ -24,20 +23,32 @@
             "Notities Archiveren"
     },
 
-    "CTXMENU_TITLE":
-        "Notitie",
-    "CTXMENU_ITEM1":
-        "Aanmaken...",
-    "CTXMENU_ITEM2":
-        "Wijzigen...",
-    "CTXMENU_ITEM3":
-        "Verwijderen...",
+    "CTXMENU": {
+        "TITLE":
+            "Notitie",
+        "ITEM1":
+            "Aanmaken...",
+        "ITEM2":
+            "Wijzigen...",
+        "ITEM3":
+            "Verwijderen..."
+    },
 
-    "SESSIONMENU_TITLE":
-        "Sessiemenu",
-    "SESSIONMENU_ITEM1":
-        "Eigenschappen...",
+    "SESSIONMENU": {
+        "TITLE":
+            "Sessiemenu",
+        "ITEM1":
+            "Sessie",
+        "ITEM2":
+            "Eigenschappen..."
+    },
 
+    "STARTMENU": {
+        "TITLE":
+            "Sessie",
+        "ITEM1":
+            "Start..."
+    },
 
     "SETTINGSDIALOG": {
         "TITLE":

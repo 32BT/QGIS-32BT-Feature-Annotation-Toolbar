@@ -105,11 +105,6 @@ class Session(FSFolder):
     ########################################################################
     ########################################################################
 
-    @crs.setter
-    def crs(self, crs):
-        if hasattr(crs, 'authid'): crs = crs.authid()
-        self._crs = crs or 'EPSG:4326'
-
     @property
     def crs(self):
         if not hasattr(self, '_crs') or not self._crs:
@@ -117,6 +112,11 @@ class Session(FSFolder):
             if crs: crs = crs.strip()
             self._crs = crs or (self.logFile.readHdr() or [None])[-1]
         return self._crs
+
+    @crs.setter
+    def crs(self, crs):
+        if hasattr(crs, 'authid'): crs = crs.authid()
+        self._crs = crs or 'EPSG:4326'
 
     ########################################################################
     '''
@@ -126,10 +126,10 @@ class Session(FSFolder):
     Existing sessions will read crs from log file.
     '''
     def start(self, crs):
-        if not self.exists():
+        if not self.logFile.exists():
             super().start()
-            self.crs = crs
-            self.log('CREATE', Marker.class_guid(), self.crs)
+            self.crs = crs # <- stuff crs, also translates qgsobject to text
+            self.log('CREATE', Marker.class_guid(), self.crs) # <- fetch crs
         return self
 
     ########################################################################
