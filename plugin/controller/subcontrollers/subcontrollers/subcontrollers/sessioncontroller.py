@@ -103,10 +103,17 @@ class SessionController:
         return SessionDialog(parent).askInput(sessionSet)
 
     def startSessionWithPath(self, path):
-        # A new session will default to project-crs
-        suggested_crs = QgsProject.instance().crs()
-        layer = Session(path).start_layer(suggested_crs)
+        layer = self.findLayer(path)
+        if not layer:
+            # A new session will default to project-crs
+            suggested_crs = QgsProject.instance().crs()
+            layer = Session(path).start_layer(suggested_crs)
         self._iface.setActiveLayer(layer)
+
+    def findLayer(self, path):
+        layers = QgsProject.instance().mapLayers().values()
+        for layer in layers:
+            if Session.get_path(layer) == path: return layer
 
     ########################################################################
     ### Storage Location

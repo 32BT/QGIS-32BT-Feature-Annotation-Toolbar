@@ -52,13 +52,12 @@ bits
 mark
 '''
 _URI = '&'.join((
-    "Point?",
+    "Point?index=yes",
     # "crs=epsg:28992",
     "field=flag:text(1)",
     "field=guid:text(32)",
     "field=date:text(32)",
-    "field=note:text(190)",
-    "index=yes"))
+    "field=note:text(190)"))
 
 def make(name='Terugmeldingen', crs=None, qml=None):
     layer = QgsVectorLayer(_URI, name, 'memory')

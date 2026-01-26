@@ -17,9 +17,8 @@ class Session(FSFolder):
     _SESSIONPATH_KEY = "tms/session/path"
 
     @classmethod
-    def validate_layer(cls, layer):
-        return (hasattr(layer, 'customProperty') and
-        bool(layer.customProperty(cls._SESSIONPATH_KEY)))
+    def validate_layer(cls, layer, path=None):
+        return bool(layer.customProperty(cls._SESSIONPATH_KEY))
 
     @classmethod
     def get_path(cls, layer):
