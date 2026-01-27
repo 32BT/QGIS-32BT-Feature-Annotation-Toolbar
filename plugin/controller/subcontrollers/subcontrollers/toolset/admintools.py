@@ -1,48 +1,42 @@
 
 
-from .toolset import ToolSet
+from qgis.PyQt.QtCore import QObject, pyqtSignal
+
+from .actions import ToolActionMarkerFreeze
+from .actions import ToolActionMarkerExport
+from .actions import ToolActionMarkerArchive
+
 
 ################################################################################
-### Language
-################################################################################
-'''
-'''
-import sys
-_MODULE = sys.modules.get(__name__.split('.')[0])
-_LABELS = _MODULE.LANGUAGE.LABELS({
-    "ADMINTOOLS": {
-        "ITEM1": "Lock Markers",
-        "ITEM2": "Export Markers",
-        "ITEM3": "Archive Markers" }
-    })
-
-################################################################################
-### TokenTools
+### Controller
 ################################################################################
 
-class AdminTools(ToolSet):
-    class TOOL:
-        class BUTTON1:
-            NAME = _LABELS.ADMINTOOLS.ITEM1
-            ICON = "marker_freeze"
-            UIID = "toolbarActionFreeze"
-        class BUTTON2:
-            NAME = _LABELS.ADMINTOOLS.ITEM2
-            ICON = "marker_export"
-            UIID = "toolbarActionExport"
-        class BUTTON3:
-            NAME = _LABELS.ADMINTOOLS.ITEM3
-            ICON = "marker_archive"
-            UIID = "toolbarActionArchive"
+class AdminTools(QObject):
+    updateAction = pyqtSignal(object)
+    handleAction = pyqtSignal(object)
 
-    def __init__(self, toolBar):
-        super().__init__(toolBar, {
-            self.TOOL.BUTTON1.NAME: self.TOOL.BUTTON1.ICON,
-            self.TOOL.BUTTON2.NAME: self.TOOL.BUTTON2.ICON,
-            self.TOOL.BUTTON3.NAME: self.TOOL.BUTTON3.ICON
-        })
+    def __init__(self, iface, toolBar):
+        super().__init__()
+        self._iface = iface
 
-        self.action(0).setObjectName("toolbarActionFreeze")
-        self.action(1).setObjectName("toolbarActionExport")
-        self.action(2).setObjectName("toolbarActionArchive")
+        self._markerFreeze = ToolActionMarkerFreeze(self)
+        self._markerExport = ToolActionMarkerExport(self)
+        self._markerArchive = ToolActionMarkerArchive(self)
 
+        action1 = toolBar.addSeparator()
+        action2 = toolBar.addAction(self._markerFreeze)
+        action3 = toolBar.addAction(self._markerExport)
+        action4 = toolBar.addAction(self._markerArchive)
+        self._actions = [action1, action2, action3, action4]
+
+    def __del__(self):
+        for action in self._actions:
+            parent = action.parent()
+            parent.removeAction(action)
+
+    ########################################################################
+
+    def updateActions(self):
+        self._markerFreeze.update()
+        self._markerExport.update()
+        self._markerArchive.update()

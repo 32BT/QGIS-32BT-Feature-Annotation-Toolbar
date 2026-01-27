@@ -40,9 +40,9 @@ class ActionHandler:
     '''
     Receives ACTION.INDEX types
     '''
-    def updateAction(self, action, idx):
-        return self._markersController.updateAction(action, idx)
+    def updateAction(self, action):
+        return self._markersController.updateAction(action)
 
-    def handleAction(self, sender, idx):
-        return self._markersController.handleAction(sender, idx)
+    def handleAction(self, action):
+        return self._markersController.handleAction(action)
 

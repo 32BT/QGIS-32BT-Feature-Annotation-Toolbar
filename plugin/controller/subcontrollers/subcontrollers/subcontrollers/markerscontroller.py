@@ -8,7 +8,7 @@ from qgis.PyQt.QtCore import *
 ################################################################################
 
 # Action indices
-from ..actionmanager import ACTION
+from ..toolset.actions import ACTION
 
 # Actions involve dialogs
 from .dialogs import MarkerDialog
@@ -57,18 +57,18 @@ class MarkersController:
     ### Update Action
     ########################################################################
 
-    def updateAction(self, action, idx):
-        action.setEnabled(self.validateAction(action, idx))
+    def updateAction(self, action):
+        action.setEnabled(self.validateAction(action, action.INDEX))
 
     def validateAction(self, action, idx):
         # It is not generally sensible to annotate an empty map
         n = len(QgsProject.instance().mapLayers())
-        if idx == ACTION.INDEX.CREATE: return n>0
+        if idx == ACTION.INDEX.APPEND: return n>0
         # Remaining actions require a selection
         n = self._validateActiveLayer() or 0
         if idx == ACTION.INDEX.MODIFY:
             return n==1 and self._validateActionModify()
-        if idx == ACTION.INDEX.DELETE:
+        if idx == ACTION.INDEX.REMOVE:
             return n>=1 and self._validateActionDelete()
         if idx == ACTION.INDEX.FREEZE:
             return n>=1 and self._validateActionFreeze()
@@ -79,8 +79,29 @@ class MarkersController:
         return False
 
     ########################################################################
+    ### Handle Action
+    ########################################################################
+
+    def handleAction(self, sender, idx=None):
+        idx = sender.INDEX
+        if idx == ACTION.INDEX.APPEND:
+            return self.startAppend()
+        if idx == ACTION.INDEX.MODIFY:
+            return self.startModify()
+        if idx == ACTION.INDEX.REMOVE:
+            return self.startRemove()
+        if idx == ACTION.INDEX.FREEZE:
+            return self.startFreeze()
+        if idx == ACTION.INDEX.EXPORT:
+            return self.startExport()
+        if idx == ACTION.INDEX.ARCHIVE:
+            return self.startArchive()
+
+    ########################################################################
     ### Validate Action
     ########################################################################
+    def validateLayer(self, layer):
+        return TMS.LAYER.validate(layer, mode='w')
     '''
     _validateActiveLayer
     --------------------
@@ -122,31 +143,17 @@ class MarkersController:
         return Session.validate_layer(layer)
 
     ########################################################################
-    ### Handle Action
+    ### Start Action
     ########################################################################
 
-    def handleAction(self, sender, idx):
-        if idx == ACTION.INDEX.CREATE:
-            return self.startAppend()
-        if idx == ACTION.INDEX.MODIFY:
-            return self.startModify()
-        if idx == ACTION.INDEX.DELETE:
-            return self.startRemove()
-        if idx == ACTION.INDEX.FREEZE:
-            return self.startFreeze()
-        if idx == ACTION.INDEX.EXPORT:
-            return self.startExport()
-        if idx == ACTION.INDEX.ARCHIVE:
-            return self.startArchive()
-
-    ########################################################################
-
-    def startAppend(self):
+    def startAppend(self, mapPoint=None):
         layer = self.findLayer()
         note = self.runInputDialog(layer)
         if note:
             layer = self.assertLayer(layer)
-            layerPoint = self._getLastEventLocation(layer.crs())
+            if mapPoint is None:
+                mapPoint = self._getLastEventLocation()
+            layerPoint = self._convertMapPoint(mapPoint, layer.crs())
             # WARNING: A rather broad assumption...
             if layer.crs().mapUnits() == QgsUnitTypes.DistanceMeters:
                 layerPoint = TMS.Marker.class_round(layerPoint, 3)

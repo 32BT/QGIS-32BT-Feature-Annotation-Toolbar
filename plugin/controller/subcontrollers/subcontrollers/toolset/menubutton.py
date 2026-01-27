@@ -7,8 +7,8 @@ from qgis.PyQt.QtWidgets import *
 ### Imports
 ################################################################################
 
-# MenuButton requires access to _load_icon
-from .toolset import ToolSet
+# MenuButton requires access to icon
+from .icons import loadIcon
 
 # MenuButton has SessionMenu attached
 from .sessionmenu import SessionMenu
@@ -31,7 +31,7 @@ class MenuButton:
 
         self._action = QAction()
         self._action.setObjectName("toolbarActionSessionMenu")
-        self._action.setIcon(ToolSet._load_icon(iconName))
+        self._action.setIcon(loadIcon(iconName))
         self._action.setText(self._menu.title())
         self._action.triggered.connect(self.showMenu)
         #self._actions.append(self._action)

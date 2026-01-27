@@ -7,7 +7,6 @@
 from .subcontrollers import ActionManager
 from .subcontrollers import ActionHandler
 
-
 class ToolController:
     def __init__(self, iface, toolBar):
         self._iface = iface

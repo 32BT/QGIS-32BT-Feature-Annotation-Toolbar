@@ -5,6 +5,15 @@
     "TOOLBAR_TITLE":
         "Werkbalk Objectannotatie",
 
+    "ACTION": {
+        "APPEND": "Notitie Aanmaken...",
+        "MODIFY": "Notitie Wijzigen...",
+        "REMOVE": "Notitie Verwijderen...",
+        "FREEZE": "Notities Vastleggen...",
+        "EXPORT": "Notities Exporteren...",
+        "ARCHIVE": "Notities Archiveren..." },
+
+
     "TOKENTOOLS": {
         "ITEM1":
             "Notitie Aanmaken",
