@@ -58,7 +58,7 @@ class MarkersController:
     ########################################################################
 
     def updateAction(self, action):
-        action.setEnabled(self.validateAction(action, action.INDEX))
+        action.setEnabled(bool(self.validateAction(action, action.INDEX)))
 
     def validateAction(self, action, idx):
         # It is not generally sensible to annotate an empty map
@@ -119,8 +119,8 @@ class MarkersController:
     # Only allow unflagged items to be modified
     def _validateActionModify(self):
         layer = self._iface.activeLayer()
-        marker = next(TMS.LAYER.fetchMarkers(layer))
-        return bool(marker.flag()) == False
+        for marker in TMS.LAYER.fetchMarkers(layer):
+            return bool(marker.flag()) == False
 
     # Only allow unflagged items in a deleteset
     def _validateActionDelete(self):

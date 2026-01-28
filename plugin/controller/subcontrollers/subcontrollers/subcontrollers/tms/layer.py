@@ -157,7 +157,7 @@ Append marker to layer and, if available, to session as well.
 '''
 def appendMarker(layer, marker):
     feature = marker.as_qgsfeature(layer.fields())
-    QGS.LAYER.appendFeature(layer, feature)
+    QGS.LAYER.appendFeature(layer, feature, True)
     session = Session.from_layer(layer)
     if session: session.saveMarker(marker)
 

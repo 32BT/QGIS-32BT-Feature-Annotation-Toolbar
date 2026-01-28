@@ -157,10 +157,10 @@ def deleteFeatures(layer, fids):
 
 ################################################################################
 
-def appendFeature(layer, feature):
+def appendFeature(layer, feature, select=False):
     with edit(layer):
         layer.addFeature(feature)
-        layer.selectByIds([feature.id()])
+        if select: layer.selectByIds([feature.id()])
 
 def updateFeature(layer, feature):
     with edit(layer):
