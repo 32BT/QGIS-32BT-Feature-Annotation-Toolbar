@@ -10,9 +10,6 @@ from qgis.PyQt.QtCore import *
 ### Imports
 ################################################################################
 
-# Menu definitions
-from ..toolset.sessionmenu import SessionMenu as MENU
-
 from .database import Database
 from .tms.session import Session
 from .tms.sentinel import Sentinel
@@ -20,6 +17,9 @@ from .tms.sentinel import Sentinel
 from .dialogs import StorageDialog
 from .dialogs import SessionDialog
 from .dialogs import SettingsDialog
+
+# Menu definitions
+from ..toolset.sessionmenu import MENU
 
 ################################################################################
 ### Controller

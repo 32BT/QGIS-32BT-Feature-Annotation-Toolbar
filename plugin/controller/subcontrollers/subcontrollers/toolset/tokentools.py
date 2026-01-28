@@ -45,7 +45,6 @@ class TokenTools(ActionSet):
             self.getAction(2),
             self.getAction(3)])
 
-
         '''
         The toolbar-version of markerAppend requires a mapTool in order
         to acquire a mapLocation from the user.

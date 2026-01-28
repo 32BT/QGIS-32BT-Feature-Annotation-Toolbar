@@ -69,7 +69,7 @@ class Dialog(QDialog, _form()):
             self.mainLabel.setText(label)
 
         if self.exec():
-            return True
+            return self.pathText.text(), "GPKG"
 
     ########################################################################
 

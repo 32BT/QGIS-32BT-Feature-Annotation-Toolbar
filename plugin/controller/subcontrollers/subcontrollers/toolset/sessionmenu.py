@@ -5,6 +5,19 @@ from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtWidgets import *
 from qgis.PyQt.QtGui import *
 
+################################################################################
+### Definitions
+################################################################################
+'''
+'''
+class MENU:
+    class BUTTON:
+        INDEX                = -1
+    class ITEM:
+        class INDEX:
+            SESSION          = 0
+            SETTINGS         = 1
+            SESSION_START    = 2
 
 ################################################################################
 ### Language
@@ -25,45 +38,11 @@ _LABELS = _LANGUAGE.LABELS({
     })
 
 
-from ..subcontrollers.database import Database
-
-class StartMenu(QMenu):
-    class ITEM:
-        class INDEX:
-            START = 0
-
-    def updateMenu(self):
-        self.clear()
-        self.addAction(_LABELS.STARTMENU.ITEM1)
-        db = Database()
-        if db and db.exists():
-            sessionSet = db.getSessionSet()
-            items = list(sessionSet.folderItemNames())
-            for item in items:
-                action = self.addAction(item)
-                action.setData(sessionSet.itemPath(item))
-
-
 ################################################################################
 ### SessionMenu
 ################################################################################
 
-class SessionMenu(QMenu):
-
-    ########################################################################
-    ### Definities
-    ########################################################################
-
-    class BUTTON:
-        INDEX                = -1
-    class ITEM:
-        class INDEX:
-            SESSION          = 0
-            SETTINGS         = 1
-            SESSION_START    = 2
-
-    ########################################################################
-
+class SessionMenu(QMenu, MENU):
     updateAction = pyqtSignal(object, object, object)
     handleAction = pyqtSignal(object, object, object)
 
@@ -117,6 +96,38 @@ class SessionMenu(QMenu):
         self.handleAction.emit(self, action, idx)
     ########################################################################
 
+################################################################################
+### Start Menu
+################################################################################
+'''
+WARNING: SessionController is part of ..subcontrollers.__init__ and refers back
+to this file for the MENU definition.
+This does not seem to cause problems THE FIRST TIME loading the plugin, but it
+does cause problems on subsequent activations if sessioncontroller tries to read
+beyond the database import. BEWARE WHEN TESTING!
+
+Triple safety measures:
+    - MENU is defined first
+    - SessionMenu includes MENU
+    - StartMenu is defined after SessionMenu
+'''
+from ..subcontrollers.database import Database
+
+class StartMenu(QMenu):
+    class ITEM:
+        class INDEX:
+            START = 0
+
+    def updateMenu(self):
+        self.clear()
+        self.addAction(_LABELS.STARTMENU.ITEM1)
+        db = Database()
+        if db and db.exists():
+            sessionSet = db.getSessionSet()
+            items = list(sessionSet.folderItemNames())
+            for item in items:
+                action = self.addAction(item)
+                action.setData(sessionSet.itemPath(item))
 
 
 

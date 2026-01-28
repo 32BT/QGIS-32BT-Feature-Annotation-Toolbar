@@ -198,3 +198,14 @@ def freezeMarkers(layer, flag=''):
             session.saveMarker(marker, info)
 
 ################################################################################
+
+def exportMarkers(layer, path, driverName="GPKG"):
+    transform_context = QgsProject.instance().transformContext()
+    save_options = QgsVectorFileWriter.SaveVectorOptions()
+    save_options.driverName = driverName
+    save_options.fileEncoding = "UTF-8"
+    error = QgsVectorFileWriter.writeAsVectorFormatV3(
+        layer, path, transform_context, save_options)
+    return error
+
+################################################################################

@@ -34,7 +34,6 @@ class MenuButton:
         self._action.setIcon(loadIcon(iconName))
         self._action.setText(self._menu.title())
         self._action.triggered.connect(self.showMenu)
-        #self._actions.append(self._action)
 
         self._button = QToolButton()
         self._button.setObjectName("toolbarButtonSessionMenu")
