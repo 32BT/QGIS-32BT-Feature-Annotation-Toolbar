@@ -10,7 +10,6 @@ from qgis.PyQt.QtWidgets import QDialog, QFileDialog, QMessageBox
 
 import sys
 _MODULE = sys.modules.get(__name__.split('.')[0])
-
 _LABELS = _MODULE.LANGUAGE.LABELS({
     "EXPORTDIALOG": {
         "TITLE":
@@ -20,10 +19,8 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
                 "You are about to export {} marker from layer '{}'.",
                 "You are about to export {} markers from layer '{}'."],
             "LINE2":
-                "Select a destination filepath to continue." },
-        "PATH": {
-            "LABEL":
-                "Filepath:" }
+                "Select the savebutton to choose a destination file." },
+        "FILE": { "TYPE": { "CUSTOM": "Custom" }}
         }
     })
 
@@ -43,17 +40,20 @@ def _form():
 ################################################################################
 
 class Dialog(QDialog, _form()):
+    _LAST_PATH = os.path.join(os.path.expanduser("~"), 'export.gpkg')
+
+    @classmethod
+    def get_lastpath(cls): return cls._LAST_PATH
+    @classmethod
+    def set_lastpath(cls, path): cls._LAST_PATH = path
 
     def __init__(self, parent):
         super().__init__(parent)
         self.setupUi(self)
         self.setWindowTitle(_DIALOG.TITLE)
-        self.pathLabel.setText(_DIALOG.PATH.LABEL)
-        self.pathButton.clicked.connect(self.startBrowser)
-
-        path = os.path.join(os.getcwd(), "export.gpkg")
-        self.pathText.setText(path)
-
+        self.mainLabel.setText(_DIALOG.LABEL.LINE2)
+        button = self.buttonBox.button(self.buttonBox.StandardButton.Save)
+        if button: button.setText(button.text()+'...')
 
     ########################################################################
     ### Entrypoint
@@ -69,16 +69,42 @@ class Dialog(QDialog, _form()):
             self.mainLabel.setText(label)
 
         if self.exec():
-            return self.pathText.text(), "GPKG"
+            # if savebutton was clicked, start file-browser
+            path = self.startBrowser()
+            if path:
+                _, ext = os.path.splitext(path)
+                return path, ext[1:]
 
     ########################################################################
+    _FORMATS = {
+        ".": _DIALOG.FILE.TYPE.CUSTOM + " (*.*)",
+        ".geojson": "GeoJSON (*.geojson)",
+        ".gpkg": "GeoPackage (*.gpkg)",
+        ".gml": "GML (*.gml)"}
 
-    # if browserbutton was clicked, start file-browser
-    def startBrowser(self):
-        path = self.pathText.text()
+    def _get_format(self, ext):
+        return self._FORMATS.get(ext.lower()) or self._FORMATS.get(".")
+
+    _EXTENSION = dict(zip(_FORMATS.values(), _FORMATS.keys()))
+
+    def _get_extension(self, format):
+        return self._EXTENSION.get(format) or "."
+    ########################################################################
+
+    def startBrowser(self, parent=None):
+        path = self.get_lastpath()
+        _, ext = os.path.splitext(path)
+
         path, format = QFileDialog.getSaveFileName(
-        directory=path, filter="GeoPackage (*.gpkg)")
+            caption="Export",
+            directory=path,
+            filter=';;'.join(self._FORMATS.values()),
+            initialFilter=self._get_format(ext))
         if path:
-            path, ext = os.path.splitext(path)
-            if ext.lower() != '.gpkg': ext = '.gpkg'
-            self.pathText.setText(path+ext)
+            ext = self._get_extension(format)
+            if ext != os.path.splitext(path)[-1].lower():
+                if ext != ".": path += ext
+            self.set_lastpath(path)
+            return path
+
+

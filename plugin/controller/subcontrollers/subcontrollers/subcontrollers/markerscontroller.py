@@ -190,8 +190,7 @@ class MarkersController:
         layer = self._iface.activeLayer()
         result = self.runExportDialog(layer)
         if result:
-            path, format = result
-            TMS.LAYER.exportMarkers(layer, path, "GeoJSON")
+            TMS.LAYER.exportMarkers(layer, *result)
 
     def startArchive(self):
         layer = self._iface.activeLayer()

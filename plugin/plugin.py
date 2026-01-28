@@ -24,7 +24,4 @@ class Plugin:
         self._controller = None
         self._toolBar = None
 
-    def __del__(self):
-        print('Plugin.__del__')
-
 ################################################################################

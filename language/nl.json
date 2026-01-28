@@ -152,10 +152,8 @@
                 "Er zal {} notitie weggeschreven worden uit laag '{}'.",
                 "Er zullen {} notities weggeschreven worden uit laag '{}'."],
             "LINE2":
-                "Selecteer een bestandslocatie om door te gaan." },
-        "PATH": {
-            "LABEL":
-                "Locatie:" }
+                "Geef een bestandslocatie op om door te gaan." },
+        "FILE": { "TYPE": { "CUSTOM": "Anders" }}
         },
 
 
