@@ -1,9 +1,8 @@
 
 
-from qgis.PyQt.QtCore import QObject, pyqtSignal
 from qgis.PyQt.QtWidgets import QMenu
 
-
+from .actionset import ActionSet
 from .actions import MenuActionMarkerAppend
 from .actions import ToolActionMarkerAppend
 from .actions import ToolActionMarkerModify
@@ -15,8 +14,7 @@ from .maptools import PanningMarkerMapTool
 ################################################################################
 ### Language
 ################################################################################
-'''
-'''
+
 import sys
 _MODULE = sys.modules.get(__name__.split('.')[0])
 _LABELS = _MODULE.LANGUAGE.LABELS({
@@ -27,41 +25,42 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
 ### Controller
 ################################################################################
 
-class TokenTools(QObject):
-    updateAction = pyqtSignal(object)
-    handleAction = pyqtSignal(object)
-
+class TokenTools(ActionSet):
     def __init__(self, iface, toolBar):
-        super().__init__()
+        super().__init__(
+            MenuActionMarkerAppend(),
+            ToolActionMarkerAppend(),
+            ToolActionMarkerModify(),
+            ToolActionMarkerRemove())
+
+        toolBar.addSeparator()
+        toolBar.addActions([
+            self.getAction(1),
+            self.getAction(2),
+            self.getAction(3)])
+
+        self._menu = QMenu(_LABELS.CTXMENU.TITLE)
+        self._menu.addActions([
+            self.getAction(0),
+            self.getAction(2),
+            self.getAction(3)])
+
+
+        '''
+        The toolbar-version of markerAppend requires a mapTool in order
+        to acquire a mapLocation from the user.
+        The contextmenu-version of markerAppend gets the mapLocation from the
+        contextMenu mouseEvent during the prepareContextMenu signal.
+        (See self.prepareContextMenu below.)
+
+        The contextmenu-version can remain connected straight to our signals,
+        but the toolbar-version needs to be preprocessed locally to start
+        the maptool and acquire the desired mapLocation.
+        '''
         self._iface = iface
-
-        '''
-        The toolbar-version of markerAppend requires maptoolinteraction.
-        The contextmenu-version of markerAppend does not.
-        (It gets the mapLocation from the contextMenu mouseEvent during the
-        prepareContextMenu signal. See self.prepareContextMenu below).
-        '''
-        self._markerAppend_menu = MenuActionMarkerAppend(self)
-        self._markerAppend = ToolActionMarkerAppend(self)
-        self._markerModify = ToolActionMarkerModify(self)
-        self._markerRemove = ToolActionMarkerRemove(self)
-
-        # Need to handle toolbar-version of markerAppend locally
-        self._markerAppend.handleAction.disconnect(self.handleAction)
-        self._markerAppend.handleAction.connect(self.handleAppend)
-
-        # Add actions to toolBar
-        if toolBar.actions(): toolBar.addSeparator()
-        toolBar.addAction(self._markerAppend)
-        toolBar.addAction(self._markerModify)
-        toolBar.addAction(self._markerRemove)
-
-        # Also create submenu for contextmenu
-        ctxMenu = QMenu(_LABELS.CTXMENU.TITLE)
-        ctxMenu.addAction(self._markerAppend_menu)
-        ctxMenu.addAction(self._markerModify)
-        ctxMenu.addAction(self._markerRemove)
-        self._ctxMenu = ctxMenu
+        self._appendAction = self.getAction(1)
+        self._appendAction.handleAction.disconnect(self.handleAction)
+        self._appendAction.handleAction.connect(self.handleAppend)
 
         mapCanvas = self._iface.mapCanvas()
         mapCanvas.contextMenuAboutToShow.connect(self.prepareContextMenu)
@@ -71,13 +70,6 @@ class TokenTools(QObject):
         mapCanvas.contextMenuAboutToShow.disconnect(self.prepareContextMenu)
 
     ########################################################################
-
-    def updateActions(self):
-        self._markerAppend.update()
-        self._markerModify.update()
-        self._markerRemove.update()
-
-    ########################################################################
     '''
     MarkersController expects a mapLocation to be attached to the actionAppend.
     If the ctxmenu-actionAppend is triggered, then the mouseEvent is used.
@@ -85,14 +77,14 @@ class TokenTools(QObject):
     and the canvasClicked result will be used.
     '''
     def prepareContextMenu(self, menu, mouseEvent):
-        self._markerAppend_menu.mapLocation = mouseEvent.originalMapPoint()
-        self._markerAppend_menu.update()
-        menu.addMenu(self._ctxMenu)
+        appendAction = self.getAction(0)
+        appendAction.mapLocation = mouseEvent.originalMapPoint()
+        menu.addMenu(self._menu)
 
     ########################################################################
     '''
     Handle markerAppend action ourself in order to obtain mapLocation.
-    Once we have the mapLocation, the action is tranferred to markersController.
+    Once we have the mapLocation, the action is transmitted.
     '''
 
     def handleAppend(self, action):
@@ -106,10 +98,10 @@ class TokenTools(QObject):
     def _markerMapTool(self, mapCanvas):
         if not hasattr(self, '_marker'):
             self._marker = PanningMarkerMapTool(mapCanvas)
-            self._marker.setAction(self._markerAppend)
+            self._marker.setAction(self._appendAction)
             self._marker.canvasClicked.connect(self._canvasClicked)
         return self._marker
 
     def _canvasClicked(self, location=None, button=None):
-        self._markerAppend.mapLocation = location
-        self.handleAction.emit(self._markerAppend)
+        self._appendAction.mapLocation = location
+        self.emitAction(self._appendAction)

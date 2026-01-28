@@ -8,6 +8,7 @@
 from qgis.PyQt.QtCore import QObject, pyqtSignal
 
 # ActionsController handles tokentools and admintools
+from .toolset.action import ActionLink
 from .toolset.tokentools import TokenTools
 from .toolset.admintools import AdminTools
 
@@ -24,37 +25,23 @@ ToolController fuses them together.
 The sessionmenu is handled separately. Its actions are channeled through
 ToolController directly to ActionHandler.
 
-ActionManager emits two signals:
+ActionManager is an ActionLink and emits two signals:
 
-    updateAction.emit(...)
+    updateAction(action)
     -- Allows Responder to update actionstates.
 
-    handleAction.emit(sender=self, index=ACTION.INDEX...)
+    handleAction(action)
     -- Allows Responder to respond to action
 '''
 
-class ActionManager(QObject):
-    updateAction = pyqtSignal(object)
-    handleAction = pyqtSignal(object)
+class ActionManager(ActionLink):
 
     def __init__(self, iface, toolBar):
         super().__init__()
-        self._iface = iface
-
         self._tokenTools = TokenTools(iface, toolBar)
-        self._tokenTools.updateAction.connect(self.updateAction)
-        self._tokenTools.handleAction.connect(self.handleAction)
-
+        self._tokenTools.setResponder(self)
         self._adminTools = AdminTools(iface, toolBar)
-        self._adminTools.updateAction.connect(self.updateAction)
-        self._adminTools.handleAction.connect(self.handleAction)
-
-
-    # ToolController will set ActionHandler as responder
-    def setResponder(self, responder):
-        self.updateAction.connect(responder.updateAction)
-        self.handleAction.connect(responder.handleAction)
-
+        self._adminTools.setResponder(self)
 
     def updateActions(self):
         if self._tokenTools: self._tokenTools.updateActions()

@@ -1,10 +1,7 @@
 
 
-from qgis.core import *
-from qgis.PyQt.QtCore import pyqtSignal
-from qgis.PyQt.QtGui import QAction
+from .action import Action
 
-from .maptools import PanningMarkerMapTool
 
 ################################################################################
 ### Definitions
@@ -38,30 +35,6 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
     })
 
 ################################################################################
-### BaseAction
-################################################################################
-
-from .icons import loadIcon
-
-class Action(QAction):
-    updateAction = pyqtSignal(object)
-    handleAction = pyqtSignal(object)
-
-    def __init__(self, responder=None):
-        super().__init__(loadIcon(self._ICON), self._TEXT)
-        self.setObjectName(self._UIID)
-        self.triggered.connect(self._triggered)
-        if responder:
-            self.updateAction.connect(responder.updateAction)
-            self.handleAction.connect(responder.handleAction)
-
-    def update(self):
-        self.updateAction.emit(self)
-
-    def _triggered(self):
-        self.handleAction.emit(self)
-
-################################################################################
 '''
 MenuActionMarkerAppend is the contextmenu-version. It does not require
 additional user-input for a maplocation.
@@ -70,7 +43,7 @@ class MenuActionMarkerAppend(Action):
     INDEX = ACTION.INDEX.APPEND
     _ICON = "marker_append"
     _TEXT = _LABELS.ACTION.APPEND
-    _UIID = "fat:ctxmenu:actionAppend"
+    _UIID = "fat:ctxmenuActionAppend"
 
 ################################################################################
 '''
@@ -80,7 +53,7 @@ using a MapTool to acquire a maplocation.
 class ToolActionMarkerAppend(MenuActionMarkerAppend):
     _UIID = "fat:toolbar:actionAppend"
 
-    def __init__(self, responder):
+    def __init__(self, responder=None):
         super().__init__(responder)
         self.setCheckable(True)
 
@@ -90,7 +63,7 @@ class ToolActionMarkerModify(Action):
     INDEX = ACTION.INDEX.MODIFY
     _ICON = "marker_modify"
     _TEXT = _LABELS.ACTION.MODIFY
-    _UIID = "fat:toolbar:actionModify"
+    _UIID = "fat:toolbarActionModify"
 
 ################################################################################
 
@@ -98,7 +71,7 @@ class ToolActionMarkerRemove(Action):
     INDEX = ACTION.INDEX.REMOVE
     _ICON = "marker_remove"
     _TEXT = _LABELS.ACTION.REMOVE
-    _UIID = "fat:toolbar:actionRemove"
+    _UIID = "fat:toolbarActionRemove"
 
 ################################################################################
 
@@ -106,7 +79,7 @@ class ToolActionMarkerFreeze(Action):
     INDEX = ACTION.INDEX.FREEZE
     _ICON = "marker_freeze"
     _TEXT = _LABELS.ACTION.FREEZE
-    _UIID = "fat:toolbar:actionFreeze"
+    _UIID = "fat:toolbarActionFreeze"
 
 ################################################################################
 
@@ -114,7 +87,7 @@ class ToolActionMarkerExport(Action):
     INDEX = ACTION.INDEX.EXPORT
     _ICON = "marker_export"
     _TEXT = _LABELS.ACTION.EXPORT
-    _UIID = "fat:toolbar:actionExport"
+    _UIID = "fat:toolbarActionExport"
 
 ################################################################################
 
@@ -122,6 +95,6 @@ class ToolActionMarkerArchive(Action):
     INDEX = ACTION.INDEX.ARCHIVE
     _ICON = "marker_archive"
     _TEXT = _LABELS.ACTION.ARCHIVE
-    _UIID = "fat:toolbar:actionArchive"
+    _UIID = "fat:toolbarActionArchive"
 
 ################################################################################
