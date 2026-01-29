@@ -78,6 +78,8 @@ class TokenTools(ActionSet):
     def prepareContextMenu(self, menu, mouseEvent):
         appendAction = self.getAction(0)
         appendAction.mapLocation = mouseEvent.originalMapPoint()
+
+        if len(menu.actions()) == 1: menu.addSeparator()
         menu.addMenu(self._menu)
 
     ########################################################################
