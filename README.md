@@ -34,10 +34,12 @@ For a quick short note, you can select or edit the note in the combobox. For add
 As soon as you click OK, the plugin will add a memory-layer to the maplegend with a default styling and the first marker added, which will show up as a bright yellow pointfeature on the map with a red label attached. If you'd like to modify the comment, or remove the marker, use the corresponding buttons. 
 
 >[!NOTE]
->The combined length of the note is limited to a minimum of 3 characters, and a maximum of 190 characters. The total number of characters is shown at the bottom-right, below the commentsbox.
+>The combined length of the note is limited to a minimum of 3 characters, and a maximum of 190 characters. The OK button will not be available outside these limits. The total number of characters is shown at the bottom-right, below the commentsbox.
 
 **Contextmenu**  
-To make it even more 
+To make it even easier to place a marker, you can also right-click the map at a desired location using the right-mouse button. This will show the MapCanvas contextmenu which will have an additional submenu called "Markers". It represents the same actions as the buttons, except adding a marker is immediate since the maplocation is already known by the menu-mouse-click.
+
+<img width="412" height="123" alt="image" src="https://github.com/user-attachments/assets/91d21e4e-9900-4d17-becc-2472c7f05756" /><br/>
 
 
 
