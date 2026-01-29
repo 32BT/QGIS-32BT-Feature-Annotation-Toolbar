@@ -9,6 +9,8 @@ from .. import qgs as QGS
 from .marker import Marker
 from .session import Session
 
+from .qml import qml_path
+
 ################################################################################
 ###
 ################################################################################
@@ -74,8 +76,7 @@ def set_crs(layer, crs):
 
 def set_qml(layer, path=''):
     if not (path and os.path.exists(path)):
-        path = os.path.split(__file__)[0]
-        path = os.path.join(path, 'layer.qml')
+        path = qml_path()
     set_style(layer, path)
 
 def set_style(layer, path):
@@ -204,6 +205,9 @@ def exportMarkers(layer, path, driverName="GPKG"):
     save_options = QgsVectorFileWriter.SaveVectorOptions()
     save_options.driverName = driverName
     save_options.fileEncoding = "UTF-8"
+    save_options.onlySelectedFeatures = True
+    #if layer.crs().mapUnits() == QgsUnitTypes.DistanceMeters:
+    #    save_options.
     error = QgsVectorFileWriter.writeAsVectorFormatV3(
         layer, path, transform_context, save_options)
     return error
