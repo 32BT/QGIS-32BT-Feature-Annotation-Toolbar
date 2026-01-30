@@ -48,7 +48,7 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
     })
 
 '''
-TODO customisable noteoptions
+TODO customisable/self-adaptable noteoptions
 '''
 ################################################################################
 ### Annotation Dialog

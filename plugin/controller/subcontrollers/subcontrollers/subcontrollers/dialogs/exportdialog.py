@@ -14,13 +14,11 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
     "EXPORTDIALOG": {
         "TITLE":
             "Export",
-        "LABEL": {
-            "LINE1": [
-                "You are about to export {} marker from layer '{}'.",
-                "You are about to export {} markers from layer '{}'."],
-            "LINE2":
-                "Select the savebutton to choose a destination file." },
-        "FLAG": { "LABEL": "Flag:" },
+        "LABEL": [
+            "You are about to export {} marker from layer '{}'.",
+            "You are about to export {} markers from layer '{}'."],
+        "FLAG": { "LABEL": "Choose a flag to lock the markers:" },
+        "SAVE": { "LABEL": "Select save to choose a destination file." },
         "FILE": { "TYPE": { "CUSTOM": "Other" }}
         }
     })
@@ -53,9 +51,9 @@ class Dialog(QDialog, _form()):
         super().__init__(parent)
         self.setupUi(self)
         self.setWindowTitle(_DIALOG.TITLE)
-        self.mainLabel.setText(_DIALOG.LABEL.LINE2)
         self.flagLabel.setText(_DIALOG.FLAG.LABEL)
         self.flagText.setText(self._LAST_FLAG)
+        self.saveLabel.setText(_DIALOG.SAVE.LABEL)
         button = self.buttonBox.button(self.buttonBox.StandardButton.Save)
         if button: button.setText(button.text()+'...')
 
@@ -66,14 +64,12 @@ class Dialog(QDialog, _form()):
     def askInput(self, layer=None):
         if layer:
             n = layer.selectedFeatureCount()
-            label = _DIALOG.LABEL.LINE1[n>1]
-            label += '\n'
-            label += _DIALOG.LABEL.LINE2
+            label = _DIALOG.LABEL[n>1]
             label = label.format(n, layer.name())
             self.mainLabel.setText(label)
 
         if self.exec():
-            self._LAST_FLAG = self.flagText.text()
+            self.__class__._LAST_FLAG = self.flagText.text()
             # if savebutton was clicked, start file-browser
             path = self.startBrowser()
             if path:
