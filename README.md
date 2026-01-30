@@ -68,7 +68,7 @@ For convenience, the current date is provided in numbers. You do not have to use
 >This can also be used as another way to organize your work. You can select a new folder at the start of each month for example, or you can create multiple folders for different registries.
 
 #
-**Admintools**  
+### Admintools  
 Besides the tokentools is a set of three additional buttons to manage markers for further processing.  
 
 <img width="111" height="42" alt="image" src="https://github.com/user-attachments/assets/b66fdb4a-b61a-487c-8c0a-da0110e368fa" /><br/>  
