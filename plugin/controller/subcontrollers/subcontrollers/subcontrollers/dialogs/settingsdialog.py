@@ -30,7 +30,7 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
             "Settings",
         "ADMINTOOLS": {
             "LABEL":
-                "Show Admin Tools"
+                "Hide Admin Tools"
             }
         }
     })
@@ -48,7 +48,7 @@ class Dialog(QDialog, _form()):
 
     class OPTIONS:
         class ADMINTOOLS:
-            SHOW = "options/admintools/show"
+            HIDE = "options/admintools/hide"
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -61,8 +61,8 @@ class Dialog(QDialog, _form()):
 
     def adminToolsToggled(self, isChecked):
         path = self._storageSettings.getPath()
-        show = self.adminTools.isChecked()
-        result = dict(path=path, show=show)
+        hide = self.adminTools.isChecked()
+        result = dict(path=path, hide=hide)
         self.settingsChanged.emit(result)
 
     def askSettings(self, responder=None):
@@ -76,15 +76,15 @@ class Dialog(QDialog, _form()):
     def loadDialogSettings(self):
         Settings = _MODULE.plugin.Settings
         path = Database.getGlobalPath()
-        show = Settings.getGlobalValue(self.OPTIONS.ADMINTOOLS.SHOW)
-        show = show in (True, 'true', 'True', 'TRUE')
+        hide = Settings.getGlobalValue(self.OPTIONS.ADMINTOOLS.HIDE)
+        hide = hide in (True, 'true', 'True', 'TRUE')
         self._storageSettings.setPath(path)
-        self.adminTools.setChecked(show)
+        self.adminTools.setChecked(hide)
 
     def saveDialogSettings(self):
         path = self._storageSettings.getPath()
-        show = self.adminTools.isChecked()
+        hide = self.adminTools.isChecked()
         Settings = _MODULE.plugin.Settings
         Database.setGlobalPath(path)
-        Settings.setGlobalValue(self.OPTIONS.ADMINTOOLS.SHOW, show)
-        return dict(path=path, show=show)
+        Settings.setGlobalValue(self.OPTIONS.ADMINTOOLS.HIDE, hide)
+        return dict(path=path, hide=hide)

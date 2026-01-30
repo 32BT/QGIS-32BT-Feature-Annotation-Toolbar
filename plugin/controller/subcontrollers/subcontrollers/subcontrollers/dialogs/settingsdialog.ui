@@ -20,7 +20,7 @@
    <item>
     <widget class="QCheckBox" name="adminTools">
      <property name="text">
-      <string>Show Admin Tools</string>
+      <string>Hide Admin Tools</string>
      </property>
     </widget>
    </item>

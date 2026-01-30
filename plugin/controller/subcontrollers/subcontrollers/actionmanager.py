@@ -39,7 +39,7 @@ ActionManager is an ActionLink and emits two signals:
 
 class ActionManager(ActionLink):
     class ADMINTOOLS:
-        SHOW = "options/admintools/show"
+        HIDE = "options/admintools/hide"
 
     def __init__(self, iface, toolBar):
         super().__init__()
@@ -48,8 +48,8 @@ class ActionManager(ActionLink):
         self._adminTools = AdminTools(iface, toolBar)
         self._adminTools.setResponder(self)
         Settings = _MODULE.plugin.Settings
-        show = Settings.getGlobalValue(self.ADMINTOOLS.SHOW)
-        self.settingsChanged(dict(show=show))
+        hide = Settings.getGlobalValue(self.ADMINTOOLS.HIDE)
+        self.settingsChanged(dict(hide=hide))
 
     def updateActions(self):
         if self._tokenTools: self._tokenTools.updateActions()
@@ -64,6 +64,6 @@ class ActionManager(ActionLink):
     types for parameters after restarting the QGIS application.
     '''
     def settingsChanged(self, params):
-        show = params.get('show')
-        show = show in (True, 'true', 'True', 'TRUE')
-        self._adminTools.show(show)
+        hide = params.get('hide')
+        hide = hide in (True, 'true', 'True', 'TRUE')
+        self._adminTools.hide(hide)
