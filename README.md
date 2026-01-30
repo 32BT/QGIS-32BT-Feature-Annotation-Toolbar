@@ -121,8 +121,16 @@ Relevant actions are logged in the logfile. It is a simple csv file, readable by
 **lyr.qml**  
 The styling of the sessionlayer is determined by a default styling file. If you'd like to adapt the styling of a particular session to your specific needs, you can save a qml-file in the sessionfolder and name it "lyr.qml". This will override the plugin default styling each time you start this session.  
 
-**nts.txt**  
-When you create a new marker, you are asked to enter a short note with optional comments. The short note can be selected from a predefined quicklist. Each applicationcontext will likely require a different set of predefined notes. The "nts.txt" file allows you to define the list for a particular session.
+**rmk.txt**  
+When you create a new marker, you are asked to enter a short note with optional comments. The short note can be selected from a predefined quicklist. Each applicationcontext will likely require a different set of predefined notes. The "rmk.txt" file allows you to define the list for a particular session. The list should be a simple new-line delimited text file: 
+
+<img width="176" height="92" alt="image" src="https://github.com/user-attachments/assets/7d5a8f37-2766-43ce-a042-94770a9df12c" /><br/>  
+
+During marker creation and editing the dialog will show the custom list: 
+
+<img width="382" height="348" alt="image" src="https://github.com/user-attachments/assets/ec146bbf-f783-4d49-a1c0-bdeadb76ddb0" /><br/>  
+
+
 
 
 
