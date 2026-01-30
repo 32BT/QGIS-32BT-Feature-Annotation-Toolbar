@@ -57,9 +57,18 @@ The plugin will then ask you to enter or choose a Sessionname:
 
 <img width="384" height="185" alt="image" src="https://github.com/user-attachments/assets/717b0ef3-77f0-421c-bd8f-44b74cfc0dc8" /><br/>
 
-For convenience, the current date is provided in numbers. You do not have to use it. Any name can be chosen. Both the layer and the folder will use this name. (If your system has restrictions on foldernames, apply those same restrictions to the name you enter.) If you have created Sessions previously, they will be available as items in the combobox. They will also show up as items beneath the "Start..." option. If you want to reopen a previous session, you can use either option to quickly select the session desired.
+For convenience, the current date is provided in numbers. You do not have to use it. Any name can be chosen. Both the layer and the folder will use this name. (If your system has restrictions on foldernames, apply those same restrictions to the name you enter.) If you have created Sessions previously, they will be available as items in the combobox. They will also show up as items beneath the "Start..." option. If you want to reopen a previous session, you can use either option to quickly open the session desired.
 
->[!WARNING] **Central Storage Location**
+>[!IMPORTANT]
+>**Central Storage Location**  
+>The plugin requires a central storage location in order to save the session folders. The first time you start a session, the plugin will ask you to assign a central storage location. The storage location is simply a path to a folder of your liking wherein the session folders will be created. You can change the central storage path whenever you want by choosing _Sessionmenu->Options..._
+>
+><img width="342" height="197" alt="image" src="https://github.com/user-attachments/assets/2cdf7aec-f0bc-4172-9cff-c2649b4ffe97" /><br/>
+>
+>This can also be used as another way to organize your work. You can select a new folder at the start of each month for example, or you can create multiple folders for different registries.
+
+
+
 
 
 
