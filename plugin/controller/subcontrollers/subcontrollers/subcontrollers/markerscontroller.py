@@ -24,7 +24,7 @@ from . import tms as TMS
 # Require MapCanvas utilities
 from .qgs.mapcanvas import MapCanvas
 
-# Require Session for Archive update and handling
+# Require Session for Archive action validation
 from .tms.session import Session
 
 ################################################################################
