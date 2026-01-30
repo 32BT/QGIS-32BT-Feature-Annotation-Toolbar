@@ -71,6 +71,7 @@ class Dialog(QDialog, _form()):
         self.loadDialogSettings()
         if self.exec():
             return self.saveDialogSettings()
+        self.loadDialogSettings()
 
     def loadDialogSettings(self):
         Settings = _MODULE.plugin.Settings
