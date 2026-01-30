@@ -6,6 +6,7 @@ from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtWidgets import QDialog
 
+from ..tms.session import Session
 
 ################################################################################
 
@@ -63,6 +64,7 @@ Pattern:
 '''
 
 class Dialog(QDialog, _form()):
+    _LST_NOTES = _LABELS.MARKERDIALOG_NOTEOPTIONS
     _MIN_CHARS = 5
     _MAX_CHARS = 192
 
@@ -74,7 +76,7 @@ class Dialog(QDialog, _form()):
         self.mainLabel.setText(_LABELS.MARKERDIALOG_MAINLABEL[0])
         self.noteLabel.setText(_LABELS.MARKERDIALOG_NOTELABEL)
         self.infoLabel.setText(_LABELS.MARKERDIALOG_INFOLABEL)
-        self.noteCombo.addItems(_LABELS.MARKERDIALOG_NOTEOPTIONS)
+        self.setRemarks(self._LST_NOTES)
 
         # Combined textsize should be at least 5 characters,
         # adjust OK button accordingly
@@ -82,6 +84,10 @@ class Dialog(QDialog, _form()):
         self.noteCombo.editTextChanged.connect(self.textChanged)
         self.infoText.textChanged.connect(self.textChanged)
         self.updateControls()
+
+    def setRemarks(self, notes):
+        self.noteCombo.clear()
+        self.noteCombo.addItems(notes)
 
     def textChanged(self, text=None):
         self.updateControls()
@@ -111,6 +117,11 @@ class Dialog(QDialog, _form()):
             label = _LABELS.MARKERDIALOG_MAINLABEL[1 + bool(marker)]
             label = label.format(layer.name())
             self.mainLabel.setText(label)
+            # Adjust remark list if available
+            if Session.validate_layer(layer):
+                session = Session.from_layer(layer)
+                remarks = session.getRemarks()
+                if remarks: self.setRemarks(remarks)
 
         if self.exec():
             return self.getText()

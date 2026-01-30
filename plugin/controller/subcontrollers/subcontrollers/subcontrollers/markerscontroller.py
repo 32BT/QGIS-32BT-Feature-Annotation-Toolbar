@@ -163,6 +163,7 @@ class MarkersController:
             TMS.LAYER.appendMarker(layer, marker)
             self._layerID = layer.id()
 
+
     def startModify(self):
         layer = self._iface.activeLayer()
         marker = next(TMS.LAYER.fetchMarkers(layer))

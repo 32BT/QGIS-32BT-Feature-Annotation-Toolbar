@@ -102,6 +102,18 @@ class Session(FSFolder):
         return self.itemPath(self._CRS_FILENAME)
 
     ########################################################################
+    _RMK_FILENAME = "rmk.txt"
+
+    @property
+    def rmkFile(self):
+        return self.itemPath(self._RMK_FILENAME)
+
+    def getRemarks(self):
+        file = FSFile(self.rmkFile)
+        if file.exists():
+            return [r.strip() for r in file if r.strip()]
+
+    ########################################################################
     ########################################################################
 
     @property
