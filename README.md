@@ -65,9 +65,27 @@ For convenience, the current date is provided in numbers. You do not have to use
 >
 ><img width="342" height="197" alt="image" src="https://github.com/user-attachments/assets/2cdf7aec-f0bc-4172-9cff-c2649b4ffe97" /><br/>
 >
->This can also be used as another way to organize your work. You can select a new folder at the start of each month for example, or you can create multiple folders for different registries.  
+>This can also be used as another way to organize your work. You can select a new folder at the start of each month for example, or you can create multiple folders for different registries.
 
 #
+**Admintools**  
+Besides the tokentools is a set of three additional buttons to manage markers for further processing.  
+
+<img width="111" height="42" alt="image" src="https://github.com/user-attachments/assets/b66fdb4a-b61a-487c-8c0a-da0110e368fa" /><br/>  
+
+You may have several operators that create markers. After markers are created, the markers will likely be used in a further processing-pipeline. The first step is to freeze markers so that they can no longer be editted or deleted other than by the administrator. This is accomplished by the lock-button. The lock-button allows the administrator to set a flag for each marker selected. The flag can be any single character. This gives you a quick way to both freeze markers, as well as assign them to different processing-pipelines, departments, registries, or third-party processors to name just a few options.  
+
+<img width="420" height="186" alt="image" src="https://github.com/user-attachments/assets/fbddf922-8130-4f12-a20b-e41f8dec9279" /><br/>  
+
+For easy connection with your workflow process, markers can also be exported to a compatible interchange format. Since the markers are stored in a plain pointlayer, they can be exported by the usual QGIS export options. The export button merely combines export with flagging for convenience.  
+
+Lastly, when markers are fully processed, and are no longer needed for monitoring or other purposes, they can be archived using the archive-button. The Archive dialog will ask you for a short note as reason for archiving. This will be logged in the Session-logfile.
+
+>[!NOTE]
+>The Archive-button is only available in Session-mode. If the admintool-buttons are available, but the Archive-button is grayed out, then it indicates that the active layer is a normal Ad-hoc layer.
+
+
+# Customization  
 **Folder Structure**  
 In order to fully utilize the plugin's potential, it is useful to know how the plugin organizes your work. The plugin simply uses the system's filemanagement to create a useful folder structure for you. All folders and files can be accessed by your system's filebrowser. All files are textfiles that can be read and editted by a texteditor. The main folderstructure looks as follows:  
 
@@ -96,7 +114,7 @@ Each sessionfolder is organized as follows:
 As soon as you create markers, they will be stored in the "markers" folder. If you delete or archive a marker, it will be stored in the "archive" folder.  
 
 **log.csv**  
-Relevant actions are logged in the logfile. It is a simple csv file, readable by any csv-parser, like Excel. It logs the date, username, and action as plain, comma-separated text.  
+Relevant actions are logged in the logfile. It is a simple csv file, readable by any csv-parser, such as Excel. The file logs the date, username, and action as plain, comma-separated text.  
 
 <img width="737" height="250" alt="image" src="https://github.com/user-attachments/assets/d441dc14-c517-4099-aac1-1d47178f983e" /><br/>  
 
