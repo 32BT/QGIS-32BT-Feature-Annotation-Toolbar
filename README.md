@@ -45,6 +45,23 @@ To make it even more convenient to place a marker, you can also right-click the 
 
 <img width="412" height="123" alt="image" src="https://github.com/user-attachments/assets/91d21e4e-9900-4d17-becc-2472c7f05756" /><br/>  
 
+#
+### Session mode  
+Session mode allows you to organize your work in batches. It stores markers in a folder-structure, logs the actions, supports quick access and also enables some customization. The Session-mode function basically creates, in advance, a markerlayer with a folder-reference. The folder contains storage for markers, a log file, a styling file, and a notes list. This allows you to harvest statistics and customize behavior. It also enables the plugin to offer additional convenience. It will save markers as separate GeoJSON items, and will reload those items if the corresponding session-layer is encountered. 
+
+Starting a Session is simple. Click the sessionmenu button, and choose "Start...":
+
+<img width="253" height="124" alt="image" src="https://github.com/user-attachments/assets/2c367ea9-babb-4700-9e67-ffbf02d9a8c9" /><br/>  
+
+The plugin will then ask you to enter or choose a Sessionname:
+
+<img width="384" height="185" alt="image" src="https://github.com/user-attachments/assets/717b0ef3-77f0-421c-bd8f-44b74cfc0dc8" /><br/>
+
+For convenience, the current date is provided in numbers. You do not have to use it. Any name can be chosen. Both the layer and the folder will use this name. (If your system has restrictions on foldernames, apply those same restrictions to the name you enter.) If you have created Sessions previously, they will be available as items in the combobox. They will also show up as items beneath the "Start..." option. If you want to reopen a previous session, you can use either option to quickly select the session desired.
+
+>[!WARNING] **Central Storage Location**
+
+
 
 
 
