@@ -61,13 +61,50 @@ For convenience, the current date is provided in numbers. You do not have to use
 
 >[!IMPORTANT]
 >**Central Storage Location**  
->The plugin requires a central storage location in order to save the session folders. The first time you start a session, the plugin will ask you to assign a central storage location. The storage location is simply a path to a folder of your liking wherein the session folders will be created. You can change the central storage path whenever you want by choosing _Sessionmenu->Options..._
+>The plugin requires a central storage location in order to save the session folders. The first time you start a session, the plugin will ask you to assign a central storage location. The storage location is simply a path to a folder of your liking wherein the session folders will be created. You can change the central storage path whenever you want by choosing _Sessionmenu->Settings..._
 >
 ><img width="342" height="197" alt="image" src="https://github.com/user-attachments/assets/2cdf7aec-f0bc-4172-9cff-c2649b4ffe97" /><br/>
 >
->This can also be used as another way to organize your work. You can select a new folder at the start of each month for example, or you can create multiple folders for different registries.
+>This can also be used as another way to organize your work. You can select a new folder at the start of each month for example, or you can create multiple folders for different registries.  
 
+#
+**Folder Structure**  
+In order to fully utilize the plugin's potential, it is useful to know how the plugin organizes your work. The plugin simply uses the system's filemanagement to create a useful folder structure for you. All folders and files can be accessed by your system's filebrowser. All files are textfiles that can be read and editted by a texteditor. The main folderstructure looks as follows:  
 
+```
+- <central storage folder>
+  - sessions
+    - <sessionname 1>
+    - <sessionname 2>
+    - ...
+```
+
+This is where the plugin fetches the quick-access session-names. This is also where you find the logfiles or apply customizations.  
+
+**Session Folder Structure**  
+Each sessionfolder is organized as follows:  
+
+```
+- <sessionname>
+  - <folder: markers>
+  - <folder: archive>
+  - <file: log.csv>
+  - <file: lyr.qml>
+  - <file: nts.txt>
+```
+
+As soon as you create markers, they will be stored in the "markers" folder. If you delete or archive a marker, it will be stored in the "archive" folder.  
+
+**log.csv**  
+Relevant actions are logged in the logfile. It is a simple csv file, readable by any csv-parser, like Excel. It logs the date, username, and action as plain, comma-separated text.  
+
+<img width="737" height="250" alt="image" src="https://github.com/user-attachments/assets/d441dc14-c517-4099-aac1-1d47178f983e" /><br/>  
+
+**lyr.qml**  
+The styling of the sessionlayer is determined by a default styling file. If you'd like to adapt the styling of a particular session to your specific needs, you can save a qml-file in the sessionfolder and name it "lyr.qml". This will override the plugin default styling each time you start this session.  
+
+**nts.txt**  
+When you create a new marker, you are asked to enter a short note with optional comments. The short note can be selected from a predefined quicklist. Each applicationcontext will likely require a different set of predefined notes. The "nts.txt" file allows you to define the list for a particular session.
 
 
 
