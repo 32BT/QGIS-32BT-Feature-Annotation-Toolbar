@@ -47,5 +47,12 @@ class ActionManager(ActionLink):
         if self._tokenTools: self._tokenTools.updateActions()
         if self._adminTools: self._adminTools.updateActions()
 
+    def setResponder(self, responder):
+        super().setResponder(responder)
+        responder.settingsChanged.connect(self.settingsChanged)
 
-
+    def settingsChanged(self, params):
+        if params.get('show'):
+            self._adminTools.show()
+        else:
+            self._adminTools.hide()

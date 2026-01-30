@@ -19,5 +19,8 @@ class AdminTools(ActionSet):
         self._toolBar = toolBar
         self.appendTo(self._toolBar)
 
-    def __del__(self):
+    def show(self):
+        self.appendTo(self._toolBar)
+
+    def hide(self):
         self.removeFrom(self._toolBar)

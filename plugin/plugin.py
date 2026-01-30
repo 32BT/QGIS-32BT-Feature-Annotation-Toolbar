@@ -13,6 +13,8 @@ from .controller import ToolBar
 from .controller import Controller
 
 class Plugin:
+    from .settings import Settings
+
     def __init__(self, iface):
         self._iface = iface
 

@@ -16,11 +16,15 @@ from .subcontrollers import MarkersController
 
 ################################################################################
 
-class ActionHandler:
+class ActionHandler(QObject):
+    settingsChanged = pyqtSignal(object)
+
     def __init__(self, iface):
+        super().__init__()
         self._iface = iface
         self._sessionController = SessionController(self._iface)
         self._markersController = MarkersController(self._iface)
+        self._sessionController.settingsChanged.connect(self.settingsChanged)
 
     ########################################################################
     ### Handle Menu Actions (sessionmenu)

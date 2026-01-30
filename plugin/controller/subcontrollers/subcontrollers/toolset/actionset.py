@@ -34,12 +34,15 @@ class ActionSet(ActionLink):
     ########################################################################
 
     def appendTo(self, toolBox):
-        if toolBox.actions(): toolBox.addSeparator()
-        toolBox.addActions(self._actions)
+        if self._actions[0] not in toolBox.actions():
+            if toolBox.actions(): toolBox.addSeparator()
+            toolBox.addActions(self._actions)
 
     def removeFrom(self, toolBox):
-        for action in self._actions:
-            toolBox.removeAction(action)
-        if toolBox.actions(): toolBox.removeAction(toolBox.actions()[-1])
+        if self._actions[0] in toolBox.actions():
+            for action in reversed(self._actions):
+                toolBox.removeAction(action)
+            action = toolBox.actions()[-1]
+            if action.isSeparator(): toolBox.removeAction(action)
 
 

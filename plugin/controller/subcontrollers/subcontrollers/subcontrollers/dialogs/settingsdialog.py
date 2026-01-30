@@ -7,6 +7,7 @@ from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtWidgets import *
 
 from .storagesettings import StorageSettings
+from ..database import Database
 
 ################################################################################
 
@@ -37,12 +38,17 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
 _LABELS = _LABELS.SETTINGSDIALOG
 
 ################################################################################
-### Storage Dialog
+### Settings Dialog
 ################################################################################
 '''
 '''
 
 class Dialog(QDialog, _form()):
+    settingsChanged = pyqtSignal(object)
+
+    class OPTIONS:
+        class ADMINTOOLS:
+            SHOW = "options/admintools/show"
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -50,17 +56,33 @@ class Dialog(QDialog, _form()):
         self.setWindowTitle(_LABELS.TITLE)
         self._storageSettings = StorageSettings()
         self.layout().insertWidget(0, self._storageSettings)
-
         self.adminTools.setText(_LABELS.ADMINTOOLS.LABEL)
+        self.adminTools.toggled.connect(self.adminToolsToggled)
 
-    def askSettings(self, params=None):
-        params = params or {}
-        path = params.get('path')
-        show = params.get('show')
-        self._storageSettings.setPath(path)
-        self.adminTools.setChecked(show)
+    def adminToolsToggled(self, isChecked):
+        path = self._storageSettings.getPath()
+        show = self.adminTools.isChecked()
+        result = dict(path=path, show=show)
+        self.settingsChanged.emit(result)
+
+    def askSettings(self, responder=None):
+        if hasattr(responder, 'settingsChanged'):
+            self.settingsChanged.connect(responder.settingsChanged)
+        self.loadDialogSettings()
         if self.exec():
-            path = self._storageSettings.getPath()
-            show = self.adminTools.isChecked()
-            return dict(path=path, show=show)
+            return self.saveDialogSettings()
 
+    def loadDialogSettings(self):
+        Settings = _MODULE.plugin.Settings
+        path = Database.getGlobalPath()
+        show = Settings.getGlobalValue(self.OPTIONS.ADMINTOOLS.SHOW)
+        self._storageSettings.setPath(path)
+        self.adminTools.setChecked(bool(show))
+
+    def saveDialogSettings(self):
+        path = self._storageSettings.getPath()
+        show = self.adminTools.isChecked()
+        Settings = _MODULE.plugin.Settings
+        Database.setGlobalPath(path)
+        Settings.setGlobalValue(self.OPTIONS.ADMINTOOLS.SHOW, show)
+        return dict(path=path, show=show)

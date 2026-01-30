@@ -24,6 +24,15 @@ _MODULE = _MODULE.identity.MODULE
 from qgis.core import QgsSettings
 
 class Settings(QgsSettings):
+    @staticmethod
+    def getGlobalValue(key):
+        with Settings() as settings:
+            return settings.loadValue(key)
+    @staticmethod
+    def setGlobalValue(key, value):
+        with Settings() as settings:
+            settings.saveValue(key, value)
+
 
     def __enter__(self):
         # start with group '32bt' which will create a section [32bt]

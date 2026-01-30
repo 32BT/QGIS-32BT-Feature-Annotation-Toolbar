@@ -25,8 +25,11 @@ from ..toolset.sessionmenu import MENU
 ### Controller
 ################################################################################
 
-class SessionController:
+class SessionController(QObject):
+    settingsChanged = pyqtSignal(object)
+
     def __init__(self, iface):
+        super().__init__()
         self._iface = iface
         # Listen for incomming sessionlayers
         self._sentinel = Sentinel()
@@ -142,12 +145,7 @@ class SessionController:
 
     def askSettings(self):
         parent = self._iface.mainWindow()
-        params = dict(
-            path = Database.getGlobalPath(),
-            show = True)
-        result = SettingsDialog(parent).askSettings(params)
-        if result:
-            if result.get('path') != params.get('path'):
-                Database.setGlobalPath(result.get('path'))
+        result = SettingsDialog(parent).askSettings(self)
+        if result: self.settingsChanged.emit(result)
 
     ########################################################################
