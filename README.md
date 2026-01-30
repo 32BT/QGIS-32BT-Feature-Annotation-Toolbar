@@ -5,7 +5,7 @@ This QGIS plugin implements a toolbar to quickly and easily create and manage an
 
 ### Feature Annotation Toolbar
 **Overview**  
-The Feature Annotation Toolbar is meant to quickly mark features on a map in a simple and intuitive way. Markers can be placed quickly and easily near points-of-interest, and are accompanied by a note which is visible in the marker's label. The markerslayer is a plain pointlayer which can be exported and manipulated by the usual methods, and customized to taste. The process is applicable in many situations, and is easily adaptable to various workflows.  
+The Feature Annotation Toolbar is meant to quickly mark features on a map using a simple and intuitive method. Markers can be placed quickly and easily near points-of-interest, and are accompanied by a note which is visible in the marker's label. The markerslayer is a plain pointlayer which can be exported and manipulated by the usual methods, and customized to taste. The process is applicable in many situations, and is easily adaptable to various workflows.  
 
 <img width="917" height="649" alt="image" src="https://github.com/user-attachments/assets/4beff7ed-3961-4f65-98c6-bba88a9835a0" /><br/>  
 
@@ -18,10 +18,11 @@ See: https://docs.qgis.org/3.40/nl/docs/user_manual/plugins/plugins.html#the-ins
 
 #
 ### Operation  
-The plugin allows two modes of operation. **Ad-hoc**-mode, or **Session**-mode. In **Ad-hoc**-mode, the plugin will create a memory-layer without backing. Markers will simply be added to the layer. If you want to save your work, you should make the layer permanent choosing your preferred storageformat. This mode is useful for quick temporary markers, or storage that does not require logging and archiving. You can also choose to start a **Session**. When starting a session, the plugin will also create a memory-layer, but at the same time it creates an internal, open backingstore with logging and archiving available. Markers are stored as readable geojson items, logging is available in a csv-file, and the session becomes available in a quick-select menu. In addition, the plugin can identify the layer as a session-layer, so it can rebuild the layer on demand.
+The plugin allows two modes of operation. **Ad-hoc**-mode, or **Session**-mode. In **Ad-hoc**-mode, the plugin will create a memory-layer without backing. Markers will simply be added to the layer. If you want to save your work, you should make the layer permanent choosing your preferred storageformat. This mode is useful for quick temporary markers, or storage that does not require logging and archiving.  
+In **Session**-mode, the plugin will also create a memory-layer, but at the same time it creates an internal, open backingstore with logging and archiving available. Markers are stored as readable geojson items, logging is available in a csv-file, and the session becomes available in a quick-select menu. In addition, the plugin can identify the layer as a session-layer, so it can rebuild the layer on demand.
 
 ### Ad-hoc mode  
-The plugin's primary task is extremely simple. Add a quick annotated marker to a map. Because of the ease of application, you can rappidly mark a lot of locations in quick succession. And since it uses a plain pointfeature layer, the result can easily be integrated in further workflows. The potential applications are limitless. You can quickly mark errors, mutations, or any other points-of-interest, and label the situation or desired corrections accordingly.  
+The plugin's primary task is extremely simple. Add annotated markers to a map quickly. Because of the ease of application, you can rappidly mark a lot of locations in quick succession. And since it uses a plain pointfeature layer, the result can easily be integrated in further workflows. The potential applications are limitless. You can quickly mark errors, mutations, or any other points-of-interest, and label the situation or desired corrections accordingly.  
 
 <img width="107" height="39" alt="image" src="https://github.com/user-attachments/assets/a6177028-692e-4b40-9eeb-794e6a017152" />  
 
@@ -34,7 +35,7 @@ For a quick short note, you can select or edit the note in the combobox. For add
 >[!NOTE]
 >The combined length of the note is limited to a minimum of 3 characters, and a maximum of 190 characters. The OK button will not be available outside these limits. The total number of characters is shown at the bottom-right, below the commentsbox.  
 
-As soon as you click OK, the plugin will add a memory-layer to the maplegend with a default styling and the first marker added, which will show up as a bright yellow pointfeature on the map with a red label attached. If you'd like to modify the comment, or remove the marker, use the corresponding buttons.  
+As soon as you click OK, the plugin will add a memory-layer to the map legend with a default styling and the first marker added. The marker will show up on the map as a bright yellow pointfeature with a red label attached. If you'd like to modify the comment, or remove the marker, use the corresponding buttons.  
 
 >[!NOTE]
 >To ease the process of placing multiple markers, the marker MapTool also allows panning the map. Hold the mousebutton while moving the pointer to pan the map.  
