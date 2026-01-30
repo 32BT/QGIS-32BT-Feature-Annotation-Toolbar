@@ -200,14 +200,15 @@ def freezeMarkers(layer, flag=''):
 
 ################################################################################
 
-def exportMarkers(layer, path, driverName="GPKG"):
+def exportMarkers(layer, path, driverName):
     transform_context = QgsProject.instance().transformContext()
     save_options = QgsVectorFileWriter.SaveVectorOptions()
     save_options.driverName = driverName
     save_options.fileEncoding = "UTF-8"
     save_options.onlySelectedFeatures = True
-    #if layer.crs().mapUnits() == QgsUnitTypes.DistanceMeters:
-    #    save_options.
+    # WARNING: See also MarkersController.startAppend!!!
+    if layer.crs().mapUnits() == QgsUnitTypes.DistanceMeters:
+        save_options.layerOptions = ["COORDINATE_PRECISION=3"]
     error = QgsVectorFileWriter.writeAsVectorFormatV3(
         layer, path, transform_context, save_options)
     return error

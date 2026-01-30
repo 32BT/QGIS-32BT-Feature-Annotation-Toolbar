@@ -190,7 +190,11 @@ class MarkersController:
         layer = self._iface.activeLayer()
         result = self.runExportDialog(layer)
         if result:
-            TMS.LAYER.exportMarkers(layer, *result)
+            path, driverName, flag = result
+            error = TMS.LAYER.exportMarkers(layer, path, driverName)
+            if error[0] == 0:
+                TMS.LAYER.freezeMarkers(layer, flag)
+                layer.removeSelection()
 
     def startArchive(self):
         layer = self._iface.activeLayer()

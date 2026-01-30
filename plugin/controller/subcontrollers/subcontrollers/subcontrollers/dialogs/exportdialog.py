@@ -20,7 +20,8 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
                 "You are about to export {} markers from layer '{}'."],
             "LINE2":
                 "Select the savebutton to choose a destination file." },
-        "FILE": { "TYPE": { "CUSTOM": "Custom" }}
+        "FLAG": { "LABEL": "Flag:" },
+        "FILE": { "TYPE": { "CUSTOM": "Other" }}
         }
     })
 
@@ -40,6 +41,7 @@ def _form():
 ################################################################################
 
 class Dialog(QDialog, _form()):
+    _LAST_FLAG = 'L'
     _LAST_PATH = os.path.join(os.path.expanduser("~"), 'export.gpkg')
 
     @classmethod
@@ -52,6 +54,8 @@ class Dialog(QDialog, _form()):
         self.setupUi(self)
         self.setWindowTitle(_DIALOG.TITLE)
         self.mainLabel.setText(_DIALOG.LABEL.LINE2)
+        self.flagLabel.setText(_DIALOG.FLAG.LABEL)
+        self.flagText.setText(self._LAST_FLAG)
         button = self.buttonBox.button(self.buttonBox.StandardButton.Save)
         if button: button.setText(button.text()+'...')
 
@@ -69,18 +73,22 @@ class Dialog(QDialog, _form()):
             self.mainLabel.setText(label)
 
         if self.exec():
+            self._LAST_FLAG = self.flagText.text()
             # if savebutton was clicked, start file-browser
             path = self.startBrowser()
             if path:
                 _, ext = os.path.splitext(path)
-                return path, ext[1:]
+                return path, ext[1:], self._LAST_FLAG
 
     ########################################################################
+    '''
+
+    '''
     _FORMATS = {
         ".": _DIALOG.FILE.TYPE.CUSTOM + " (*.*)",
         ".geojson": "GeoJSON (*.geojson)",
-        ".gpkg": "GeoPackage (*.gpkg)",
-        ".gml": "GML (*.gml)"}
+        ".gpkg": "GeoPackage (*.gpkg)"}
+        # ".gml": "GML (*.gml)"}
 
     def _get_format(self, ext):
         return self._FORMATS.get(ext.lower()) or self._FORMATS.get(".")

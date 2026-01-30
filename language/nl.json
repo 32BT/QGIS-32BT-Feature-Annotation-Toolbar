@@ -153,6 +153,7 @@
                 "Er zullen {} notities weggeschreven worden uit laag '{}'."],
             "LINE2":
                 "Geef een bestandslocatie op om door te gaan." },
+        "FLAG": { "LABEL": "Markering:" },
         "FILE": { "TYPE": { "CUSTOM": "Anders" }}
         },
 
