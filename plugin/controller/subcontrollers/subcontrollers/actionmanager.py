@@ -12,6 +12,9 @@ from .toolset.action import ActionLink
 from .toolset.tokentools import TokenTools
 from .toolset.admintools import AdminTools
 
+import sys
+_MODULE = sys.modules.get(__name__.split('.')[0])
+
 ################################################################################
 ### Controller
 ################################################################################
@@ -35,6 +38,8 @@ ActionManager is an ActionLink and emits two signals:
 '''
 
 class ActionManager(ActionLink):
+    class ADMINTOOLS:
+        SHOW = "options/admintools/show"
 
     def __init__(self, iface, toolBar):
         super().__init__()
@@ -42,6 +47,9 @@ class ActionManager(ActionLink):
         self._tokenTools.setResponder(self)
         self._adminTools = AdminTools(iface, toolBar)
         self._adminTools.setResponder(self)
+        Settings = _MODULE.plugin.Settings
+        show = Settings.getGlobalValue(self.ADMINTOOLS.SHOW)
+        self.settingsChanged(dict(show=show))
 
     def updateActions(self):
         if self._tokenTools: self._tokenTools.updateActions()
@@ -51,8 +59,11 @@ class ActionManager(ActionLink):
         super().setResponder(responder)
         responder.settingsChanged.connect(self.settingsChanged)
 
+    '''
+    In a bid to be completely unpredictable, QgsSettings returns different
+    types for parameters after restarting the QGIS application.
+    '''
     def settingsChanged(self, params):
-        if params.get('show'):
-            self._adminTools.show()
-        else:
-            self._adminTools.hide()
+        show = params.get('show')
+        show = show in (True, 'true', 'True', 'TRUE')
+        self._adminTools.show(show)

@@ -66,9 +66,9 @@ class Dialog(QDialog, _form()):
         self.settingsChanged.emit(result)
 
     def askSettings(self, responder=None):
+        self.loadDialogSettings()
         if hasattr(responder, 'settingsChanged'):
             self.settingsChanged.connect(responder.settingsChanged)
-        self.loadDialogSettings()
         if self.exec():
             return self.saveDialogSettings()
         self.loadDialogSettings()
@@ -77,8 +77,9 @@ class Dialog(QDialog, _form()):
         Settings = _MODULE.plugin.Settings
         path = Database.getGlobalPath()
         show = Settings.getGlobalValue(self.OPTIONS.ADMINTOOLS.SHOW)
+        show = show in (True, 'true', 'True', 'TRUE')
         self._storageSettings.setPath(path)
-        self.adminTools.setChecked(bool(show))
+        self.adminTools.setChecked(show)
 
     def saveDialogSettings(self):
         path = self._storageSettings.getPath()
