@@ -85,6 +85,8 @@ class Dialog(QDialog, _form()):
         path = self._storageSettings.getPath()
         hide = self.adminTools.isChecked()
         Settings = _MODULE.plugin.Settings
-        Database.setGlobalPath(path)
+        if path != Database.getGlobalPath():
+            Database.setGlobalPath(path)
+            Database(path).start()
         Settings.setGlobalValue(self.OPTIONS.ADMINTOOLS.HIDE, hide)
         return dict(path=path, hide=hide)

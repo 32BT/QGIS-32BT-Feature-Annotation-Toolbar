@@ -6,13 +6,7 @@
 '''
 For privacy reasons we should store relative paths in settings.
 '''
-import os
-
-def os_path_shrinkuser(path):
-    home = os.path.expanduser('~')
-    if home and path.startswith(home):
-        path = '~'+path[len(home):]
-    return path
+from .controller.subcontrollers.subcontrollers.subcontrollers.database import FSItem
 
 ################################################################################
 
@@ -82,10 +76,10 @@ class Settings(QgsSettings):
 
     ########################################################################
     def savePath(self, key, path):
-        self.saveValue(key, os_path_shrinkuser(path))
+        self.saveValue(key, FSItem.path_shrinkuser(path))
 
     def loadPath(self, key):
-        return os.path.expanduser(self.loadValue(key))
+        return FSItem.path_expanduser(self.loadValue(key))
     ########################################################################
     def saveValue(self, key, val):
         self.setValue(key,val)

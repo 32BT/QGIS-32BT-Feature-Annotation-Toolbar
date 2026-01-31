@@ -20,9 +20,11 @@ def path_isdir(path):
         return os.path.isdir(path)
 
 def path_shrinkuser(path):
-    home = os.path.expanduser('~')
-    if home and path.startswith(home):
-        path = '~'+path[len(home):]
+    if path and path[0] != '~':
+        home = os.path.expanduser('~')
+        rpth = os.path.relpath(path, home)
+        if len(rpth) < len(path):
+            path = os.path.join('~', rpth)
     return path
 
 def path_expanduser(path):
