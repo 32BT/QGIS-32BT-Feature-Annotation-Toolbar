@@ -48,7 +48,9 @@ class StorageSettings(QWidget, _form()):
         self.pathButton.clicked.connect(self.startBrowser)
 
     def setPath(self, path=None):
-        self.pathText.setText(path or '')
+        path = os.path.expanduser(path or '~')
+        path = os.path.normpath(path)
+        self.pathText.setText(path)
 
     def getPath(self):
         return self.pathText.text().strip()
@@ -67,7 +69,8 @@ class StorageSettings(QWidget, _form()):
         dialog.setOptions(options)
         if dialog.exec():
             paths = dialog.selectedFiles()
-            if paths and paths[0]: self.pathText.setText(paths[0])
+            if paths and paths[0]:
+                self.pathText.setText(paths[0])
 '''
 This would be convenient, but it shows into the directory,
 it does not show the parent directory with the item of interest selected.

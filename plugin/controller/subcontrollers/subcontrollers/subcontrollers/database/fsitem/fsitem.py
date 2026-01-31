@@ -19,21 +19,23 @@ def path_isdir(path):
     if path_exists(path):
         return os.path.isdir(path)
 
-def path_shrinkuser(path):
-    if path and path[0] != '~':
-        home = os.path.expanduser('~')
-        rpth = os.path.relpath(path, home)
-        if len(rpth) < len(path):
-            path = os.path.join('~', rpth)
-    return path
-
-def path_expanduser(path):
-    return os.path.expanduser(path)
-
 def path_parentpath(path):
     # Do not use os.path.dirname since it's an extremely confusing misnomer
     return os.path.split(path)[0]
 
+def path_shrinkuser(path):
+    path = os.path.expanduser(path)
+    path = os.path.normpath(path)
+    home = os.path.expanduser('~')
+    if path.startswith(home):
+        path = os.path.relpath(path, home)
+        path = os.path.join('~', path)
+    return path
+
+def path_expanduser(path):
+    path = os.path.expanduser(path)
+    path = os.path.normpath(path)
+    return path
 
 ################################################################################
 ### FSItem
