@@ -73,7 +73,7 @@ Besides the tokentools is a set of three additional buttons to manage markers fo
 
 <img width="111" height="42" alt="image" src="https://github.com/user-attachments/assets/b66fdb4a-b61a-487c-8c0a-da0110e368fa" /><br/>  
 
-You may have several operators that create markers. After markers are created, the markers will likely be used in a further processing-pipeline. The first step is to freeze markers so that they can no longer be editted or deleted other than by the administrator. This is accomplished by the lock-button. The lock-button allows the administrator to set a flag for each marker selected. The flag can be any single character. This gives you a quick way to both freeze markers, as well as assign them to different processing-pipelines, departments, registries, or third-party processors to name just a few options.  
+You may have several operators that create markers. After markers are created, the markers will likely be used in a further processing-pipeline. The first step is to freeze markers so that they can no longer be edited or deleted other than by the administrator. This is accomplished by the lock-button. The lock-button allows the administrator to set a flag for each marker selected. The flag can be any single character. This gives you a quick way to both freeze markers, as well as assign them to different processing-pipelines, departments, registries, or third-party processors to name just a few options.  
 
 <img width="420" height="186" alt="image" src="https://github.com/user-attachments/assets/fbddf922-8130-4f12-a20b-e41f8dec9279" /><br/>  
 
@@ -86,8 +86,8 @@ Lastly, when markers are fully processed, and are no longer needed for monitorin
 
 
 # Customization  
-**Folder Structure**  
-In order to fully utilize the plugin's potential, it is useful to know how the plugin organizes your work. The plugin simply uses the system's filemanagement to create a useful folder structure for you. All folders and files can be accessed by your system's filebrowser. All files are textfiles that can be read and editted by a texteditor. The main folderstructure looks as follows:  
+### Folder Structure  
+In order to fully utilize the plugin's potential, it is useful to know how the plugin organizes your work. The plugin simply uses the system's filemanagement to create a useful folder structure for you. All folders and files can be accessed by your system's filebrowser. All files are textfiles that can be read and edited by a texteditor. The main folderstructure looks as follows:  
 
 ```
 - <central storage folder>
@@ -99,7 +99,7 @@ In order to fully utilize the plugin's potential, it is useful to know how the p
 
 This is where the plugin fetches the quick-access session-names. This is also where you find the logfiles or apply customizations.  
 
-**Session Folder Structure**  
+### Session Folder Structure  
 Each sessionfolder is organized as follows:  
 
 ```
@@ -113,15 +113,15 @@ Each sessionfolder is organized as follows:
 
 As soon as you create markers, they will be stored in the "markers" folder. If you delete or archive a marker, it will be stored in the "archive" folder.  
 
-**log.csv**  
+### log.csv  
 Relevant actions are logged in the logfile. It is a simple csv file, readable by any csv-parser, such as Excel. The file logs the date, username, and action as plain, comma-separated text.  
 
 <img width="737" height="250" alt="image" src="https://github.com/user-attachments/assets/d441dc14-c517-4099-aac1-1d47178f983e" /><br/>  
 
-**lyr.qml**  
+### lyr.qml  
 The styling of the sessionlayer is determined by a default styling file. If you'd like to adapt the styling of a particular session to your specific needs, you can save a qml-file in the sessionfolder and name it "lyr.qml". This will override the plugin default styling each time you start this session.  
 
-**rmk.txt**  
+### rmk.txt  
 When you create a new marker, you are asked to enter a short note with optional comments. The short note can be selected from a predefined quicklist. Each applicationcontext will likely require a different set of predefined notes. The "rmk.txt" file allows you to define the list for a particular session. The list should be a simple new-line delimited text file: 
 
 <img width="176" height="92" alt="image" src="https://github.com/user-attachments/assets/7d5a8f37-2766-43ce-a042-94770a9df12c" /><br/>  
