@@ -1,19 +1,23 @@
 
 
 ################################################################################
-### Settings
+### Imports
 ################################################################################
-'''
-For privacy reasons we should store relative paths in settings.
-'''
+
+# Require FSItem for user-relative paths
 from .controller.subcontrollers.subcontrollers.subcontrollers.database import FSItem
 
 ################################################################################
 
+# Require MODULE identity for section/groupnames in settingsfile
 import sys
 _MODULE = sys.modules.get(__name__.split('.')[0])
 _AUTHOR = _MODULE.identity.AUTHOR
 _MODULE = _MODULE.identity.MODULE
+
+################################################################################
+### Settings
+################################################################################
 
 from qgis.core import QgsSettings
 
