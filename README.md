@@ -108,7 +108,7 @@ Each sessionfolder is organized as follows:
   - <folder: archive>
   - <file: log.csv>
   - <file: lyr.qml>
-  - <file: nts.txt>
+  - <file: rmk.txt>
 ```
 
 As soon as you create markers, they will be stored in the "markers" folder. If you delete or archive a marker, it will be stored in the "archive" folder.  
