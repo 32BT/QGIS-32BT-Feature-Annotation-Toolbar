@@ -52,7 +52,7 @@ class Sentinel:
         slightly longish action. ("longish" meaning: not quite long enough
         to merrit a true backgroundproces.)
         '''
-        QTimer.singleShot(100, Qt.CoarseTimer, self.addLayers)
+        QTimer.singleShot(100, Qt.TimerType.CoarseTimer, self.addLayers)
 
     def addLayers(self):
         for layer in QgsProject.instance().mapLayers().values():

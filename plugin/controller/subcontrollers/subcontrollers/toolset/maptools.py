@@ -29,7 +29,7 @@ class MarkerMapTool(QgsMapTool):
 
     def canvasPressEvent(self, event):
         if self._position is None:
-            if event.button() == Qt.LeftButton:
+            if event.button() == Qt.MouseButton.LeftButton:
                 self._position = event.pos()
 
     def canvasReleaseEvent(self, event):
@@ -87,7 +87,7 @@ class PanningMarkerMapTool(QgsMapTool):
     def canvasPressEvent(self, event):
         if self._tracking:
             self.canvas().panActionEnd(event.pos())
-        elif event.buttons() == Qt.LeftButton:
+        elif event.buttons() == Qt.MouseButton.LeftButton:
             self._position = event.pos()
 
     '''

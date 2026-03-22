@@ -2,13 +2,20 @@
 name=32BT Feature Annotation Toolbar
 icon=icon.svg
 description=Quickly add and manage annotated pointfeatures in a dedicated layer.
+
 about=This plugin provides a toolbar to quickly pin captions to locations of interest. It features predefined and customizable captions that can be selected when you pin a location, and allows additional information to be entered. Markers can be placed quickly and easily near points-of-interest, and are accompanied by a note which is visible in the marker's label. The markerslayer is a plain pointlayer which can be exported and manipulated by the usual methods, and customized to taste. The process is applicable in many situations, and is easily adaptable to various workflows.
 
     The plugin also features managementfunctions to group and categorize your workload in batches. You can quickly start a session which generates a dedicated folder with geojson items and includes a simple, accessible logfile. Features can additionally be locked as active, while being assigned to separate groups if necessary. When features are no longer needed, they can be archived.
-version=1.0
-qgisMinimumVersion=3.0
+
 author=32BT
 email=32beat(at)gmail.com
 homepage=https://github.com/32BT/QGIS-32BT-Feature-Annotation-Toolbar/blob/master/README.md
 repository=https://github.com/32BT/QGIS-32BT-Feature-Annotation-Toolbar
 tracker=https://github.com/32BT/QGIS-32BT-Feature-Annotation-Toolbar/issues
+
+qgisMinimumVersion=3.0
+qgisMaximumVersion=5.0
+
+version=1.1
+changelog=Version 1.1
+    - QGIS 4 compatibility

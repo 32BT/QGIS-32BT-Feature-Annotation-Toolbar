@@ -10,19 +10,11 @@ from .storagesettings import StorageSettings
 from ..database import Database
 
 ################################################################################
-
-import os
-
-def _form():
-    path, ext = os.path.splitext(__file__)
-    form, _ = uic.loadUiType(path+'.ui')
-    return form
-
-################################################################################
 ### Labels
 ################################################################################
 
 import sys
+
 _MODULE = sys.modules.get(__name__.split('.')[0])
 _LABELS = _MODULE.LANGUAGE.LABELS({
     "SETTINGSDIALOG": {
@@ -37,13 +29,21 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
 
 _LABELS = _LABELS.SETTINGSDIALOG
 
+
 ################################################################################
 ### Settings Dialog
 ################################################################################
-'''
-'''
 
-class Dialog(QDialog, _form()):
+import os
+
+def _form():
+    path, ext = os.path.splitext(__file__)
+    return uic.loadUiType(path+'.ui')
+
+################################################################################
+'''
+'''
+class Dialog(*_form()):
     settingsChanged = pyqtSignal(object)
 
     class OPTIONS:
