@@ -160,7 +160,7 @@ class MarkersController:
                 layerPoint = TMS.Marker.class_round(layerPoint, 3)
             # END-OF-WARNING
             marker = TMS.Marker(layerPoint, note)
-            print(marker.as_json())
+            #print(marker.as_json())
             TMS.LAYER.appendMarker(layer, marker)
             self._layerID = layer.id()
 
