@@ -1,5 +1,5 @@
-<svg height="100" width="100">
+<svg height="128" width="128" xmlns="http://www.w3.org/2000/svg">
   <g id="marker-icon">
-    <circle cx="50" cy="50" r="40" fill="#FFFB00" stroke="black" stroke-width="6" />
+    <circle cx="64" cy="64" r="50" fill="#FFFB00" stroke="black" stroke-width="8" />
   </g>
 </svg>

@@ -79,7 +79,7 @@ class Marker:
 
     @classmethod
     def from_qgsfeature(cls, F):
-        P = tuple(F.geometry().asPoint())
+        P = QGS.FEATURE.getLocation(F)
         flag = QGS.FEATURE.getValue(F, 'flag')
         guid = QGS.FEATURE.getValue(F, 'guid')
         date = QGS.FEATURE.getValue(F, 'date')

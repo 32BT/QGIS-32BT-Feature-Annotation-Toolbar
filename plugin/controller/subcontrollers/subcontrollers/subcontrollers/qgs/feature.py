@@ -26,3 +26,9 @@ def setvalue(feature, key, value):
         return False
 
 setValue = setvalue
+
+def getlocation(feature):
+    try: return tuple(feature.geometry().centroid().asPoint())
+    except Exception: return (0, 0)
+
+getLocation = getlocation
