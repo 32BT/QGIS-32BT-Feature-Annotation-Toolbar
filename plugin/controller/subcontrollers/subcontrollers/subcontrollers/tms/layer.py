@@ -131,7 +131,7 @@ def is_valid(layer):
 
 
 def is_writeable(layer):
-    return layer and layer.isValid() and layer.supportsEditing()
+    return layer and layer.isValid() and layer.supportsEditing() and not layer.isEditable()
 
 ################################################################################
 
@@ -165,6 +165,8 @@ def appendMarker(layer, marker):
 
 def updateMarker(layer, marker):
     F = next(layer.getSelectedFeatures())
+    if not QGS.FEATURE.getValue(F, 'guid'):
+        QGS.FEATURE.setValue(F, 'guid', marker.guid())
     QGS.FEATURE.setValue(F, 'date', marker.date())
     QGS.FEATURE.setValue(F, 'note', marker.note())
     QGS.LAYER.updateFeature(layer, F)

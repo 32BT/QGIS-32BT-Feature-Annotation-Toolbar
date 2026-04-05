@@ -52,7 +52,7 @@ class Marker:
         self._flag = flag
         self._guid = guid or local_uuid_as_str()
         self._date = date or local_time_as_str()
-        self._note = note.strip()
+        self._note = note.strip() if note else ""
 
     def location(self):
         return self._location
