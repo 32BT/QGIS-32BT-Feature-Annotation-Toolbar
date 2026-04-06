@@ -131,7 +131,11 @@ def is_valid(layer):
 
 
 def is_writeable(layer):
-    return layer and layer.isValid() and layer.supportsEditing() and not layer.isEditable()
+    return (
+        bool(layer) and
+        layer.isValid() and
+        layer.supportsEditing() and
+        layer.isEditable() == False)
 
 ################################################################################
 
