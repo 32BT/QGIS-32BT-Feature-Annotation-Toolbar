@@ -14,9 +14,12 @@ repository=https://github.com/32BT/QGIS-32BT-Feature-Annotation-Toolbar
 tracker=https://github.com/32BT/QGIS-32BT-Feature-Annotation-Toolbar/issues
 
 qgisMinimumVersion=3.0
-qgisMaximumVersion=5.0
+qgisMaximumVersion=4.99
 
-version=1.1
-changelog=Version 1.1
+version=1.2
+changelog=Version 1.2
+    - Updated selection signals
+
+    Version 1.1
     - QGIS 4 compatibility
     - Minor styling changes

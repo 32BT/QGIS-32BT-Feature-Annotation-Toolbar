@@ -129,13 +129,15 @@ def is_valid(layer):
             return True
     return False
 
-
+'''
+If layer is currently in editingmode, then we won't allow plugin edits.
+'''
 def is_writeable(layer):
     return (
-        bool(layer) and
-        layer.isValid() and
-        layer.supportsEditing() and
-        layer.isEditable() == False)
+        layer is not None
+        and layer.isValid()
+        and layer.supportsEditing()
+        and layer.isEditable() == False)
 
 ################################################################################
 
